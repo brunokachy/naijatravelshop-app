@@ -1,0 +1,54 @@
+.header-top {
+    max-height: 100px;
+}
+
+.top-user-area .top-user-area-list {
+    top: 20px;
+}
+
+.booking-filters {
+    background-image: linear-gradient(to bottom, #124382, #193275);
+}
+
+.logo img {
+    width: 200px;
+    float: left;
+}
+
+ul.tr-menu {
+    list-style-type: none;
+    top: 30px;
+    position: relative;
+}
+
+ul.tr-menu li {
+    float: left;
+    padding-left: 20px;
+    font-size: 16px;
+}
+
+ul.tr-menu li i {
+    color: #e69515;
+    padding: 5px;
+}
+
+
+
+@media (max-width: 480px) {
+.logo img {
+    width: 150px;
+}
+
+ul.tr-menu li {
+    padding-left: 0;
+    font-size: 12px;
+}
+
+.top-user-area .top-user-area-list, ul.tr-menu {
+    top: 0px;
+}
+
+.header-top {
+    max-height: 120px;
+}
+}

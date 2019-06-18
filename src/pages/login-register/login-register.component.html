@@ -1,0 +1,63 @@
+<div class="container">
+    <div class="gap"></div>
+    <h2>Login on NaijaTravelShop</h2>
+</div>
+
+<div class="gap"></div>
+<div class="container">
+    <div class="row" data-gutter="60">
+        <div class="col-md-4">
+            <h3>Welcome to NaijaTravelShop</h3>
+            <p align="justify" class="text-bigger">NaijaTravelShop is a fully integrated retail, corporate and online
+                travel agency,
+                offering end-to-end travel sales and support services to our most esteemed customers.</p>
+            <p align="justify" class="text-bigger">Our strategy and business model seeks to deliver a niche travel
+                service which focuses
+                on travel as a service, and not just a ticketing auction, where competing travel agents offer
+                competitive pricing terms for various travel products, without any reciprocal obligation to the travel
+                product purchasers. Our company seeks to pride itself as Nigeria’s foremost travel service company.</p>
+            <p align="justify" class="text-bigger">Hence, whilst in our line of business we still offer typical travel
+                products and
+                services, the core of our value offering lies in the affiliated services to which travelling relates. We
+                want to create a series of value services that customers direly need, understand, request and are happy
+                to pay for.</p>
+        </div>
+        <div class="col-md-4">
+            <div *ngFor="let alert of alerts">
+                <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+                    {{ alert.msg }}</alert>
+            </div>
+            <!-- <h3>Login</h3> -->
+            <form (ngSubmit)="login()" ngNativeValidate>
+                <div class="form-group form-group-lg form-group-icon-left">
+                    <i class="fa fa-user input-icon"></i>
+                    <label>Email</label>
+                    <input class="form-control" name="email" placeholder="e.g. Tobidoe@gmail.com" type="email"
+                        [(ngModel)]="user.email" required />
+                    <span *ngIf="forgotPassword" (click)="signin()" style="cursor:pointer; color: orange">
+                        Login?
+                    </span>
+                </div>
+                <div class="form-group form-group-lg form-group-icon-left" *ngIf="!forgotPassword">
+                    <i class="fa fa-lock input-icon"></i>
+                    <label>Password</label>
+                    <input class="form-control" name="password" type="password" placeholder="your password"
+                        [(ngModel)]="user.password" required />
+                    <span (click)="resetPassword()" style="cursor:pointer; color: orange">
+                        Forgot Password?
+                    </span>
+                </div>
+                <div *ngIf="!forgotPassword" class="form-group form-group-icon-left">
+                    <input class="btn btn-primary btn-lg" type="submit" value="Sign in" />
+                </div>
+                <div *ngIf="forgotPassword" class="form-group form-group-icon-left">
+                    <input class="btn btn-primary btn-lg" type="submit" value="Reset Password" />
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4">
+
+        </div>
+    </div>
+
+    <div class="gap"></div>
