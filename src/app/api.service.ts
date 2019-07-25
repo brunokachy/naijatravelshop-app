@@ -25,7 +25,7 @@ export class ApiService {
     public LOGIN = this.naijaTravelShopAPIBaseURL + 'sign_in';
     public BOOK = this.naijaTravelShopAPIBaseURL + 'booking';
     public PAYMENT_VERIFICATION = this.naijaTravelShopAPIBaseURL + 'payment_verification';
-    public GET_BOOKINGS = this.naijaTravelShopAPIBaseURL + 'get_booking';
+    public GET_RECENT_BOOKINGS = this.naijaTravelShopAPIBaseURL + 'get_recent_booking';
     public UPDATE_PROFILE = this.naijaTravelShopAPIBaseURL + 'update_profile';
     public CHANGE_PASSWORD = this.naijaTravelShopAPIBaseURL + 'change_password';
     public RESET_PASSWORD = this.naijaTravelShopAPIBaseURL + 'reset_password';

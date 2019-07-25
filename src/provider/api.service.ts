@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as sha1 from 'js-sha1';
-import { switchMap, catchError, map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { TokenObject } from '../model/TokenObject';
@@ -9,7 +9,6 @@ import { InitModel } from '../model/InitModel';
 import { AfilliateDetails } from '../model/AffiliateDetails';
 import { FlwAccountDetails } from '../model/FlwAccountDetail';
 import { Country } from '../model/Country';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
     providedIn: 'root'
@@ -21,7 +20,7 @@ export class Service {
     }
 
     private locationOrigin = window.location.origin;
-    //private naijaTravelShopAPIBaseURL = this.locationOrigin + '/naijatravelshop/api/';
+   // private naijaTravelShopAPIBaseURL = this.locationOrigin + '/naijatravelshop/api/';
     private naijaTravelShopAPIBaseURL = 'http://localhost:8080/naijatravelshop/api/';
 
     public CONFIRM_REGISTRATION = this.naijaTravelShopAPIBaseURL + 'confirm_registration';
@@ -29,13 +28,16 @@ export class Service {
     public LOGIN = this.naijaTravelShopAPIBaseURL + 'admin/login';
     public BOOK = this.naijaTravelShopAPIBaseURL + 'flight/create_reservation';
     public PAYMENT_VERIFICATION = this.naijaTravelShopAPIBaseURL + 'payment/flw_payment_verification';
-    public GET_BOOKINGS = this.naijaTravelShopAPIBaseURL + 'get_booking';
+    public GET_RECENT_BOOKINGS = this.naijaTravelShopAPIBaseURL + 'admin/get_recent_booking';
     public UPDATE_PROFILE = this.naijaTravelShopAPIBaseURL + 'admin/update_account';
-    public CHANGE_PASSWORD = this.naijaTravelShopAPIBaseURL + 'change_password';
+    public CHANGE_PASSWORD = this.naijaTravelShopAPIBaseURL + 'admin/change_password';
     public RESET_PASSWORD = this.naijaTravelShopAPIBaseURL + 'admin/reset_user_password';
     private GET_FLUTTERWAVE_ACCOUNT_DETAILS = this.naijaTravelShopAPIBaseURL + 'payment/get_flw_account_details';
     public GET_AFFILIATE_ACCOUNT = this.naijaTravelShopAPIBaseURL + 'admin/get_affiliate_account_details';
     public GET_BASE_URL = this.naijaTravelShopAPIBaseURL + 'admin/get_base_url';
+    public GET_PORTAL_USERS = this.naijaTravelShopAPIBaseURL + 'admin/get_portal_users';
+    public ACTIVATE_USER = this.naijaTravelShopAPIBaseURL + 'admin/reactivate_account';
+    public DEACTIVATE_USER = this.naijaTravelShopAPIBaseURL + 'admin/deactivate_account';
     public VISA_REQUEST = this.naijaTravelShopAPIBaseURL + 'flight/create_visa_request';
     public GET_AIRPORT_BY_SEARCH_TERM = 'flight/get-airports-by-search-term';
     public GET_CITY = 'flight/get-city';
@@ -48,6 +50,11 @@ export class Service {
     public CANCEL_RESERVATION = 'flight/cancel-reservation';
     public ISSUE_TICKET = 'affiliate/flight-ticket-issue-request';
     public FLIGHT_RESERVATION_STATUS = 'affiliate/booking/get-flight-reservation-status';
+    public GET_FLIGHT_BOOKINGS_BY_SEARCH_TERM = this.naijaTravelShopAPIBaseURL + 'admin/get_flight_bookings_by_search_term';
+    public GET_VISA_REQUEST_BY_SEARCH_TERM = this.naijaTravelShopAPIBaseURL + 'admin/get_visa_requests_by_search_term';
+    public CHANGE_BOOKING_STATUS = this.naijaTravelShopAPIBaseURL + 'admin/change_booking_status';
+    public CHANGE_VISA_REQUEST_STATUS = this.naijaTravelShopAPIBaseURL + 'admin/change_visa_request_status';
+    public GET_FLIGHT_RESERVATION_DETAILS = this.naijaTravelShopAPIBaseURL + 'admin/get_flight_reservation_details';
 
     getInitModel() {
         if (JSON.parse(sessionStorage.getItem('initModel')) != null) {
@@ -72,6 +79,10 @@ export class Service {
     callAPII(requestData: any, url: string): Observable<any> {
         return this.httpClient
             .post(url, requestData, this.header(''));
+    }
+
+    getAPICall(url: string): Observable<any> {
+        return this.httpClient.get(url);
     }
 
     // testing() {
@@ -178,6 +189,16 @@ export class Service {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: token
+            })
+        };
+        return httpOptions;
+    }
+
+    private headerII(token: string): any {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                Authorization: tokenII
             })
         };
         return httpOptions;

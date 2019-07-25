@@ -70,26 +70,27 @@ export class FlightPaymentComponent {
         const phoneNumber = this.contactDetail.phoneNumber.replace('+', '');
         const amount = ref.formatCurrency(this.pricedItinerary.totalFare);
         ref.bookingResponse.paidAmount = ref.pricedItinerary.totalFare;
-
+        
         getpaidSetup({
             PBFPubKey: PBFKey,
             customer_email: this.contactDetail.email,
             customer_firstname: this.contactDetail.firstName,
             customer_lastname: this.contactDetail.lastName,
             custom_description: '',
-            custom_title: 'Naija Travel Shop',
-            amount: amount,
+            custom_title: 'NaijaTravelShop',
+            amount,
             customer_phone: phoneNumber,
+            currency: 'NGN',
             country: 'NG',
             txref: this.bookingResponse.referenceNumber,
             integrity_hash: '',
-            onclose: function () {
+            onclose() {
                 if (payResponse != null) {
                     localStorage.setItem('viewPaymentResponse', 'true');
                     ref.router.navigate(['/payment_response']);
                }
             },
-            callback: function (response) {
+            callback(response) {
                 if (response.success === false) {
 
                 } else {

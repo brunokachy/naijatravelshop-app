@@ -10,6 +10,12 @@ import { AboutComponent } from '../pages/about/about.component';
 import { ContactusComponent } from '../pages/contactus/contactus.component';
 import { LoginRegisterComponent } from '../pages/login-register/login-register.component';
 import { RegisterComponent } from '../pages/register/register.component';
+import { ProfileComponent } from '../pages/profile/profile.component';
+import { DashboardComponent } from '../pages/dashboard/dashboard.component';
+import { UserManagementComponent } from '../pages/user-management/user-management.component';
+import { ReservationComponent } from '../pages/reservation/reservation.component';
+import { HotelSearchResultComponent } from '../pages/hotel-search-result/hotel-search-result.component';
+import { HotelDetailsComponent } from '../pages/hotel-details/hotel-details.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, },
@@ -17,10 +23,16 @@ const routes: Routes = [
   { path: 'flight_detail', component: FlightDetailComponent, canActivate: [AuthGuard] },
   { path: 'flight_payment', component: FlightPaymentComponent, canActivate: [AuthGuard] },
   { path: 'payment_response', component: PaymentResponseComponent, canActivate: [AuthGuard] },
-  { path: 'about', component: AboutComponent},
-  { path: 'contactus', component: ContactusComponent},
-  { path: 'login_register', component: LoginRegisterComponent},
-  { path: 'register', component: RegisterComponent},
+  { path: 'user_management', component: UserManagementComponent, canActivate: [AuthGuard] },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'reservation', component: ReservationComponent, canActivate: [AuthGuard] },
+  { path: 'about', component: AboutComponent },
+  { path: 'contactus', component: ContactusComponent },
+  { path: 'login_register', component: LoginRegisterComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'hotel_search_result', component: HotelSearchResultComponent, canActivate: [AuthGuard] },
+  { path: 'hotel_detail', component: HotelDetailsComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 

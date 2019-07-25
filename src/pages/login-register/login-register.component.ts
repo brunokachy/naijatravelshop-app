@@ -61,9 +61,17 @@ export class LoginRegisterComponent {
             this.service.callAPII(this.user, this.service.LOGIN).subscribe(
                 data => {
                     this.spinnerService.hide();
-                    //sessionStorage.setItem('user', JSON.stringify(data.data));
-                    //this.router.navigate(['/dashboard']);
-                   // window.location.reload();
+                    sessionStorage.setItem('user', JSON.stringify(data.data));
+
+                    const user: User = JSON.parse(sessionStorage.getItem('user'));
+                    if (user.roles.includes('SUPER ADMIN')) {
+                        sessionStorage.setItem('isSuperAdmin', 'true');
+                    } else {
+                        sessionStorage.setItem('isSuperAdmin', 'false');
+                    }
+                    this.router.navigate(['/reservation']);
+
+                    // window.location.reload();
                 },
                 error => {
                     console.log(error);
@@ -74,5 +82,5 @@ export class LoginRegisterComponent {
 
     }
 
-   
+
 }

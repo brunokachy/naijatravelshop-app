@@ -12,21 +12,22 @@
                             <div class="row mt20">
                                 <div class="col-md-12">
                                     <h4>Payment Breakdown</h4>
-                                    <p>
+                                    <p style="font-size: 14px">
                                         <strong>Fare: </strong>&#8358;{{fare | number}}</p>
                                     <p>
                                         <strong>Transaction Charge: </strong>&#8358;{{txFee | number}}</p>
-                                    <p>
+                                    <p style="font-size: 14px">
                                         <strong>Total Amount: </strong>&#8358;{{totalAmount | number}}</p>
                                     <div class="gap gap-small"></div>
+                                    
                                     <h4>Booking Reservation Details</h4>
-                                    <p>
+                                    <p style="font-size: 14px">
                                         <strong>Payment Reference: </strong>{{paymentRef}}</p>
-                                    <p>
+                                    <p style="font-size: 14px">
                                         <strong>Reference No.: </strong>{{bookingResponse.referenceNumber}}</p>
-                                    <p>
+                                    <p style="font-size: 14px">
                                         <strong>Booking No.: </strong>{{bookingResponse.bookingNumber}}</p>
-                                    <button (click)="goHome()" class="btn btn-primary">Return Home</button>
+                                    <button (click)="goHome()" class="btn btn-primary btn-lg">Return Home</button>
                                 </div>
     
                             </div>

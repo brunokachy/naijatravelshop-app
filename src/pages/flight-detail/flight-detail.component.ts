@@ -23,7 +23,7 @@ import { InitModel } from '../../model/InitModel';
 })
 export class FlightDetailComponent {
     constructor(private modalService: BsModalService, private router: Router, private service: Service,
-        private spinnerService: NgxSpinnerService) {
+                private spinnerService: NgxSpinnerService) {
         this.pricedItinerary = JSON.parse(localStorage.getItem('pricedItineraries'));
         this.flightSearch = JSON.parse(localStorage.getItem('flightSearch'));
         this.flightHeader = JSON.parse(localStorage.getItem('flightHeader'));

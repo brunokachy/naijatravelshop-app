@@ -18,6 +18,9 @@ export class User {
     age: number;
     titleCode: number;
     passwordReset: boolean;
+    roles: string[];
+    id: number;
+    active: boolean;
 
 
     constructor(

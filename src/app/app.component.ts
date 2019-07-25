@@ -4,9 +4,6 @@ import { Country } from '../model/Country';
 import { Service } from '../provider/api.service';
 import { ApiResponse } from '../model/ApiResponse';
 import { InitModel } from '../model/InitModel';
-import { FlwAccountDetails } from '../model/FlwAccountDetail';
-import { AfilliateDetails } from '../model/AffiliateDetails';
-import { switchMap } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -26,17 +23,27 @@ export class AppComponent {
   initModel: InitModel = new InitModel();
 
   constructor(private service: Service, private spinner: NgxSpinnerService) {
-    this.checkUserLogin();
+
     this.populateInitModel();
     console.log('url ' + window.location.origin);
+
+    const interval = setInterval(() => {
+      if (JSON.parse(sessionStorage.getItem('initModel')) != null) {
+        this.initModel = JSON.parse(sessionStorage.getItem('initModel'));
+        this.countries = this.initModel.countries;
+        this.countryCode = this.initModel.countryCode;
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    setInterval(() => {
+      this.checkUserLogin();
+    }, 1000);
   }
 
   populateInitModel() {
     this.service.makeInitCall()
       .subscribe((data: ApiResponse<Country[]>) => {
-        this.initModel = JSON.parse(sessionStorage.getItem('initModel'));
-        this.countries = this.initModel.countries;
-        this.countryCode = this.initModel.countryCode;
       }, (error: any) => {
         console.log(error);
       });
@@ -52,6 +59,7 @@ export class AppComponent {
   checkUserLogin() {
     if (JSON.parse(sessionStorage.getItem('user')) == null) {
       this.user = null;
+      this.isLogin = false;
     }
     if (JSON.parse(sessionStorage.getItem('user')) != null) {
       this.user = JSON.parse(sessionStorage.getItem('user'));

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { User } from '../model/user';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -11,6 +12,11 @@ export class AuthGuard implements CanActivate {
         if (url === '/flight_search_result') {
             return this.canViewFlightSearchResultPage(url);
         }
+
+        if (url === '/hotel_search_result') {
+            return this.canViewHotelSearchResultPage(url);
+        }
+
         if (url === '/flight_detail') {
             return this.canViewFlightDetailPage(url);
         }
@@ -47,8 +53,12 @@ export class AuthGuard implements CanActivate {
             return this.IsUserLoggedIn();
         }
 
-        if (url === '/password_change') {
+        if (url === '/reservation') {
             return this.IsUserLoggedIn();
+        }
+
+        if (url === '/user_management') {
+            return this.IsUserSuperAdmin();
         }
     }
 
@@ -114,5 +124,16 @@ export class AuthGuard implements CanActivate {
         if (user != null) { return true; }
         this.router.navigate(['/home']);
         return false;
+    }
+
+    IsUserSuperAdmin(): boolean {
+        if (this.IsUserLoggedIn) {
+            const user: User = JSON.parse(sessionStorage.getItem('user'));
+            if (user.roles.includes('SUPER ADMIN')) {
+                return true;
+            }
+            this.router.navigate(['/dashboard']);
+            return false;
+        }
     }
 }

@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import {DataTableModule} from 'angular-6-datatable';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,6 +25,12 @@ import { AboutComponent } from '../pages/about/about.component';
 import { ContactusComponent } from '../pages/contactus/contactus.component';
 import { LoginRegisterComponent } from '../pages/login-register/login-register.component';
 import { RegisterComponent } from '../pages/register/register.component';
+import { ProfileComponent } from '../pages/profile/profile.component';
+import { DashboardComponent } from '../pages/dashboard/dashboard.component';
+import { UserManagementComponent } from '../pages/user-management/user-management.component';
+import { ReservationComponent } from '../pages/reservation/reservation.component';
+import { HotelSearchResultComponent } from '../pages/hotel-search-result/hotel-search-result.component';
+import { HotelDetailsComponent } from '../pages/hotel-details/hotel-details.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +43,13 @@ import { RegisterComponent } from '../pages/register/register.component';
     AboutComponent,
     ContactusComponent,
     LoginRegisterComponent,
-    RegisterComponent
+    RegisterComponent,
+    ProfileComponent,
+    DashboardComponent,
+    UserManagementComponent,
+    ReservationComponent,
+    HotelSearchResultComponent,
+    HotelDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -53,6 +66,7 @@ import { RegisterComponent } from '../pages/register/register.component';
     CollapseModule.forRoot(),
     CarouselModule.forRoot(),
     AlertModule.forRoot(),
+    DataTableModule
   ],
   providers: [Service, AuthGuard],
   bootstrap: [AppComponent]

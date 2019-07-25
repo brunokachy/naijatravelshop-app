@@ -5,7 +5,7 @@ import { TypeaheadMatch, ModalDirective } from 'ngx-bootstrap';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FlightDataSearch } from '../../model/FlightDataSearch';
-import { mergeMap, catchError, debounceTime, distinctUntilChanged, map, tap, switchMap } from 'rxjs/operators';
+import { mergeMap, map } from 'rxjs/operators';
 import { InitModel } from '../../model/InitModel';
 import { Country } from '../../model/Country';
 import { VisaRequest } from '../../model/VisaRequest';
@@ -23,6 +23,7 @@ export class HomeComponent {
 
     constructor(private service: Service, private router: Router, private spinner: NgxSpinnerService) {
         localStorage.clear();
+
         const interval = setInterval(() => {
             if (JSON.parse(sessionStorage.getItem('initModel')) != null) {
                 this.initModel = JSON.parse(sessionStorage.getItem('initModel'));
@@ -30,7 +31,14 @@ export class HomeComponent {
                 clearInterval(interval);
             }
         }, 1000);
-        //  this.initModel = JSON.parse(sessionStorage.getItem('initModel'));
+
+        setInterval(() => {
+            if (this.searchTerm === '') {
+                this.airports = [];
+            } else {
+                this.getAirports(this.searchTerm);
+            }
+        }, 1000);
 
         this.formatDepartureDate();
         this.populateMultipleDest();
@@ -48,9 +56,8 @@ export class HomeComponent {
         localStorage.setItem('viewHotelSearchResult', 'false');
         localStorage.setItem('viewHotelRoom', 'false');
         localStorage.setItem('viewHotelDetails', 'false');
-
-
     }
+
     minDepartureDate: Date;
     maxDepartureDate: Date;
     minReturnDate: Date;
@@ -82,9 +89,9 @@ export class HomeComponent {
     visaReturnDate = '';
     visaRequest: VisaRequest = new VisaRequest();
 
-    model: any;
-    searching = false;
-    searchFailed = false;
+    selected = '';
+    cities: string[] = [];
+    searchTerm = '';
 
     @ViewChild('autoShownModal') autoShownModal: ModalDirective;
     isModalShown = false;
@@ -129,6 +136,11 @@ export class HomeComponent {
             this.destinationAirport = e.item;
             this.getAirportCountry(this.destinationAirport);
         }
+    }
+
+    searchHotel() {
+        localStorage.setItem('viewHotelSearchResult', 'true');
+        this.router.navigate(['/hotel_search_result']);
     }
 
     searchFlight(tripType: string) {
@@ -215,7 +227,6 @@ export class HomeComponent {
         this.spinner.show();
         this.service.callAPII(this.visaRequest, this.service.VISA_REQUEST).subscribe(
             data => {
-                console.log(data.data);
                 alert('Visa request was successful');
                 this.visaRequest = new VisaRequest();
                 this.visaDepartureDate = '';
@@ -305,26 +316,9 @@ export class HomeComponent {
         );
     }
 
-    search = (text$: Observable<string>) =>
-        text$.pipe(
-            debounceTime(300),
-            distinctUntilChanged(),
-            tap(() => this.searching = true),
-            switchMap(term =>
-                this.searchMethod(term).pipe(
-                    tap(() => this.searchFailed = false),
-                    catchError(() => {
-                        this.searchFailed = true;
-                        return of([]);
-                    }))
-            ),
-            tap(() => this.searching = false)
-        )
-
-
     checkInput(e: string) {
-        if (e.length > 2) {
-            this.getAirports(e);
+        if (e.length > 1) {
+            this.searchTerm = e;
         }
     }
 
