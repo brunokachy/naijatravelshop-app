@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Service } from '../../provider/api.service';
 import { BookingResponse } from '../../model/BookingResponse';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InitModel } from '../../model/InitModel';
+import { LocalAPIService } from '../../provider/local.api.service';
 
 @Component({
     moduleId: module.id,
@@ -20,7 +20,7 @@ export class PaymentResponseComponent {
     alerts: any[] = [];
     initModel: InitModel;
 
-    constructor(private router: Router, private service: Service, private spinner: NgxSpinnerService) {
+    constructor(private router: Router, private localAPIService: LocalAPIService, private spinner: NgxSpinnerService) {
         this.bookingResponse = JSON.parse(localStorage.getItem('bookingResponse'));
         this.paymentRef = localStorage.getItem('paymentRef');
         this.totalAmount = JSON.parse(localStorage.getItem('totalAmount'));
@@ -50,7 +50,7 @@ export class PaymentResponseComponent {
             bookingNumber: this.bookingResponse.bookingNumber
         });
 
-        this.service.callAPII(requestData, this.service.PAYMENT_VERIFICATION).subscribe(
+        this.localAPIService.postRequest(requestData, this.localAPIService.PAYMENT_VERIFICATION).subscribe(
             data => {
                 if (data.data === 'Success') {
                     this.add('success', data.message);

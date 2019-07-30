@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import * as moment from 'moment';
-import { Service } from '../../provider/api.service';
 import { TypeaheadMatch, ModalDirective } from 'ngx-bootstrap';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -10,6 +9,9 @@ import { InitModel } from '../../model/InitModel';
 import { Country } from '../../model/Country';
 import { VisaRequest } from '../../model/VisaRequest';
 import { Observable, of } from 'rxjs';
+import { TravelbetaAPIService } from '../../provider/travelbeta.api.service';
+import { LocalAPIService } from '../../provider/local.api.service';
+import { User } from '../../model/user';
 
 
 @Component({
@@ -21,7 +23,8 @@ import { Observable, of } from 'rxjs';
 export class HomeComponent {
     initModel: InitModel = new InitModel();
 
-    constructor(private service: Service, private router: Router, private spinner: NgxSpinnerService) {
+    constructor(private TBservice: TravelbetaAPIService, private router: Router,
+        private spinner: NgxSpinnerService, private localService: LocalAPIService) {
         localStorage.clear();
 
         const interval = setInterval(() => {
@@ -113,7 +116,7 @@ export class HomeComponent {
     }
 
     getAirportCountry(airport: any) {
-        this.service.callAPI(JSON.stringify({ cityCode: airport.cityCode }), this.service.GET_CITY).subscribe(
+        this.TBservice.postRequest(JSON.stringify({ cityCode: airport.cityCode }), this.TBservice.GET_CITY).subscribe(
             city => {
                 if (city.status === 0) {
                     const countries = this.initModel.countries;
@@ -202,7 +205,7 @@ export class HomeComponent {
             localStorage.setItem('multipleDest', JSON.stringify(this.multipleDest));
         }
         this.spinner.show();
-        this.service.callAPI(flightSearch, this.service.PROCESS_FLIGHT_SEARCH).subscribe(
+        this.TBservice.postRequest(flightSearch, this.TBservice.PROCESS_FLIGHT_SEARCH).subscribe(
             flight => {
                 if (flight.status === 0) {
                     localStorage.setItem('flight', JSON.stringify(flight.data));
@@ -224,8 +227,15 @@ export class HomeComponent {
         this.visaRequest.departureDate = new Date(this.formatDate2(this.visaDepartureDate));
         this.visaRequest.returnDate = new Date(this.formatDate2(this.visaReturnDate));
 
+        if (JSON.parse(sessionStorage.getItem('user')) != null) {
+            const user: User = JSON.parse(sessionStorage.getItem('user'));
+            this.visaRequest.requestById = user.id.toString();
+        } else {
+            this.visaRequest.requestById = '';
+        }
+
         this.spinner.show();
-        this.service.callAPII(this.visaRequest, this.service.VISA_REQUEST).subscribe(
+        this.localService.postRequest(this.visaRequest, this.localService.VISA_REQUEST).subscribe(
             data => {
                 alert('Visa request was successful');
                 this.visaRequest = new VisaRequest();
@@ -311,7 +321,7 @@ export class HomeComponent {
             return of([]);
         }
         const requestData = JSON.stringify({ searchTerm: term, limit: 10 });
-        return this.service.callAPI(requestData, this.service.GET_AIRPORT_BY_SEARCH_TERM).pipe(
+        return this.TBservice.postRequest(requestData, this.TBservice.GET_AIRPORT_BY_SEARCH_TERM).pipe(
             map(response => response[1])
         );
     }
@@ -325,7 +335,7 @@ export class HomeComponent {
     getAirports(token: string) {
         const requestData = JSON.stringify({ searchTerm: token, limit: 10 });
         const airports = [];
-        this.service.callAPI(requestData, this.service.GET_AIRPORT_BY_SEARCH_TERM).subscribe(
+        this.TBservice.postRequest(requestData, this.TBservice.GET_AIRPORT_BY_SEARCH_TERM).subscribe(
             data => {
                 if (data.status === 0) {
                     for (const u of data.data) {

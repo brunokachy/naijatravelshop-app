@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InitModel } from '../../model/InitModel';
+import { LocalAPIService } from '../../provider/local.api.service';
 declare var getpaidSetup;
 @Component({
     moduleId: module.id,
@@ -19,7 +20,7 @@ export class FlightPaymentComponent {
     contactDetail: User;
     bookingResponse: BookingResponse;
     initModel: InitModel;
-    constructor(private router: Router, private service: Service, private spinner: NgxSpinnerService) {
+    constructor(private router: Router, private spinner: NgxSpinnerService, private localAPIService: LocalAPIService) {
         this.pricedItinerary = JSON.parse(localStorage.getItem('pricedItineraries'));
         this.contactDetail = JSON.parse(localStorage.getItem('contactDetail'));
         this.bookingResponse = JSON.parse(localStorage.getItem('bookingResponse'));
@@ -70,7 +71,7 @@ export class FlightPaymentComponent {
         const phoneNumber = this.contactDetail.phoneNumber.replace('+', '');
         const amount = ref.formatCurrency(this.pricedItinerary.totalFare);
         ref.bookingResponse.paidAmount = ref.pricedItinerary.totalFare;
-        
+
         getpaidSetup({
             PBFPubKey: PBFKey,
             customer_email: this.contactDetail.email,
@@ -88,7 +89,7 @@ export class FlightPaymentComponent {
                 if (payResponse != null) {
                     localStorage.setItem('viewPaymentResponse', 'true');
                     ref.router.navigate(['/payment_response']);
-               }
+                }
             },
             callback(response) {
                 if (response.success === false) {
@@ -110,12 +111,19 @@ export class FlightPaymentComponent {
     }
 
     goHome() {
-        const token = JSON.parse(localStorage.getItem('token'));
-        const countries = JSON.parse(localStorage.getItem('countries'));
-        localStorage.clear();
-        localStorage.setItem('token', JSON.stringify(token));
-        localStorage.setItem('countries', JSON.stringify(countries));
-        this.router.navigate(['/home']);
-        window.location.reload();
+        const requestData = { bookingNumber: this.bookingResponse.bookingNumber, amount: this.bookingResponse.paidAmount };
+        this.localAPIService.postRequest(requestData, this.localAPIService.BANK_PAYMENT).subscribe(
+            data => {
+                const token = JSON.parse(localStorage.getItem('token'));
+                const localToken = JSON.parse(localStorage.getItem('localToken'));
+                localStorage.clear();
+                localStorage.setItem('token', JSON.stringify(token));
+                localStorage.setItem('localToken', JSON.stringify(localToken));
+                this.router.navigate(['/home']);
+                window.location.reload();
+            },
+            error => {
+                console.log(error);
+            });
     }
 }

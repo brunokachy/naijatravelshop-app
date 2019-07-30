@@ -9,6 +9,7 @@ import { InitModel } from '../model/InitModel';
 import { AfilliateDetails } from '../model/AffiliateDetails';
 import { FlwAccountDetails } from '../model/FlwAccountDetail';
 import { Country } from '../model/Country';
+import { reject, resolve } from 'q';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +21,7 @@ export class Service {
     }
 
     private locationOrigin = window.location.origin;
-   // private naijaTravelShopAPIBaseURL = this.locationOrigin + '/naijatravelshop/api/';
+    // private naijaTravelShopAPIBaseURL = this.locationOrigin + '/naijatravelshop/api/';
     private naijaTravelShopAPIBaseURL = 'http://localhost:8080/naijatravelshop/api/';
 
     public CONFIRM_REGISTRATION = this.naijaTravelShopAPIBaseURL + 'confirm_registration';
@@ -145,60 +146,122 @@ export class Service {
     }
 
     makeInitCall() {
-        return this.httpClient.get(this.GET_BASE_URL).pipe(
-            switchMap(baseResponse => {
-                const baseResponseString: string = JSON.stringify(baseResponse);
-                const baseUrl: ApiResponse<string> = JSON.parse(baseResponseString);
-                this.initModel.apiURL = baseUrl.data;
+        const getBaseURL = () => {
+            return new Promise((resolve) => {
+                this.httpClient.get(this.GET_BASE_URL).subscribe(data => {
+                    const baseResponse: string = JSON.stringify(data);
+                    const baseUrl: ApiResponse<string> = JSON.parse(baseResponse);
+                    this.initModel.apiURL = baseUrl.data;
+                    resolve();
+                }, error => {
+                    reject();
+                });
+            });
+        };
 
-                return this.httpClient.get(this.GET_AFFILIATE_ACCOUNT).pipe(
-                    switchMap(affiliateDetailResponse => {
-                        const affiliateDetailResponseString: string = JSON.stringify(affiliateDetailResponse);
-                        const affiliateDetail: ApiResponse<AfilliateDetails> = JSON.parse(affiliateDetailResponseString);
-                        this.initModel.affilateDetail = affiliateDetail.data;
+        const getAffiliateAccount = () => {
+            return new Promise((resolve) => {
+                this.httpClient.get(this.GET_AFFILIATE_ACCOUNT).subscribe(data => {
+                    const affiliateDetailResponse: string = JSON.stringify(data);
+                    const affiliateDetail: ApiResponse<AfilliateDetails> = JSON.parse(affiliateDetailResponse);
+                    this.initModel.affilateDetail = affiliateDetail.data;
+                    resolve();
+                }, error => {
+                    reject();
+                });
 
-                        return this.httpClient.get(this.GET_FLUTTERWAVE_ACCOUNT_DETAILS).pipe(
-                            switchMap(flwAccountResponse => {
-                                const flwAccountResponseString: string = JSON.stringify(flwAccountResponse);
-                                const flwAccount: ApiResponse<FlwAccountDetails> = JSON.parse(flwAccountResponseString);
-                                this.initModel.flwAccountDetails = flwAccount.data;
-                                return this.callAPI('', this.GET_COUNTRIES).pipe(
-                                    switchMap(countryResponse => {
-                                        const countryResponseString: string = JSON.stringify(countryResponse);
-                                        const country: ApiResponse<Country[]> = JSON.parse(countryResponseString);
-                                        this.initModel.countries = country.data;
-                                        for (const u of country.data) {
-                                            if (u.name === 'NIGERIA') {
-                                                this.initModel.countries.unshift(u);
-                                                this.initModel.countryCode = u.code;
-                                                break;
-                                            }
-                                        }
-                                        sessionStorage.setItem('initModel', JSON.stringify(this.initModel));
-                                        return this.callAPI('', this.GET_COUNTRIES);
-                                    })
-                                );
+            });
+        };
 
-                            }));
-                    }));
-            }));
+        const getFlutterwaveAccountDetails = () => {
+            return new Promise((resolve) => {
+                this.httpClient.get(this.GET_FLUTTERWAVE_ACCOUNT_DETAILS).subscribe(data => {
+                    const flwAccountResponse: string = JSON.stringify(data);
+                    const flwAccount: ApiResponse<FlwAccountDetails> = JSON.parse(flwAccountResponse);
+                    this.initModel.flwAccountDetails = flwAccount.data;
+                    resolve();
+                }, error => {
+                    reject();
+                });
+
+            });
+        };
+
+        const getCountries = () => {
+            return new Promise((resolve) => {
+                this.callAPI('', this.GET_COUNTRIES).subscribe(data => {
+                    const countryResponse: string = JSON.stringify(data);
+                    const countries: ApiResponse<Country[]> = JSON.parse(countryResponse);
+                    this.initModel.countries = countries.data;
+
+                    const country = new Country();
+                    country.capital = 'Abuja';
+                    country.code = 'NG';
+                    country.currencyCode = 'NGN';
+                    country.currencyName = 'NAIRA';
+                    country.dialingCode = '+234';
+                    country.isoCode = 'NG';
+                    country.name = 'NIGERIA';
+
+                    this.initModel.countries.unshift(country);
+                    this.initModel.countryCode = 'NG';
+
+                    sessionStorage.setItem('initModel', JSON.stringify(this.initModel));
+                    resolve();
+                }, error => {
+                    reject();
+                });
+
+            });
+        };
+
+        getBaseURL().then(getAffiliateAccount).then(getFlutterwaveAccountDetails).then(getCountries).catch();
     }
+    // makeInitCall() {
+    //     return this.httpClient.get(this.GET_BASE_URL).pipe(
+    //         switchMap(baseResponse => {
+    //             const baseResponseString: string = JSON.stringify(baseResponse);
+    //             const baseUrl: ApiResponse<string> = JSON.parse(baseResponseString);
+    //             this.initModel.apiURL = baseUrl.data;
+
+    //             return this.httpClient.get(this.GET_AFFILIATE_ACCOUNT).pipe(
+    //                 switchMap(affiliateDetailResponse => {
+    //                     const affiliateDetailResponseString: string = JSON.stringify(affiliateDetailResponse);
+    //                     const affiliateDetail: ApiResponse<AfilliateDetails> = JSON.parse(affiliateDetailResponseString);
+    //                     this.initModel.affilateDetail = affiliateDetail.data;
+
+    //                     return this.httpClient.get(this.GET_FLUTTERWAVE_ACCOUNT_DETAILS).pipe(
+    //                         switchMap(flwAccountResponse => {
+    //                             const flwAccountResponseString: string = JSON.stringify(flwAccountResponse);
+    //                             const flwAccount: ApiResponse<FlwAccountDetails> = JSON.parse(flwAccountResponseString);
+    //                             this.initModel.flwAccountDetails = flwAccount.data;
+    //                             return this.callAPI('', this.GET_COUNTRIES).pipe(
+    //                                 switchMap(countryResponse => {
+    //                                     const countryResponseString: string = JSON.stringify(countryResponse);
+    //                                     const country: ApiResponse<Country[]> = JSON.parse(countryResponseString);
+    //                                     this.initModel.countries = country.data;
+    //                                     for (const u of country.data) {
+    //                                         if (u.name === 'NIGERIA') {
+    //                                             this.initModel.countries.unshift(u);
+    //                                             this.initModel.countryCode = u.code;
+    //                                             break;
+    //                                         }
+    //                                     }
+    //                                     sessionStorage.setItem('initModel', JSON.stringify(this.initModel));
+    //                                     return this.callAPI('', this.GET_COUNTRIES);
+    //                                 })
+    //                             );
+
+    //                         }));
+    //                 }));
+    //         }));
+    // }
 
     private header(token: string): any {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 Authorization: token
-            })
-        };
-        return httpOptions;
-    }
-
-    private headerII(token: string): any {
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                Authorization: tokenII
             })
         };
         return httpOptions;

@@ -5,13 +5,13 @@ import * as moment from 'moment';
 import { OriginDestinationOptions } from '../../model/originDestinationOptions';
 import { BsModalService, BsModalRef, TypeaheadMatch } from 'ngx-bootstrap';
 import { Router } from '@angular/router';
-import { Service } from '../../provider/api.service';
 import { FlightDataSearch } from '../../model/FlightDataSearch';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { of, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { InitModel } from '../../model/InitModel';
 import { Country } from '../../model/Country';
+import { TravelbetaAPIService } from '../../provider/travelbeta.api.service';
 
 
 @Component({
@@ -27,8 +27,8 @@ export class FlightSearchResultComponent {
     modalRef: BsModalRef;
     config = {
         animated: false,
-      //  backdrop: 'static'
-      };
+        //  backdrop: 'static'
+    };
     pricedItinerary: PricedItineraries;
     originDestinationOptions: OriginDestinationOptions[] = [];
     flightHeader: any;
@@ -66,8 +66,8 @@ export class FlightSearchResultComponent {
     stops = -1;
     airline: { 'name': string, 'code': string, 'minPrice': number } = { name: 'SHOW ALL', code: '', minPrice: 0 };
 
-    constructor(private modalService: BsModalService, private service: Service, private router: Router,
-                private spinnerService: NgxSpinnerService) {
+    constructor(private modalService: BsModalService, private travelbetaAPIService: TravelbetaAPIService, private router: Router,
+        private spinnerService: NgxSpinnerService) {
         this.initModel = JSON.parse(sessionStorage.getItem('initModel'));
         this.flight = JSON.parse(localStorage.getItem('flight'));
         this.flightHeader = JSON.parse(localStorage.getItem('flightHeader'));
@@ -321,7 +321,7 @@ export class FlightSearchResultComponent {
             mergeMap((token: string) => of(this.airports))
         );
         this.modalRef = this.modalService.show(template, this.config);
-        
+
     }
 
     getTotalTraveller(): string {
@@ -367,7 +367,7 @@ export class FlightSearchResultComponent {
     }
 
     getAirportCountry(airport: any) {
-        this.service.callAPI(JSON.stringify({ cityCode: airport.cityCode }), this.service.GET_CITY).subscribe(
+        this.travelbetaAPIService.postRequest(JSON.stringify({ cityCode: airport.cityCode }), this.travelbetaAPIService.GET_CITY).subscribe(
             city => {
                 if (city.status === 0) {
                     const countries: Country[] = this.initModel.countries;
@@ -383,7 +383,7 @@ export class FlightSearchResultComponent {
     getAirports(token: string) {
         const requestData = JSON.stringify({ searchTerm: token, limit: 10 });
         const airports = [];
-        this.service.callAPI(requestData, this.service.GET_AIRPORT_BY_SEARCH_TERM).subscribe(
+        this.travelbetaAPIService.postRequest(requestData, this.travelbetaAPIService.GET_AIRPORT_BY_SEARCH_TERM).subscribe(
             data => {
                 if (data.status === 0) {
                     for (const u of data.data) {
@@ -573,7 +573,7 @@ export class FlightSearchResultComponent {
             localStorage.setItem('multipleDest', JSON.stringify(this.multipleDest));
         }
         this.spinnerService.show();
-        this.service.callAPI(flightSearch, this.service.PROCESS_FLIGHT_SEARCH).subscribe(
+        this.travelbetaAPIService.postRequest(flightSearch, this.travelbetaAPIService.PROCESS_FLIGHT_SEARCH).subscribe(
             flight => {
                 if (flight.status == 0) {
                     this.flightHeader = JSON.parse(localStorage.getItem('flightHeader'));
@@ -652,7 +652,7 @@ export class FlightSearchResultComponent {
         let filtered1: PricedItineraries[] = [];
         const filtered2: PricedItineraries[] = [];
         if (this.airline.name === 'SHOW ALL') {
-             this.popluateFlights();
+            this.popluateFlights();
             filtered1 = this.pricedItineraries;
         } else {
             this.popluateFlights();

@@ -1,0 +1,113 @@
+<div class="container">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Home</a>
+        </li>
+        <li class="active">
+            Profile
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-md-3">
+            <aside class="booking-filters text-white">
+                <ul class="list booking-filters-list">
+                    <!-- <li>
+                            <a href='/dashboard'>
+                                <h5 class="booking-filters-title">Dashboard
+                                </h5>
+                            </a>
+                        </li> -->
+                    <li>
+                        <a href='/reservation'>
+                            <h5 class="booking-filters-title">Reservation
+                            </h5>
+                        </a>
+                    </li>
+                    <li *ngIf='isSuperAdmin'>
+                        <a href='/user_management'>
+                            <h5 class="booking-filters-title">User Management
+                            </h5>
+                        </a>
+                    </li>
+                    <li>
+                        <a href='/profile'>
+                            <h5 class="booking-filters-title" style="color: orange">Profile
+                            </h5>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+        <div class="col-md-9">
+                <div *ngFor="let alert of alerts">
+                        <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+                            {{ alert.msg }}</alert>
+                    </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <form autocomplete="off" (ngSubmit)="updateProfile()" ngNativeValidate>
+                        <fieldset>
+                            <legend>Profile</legend>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group form-group-lg">
+                                        <label>First name</label>
+                                        <input class="form-control" name="firstName" type="text"
+                                            [(ngModel)]="profileUser.firstName" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group form-group-lg">
+                                        <label>Last name</label>
+                                        <input class="form-control" name="lastName" type="text"
+                                            [(ngModel)]="profileUser.lastName" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group form-group-lg">
+                                        <label>Phone number</label>
+                                        <input class="form-control" disabled name="phoneNumber" type="text"
+                                            [(ngModel)]="profileUser.phoneNumber" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group form-group-lg">
+                                        <label>Email</label>
+                                        <input class="form-control" disabled name="email" type="text"
+                                            [(ngModel)]="profileUser.email" />
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-lg" type="submit">Update Profile</button>
+                        </fieldset>
+                    </form>
+                    <div class="gap"></div>
+                </div>
+                <div class="col-md-6">
+                    <form autocomplete="off" (ngSubmit)="changePassword()" ngNativeValidate>
+                        <fieldset>
+                            <legend>Change Password</legend>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group form-group-lg">
+                                        <label>Old Password</label>
+                                        <input class="form-control" name="oldPassword" type="password"
+                                            [(ngModel)]="oldPassword" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group form-group-lg">
+                                        <label>New Password</label>
+                                        <input class="form-control" name="newPassword" type="password"
+                                            [(ngModel)]="newPassword" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-lg" type="submit">Change Password</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

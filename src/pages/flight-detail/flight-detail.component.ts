@@ -8,12 +8,13 @@ import { Passenger } from '../../model/passenger';
 import { FlightDataSearch } from '../../model/FlightDataSearch';
 import { Country } from '../../model/country';
 import { BsModalRef, BsModalService, ModalDirective } from 'ngx-bootstrap';
-import { Service } from '../../provider/api.service';
 import { BookingResponse } from '../../model/bookingResponse';
 import { ReservationOwner } from '../../model/reservationowner';
 import { Booking } from '../../model/booking';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InitModel } from '../../model/InitModel';
+import { TravelbetaAPIService } from '../../provider/travelbeta.api.service';
+import { LocalAPIService } from '../../provider/local.api.service';
 
 @Component({
     moduleId: module.id,
@@ -22,8 +23,8 @@ import { InitModel } from '../../model/InitModel';
     styleUrls: ['flight-detail.component.scss']
 })
 export class FlightDetailComponent {
-    constructor(private modalService: BsModalService, private router: Router, private service: Service,
-                private spinnerService: NgxSpinnerService) {
+    constructor(private modalService: BsModalService, private router: Router, private travelbetaAPIService: TravelbetaAPIService,
+        private spinnerService: NgxSpinnerService, private localAPIService: LocalAPIService) {
         this.pricedItinerary = JSON.parse(localStorage.getItem('pricedItineraries'));
         this.flightSearch = JSON.parse(localStorage.getItem('flightSearch'));
         this.flightHeader = JSON.parse(localStorage.getItem('flightHeader'));
@@ -289,7 +290,7 @@ export class FlightDetailComponent {
             travellers: this.passengers
         };
         this.spinnerService.show();
-        this.service.callAPI(requestData, this.service.CREATE_AFILLIATE_FLIGHT_BOOKING).subscribe(
+        this.travelbetaAPIService.postRequest(requestData, this.travelbetaAPIService.CREATE_AFILLIATE_FLIGHT_BOOKING).subscribe(
             booking => {
                 if (booking.status === 0) {
                     const bookingResponse: BookingResponse = booking.data;
@@ -307,9 +308,9 @@ export class FlightDetailComponent {
                 this.showModal();
             });
         if (this.shouldRegister) {
-            this.service.callAPII(this.contactDetail, this.service.CREATE_ACCOUNT).subscribe(
+            this.localAPIService.postRequest(this.contactDetail, this.localAPIService.CREATE_ACCOUNT).subscribe(
                 () => {
-                    this.service.callAPII(this.user, this.service.RESET_PASSWORD).subscribe(
+                    this.localAPIService.postRequest(this.user, this.localAPIService.RESET_PASSWORD).subscribe(
                         () => {
                         },
                         error => {
@@ -375,7 +376,7 @@ export class FlightDetailComponent {
         }
 
         this.spinnerService.show();
-        this.service.callAPII(booking, this.service.BOOK).subscribe(
+        this.localAPIService.postRequest(booking, this.localAPIService.BOOK).subscribe(
             data => {
                 localStorage.setItem('secondbookingResponse', JSON.stringify(data.data));
                 this.spinnerService.hide();
@@ -403,7 +404,7 @@ export class FlightDetailComponent {
     }
 
     signin() {
-        this.service.callAPII({ email: this.email, password: this.password }, this.service.LOGIN).subscribe(
+        this.localAPIService.postRequest({ email: this.email, password: this.password }, this.localAPIService.LOGIN).subscribe(
             data => {
                 console.log(data.data);
                 if (data.status === 'failure') {

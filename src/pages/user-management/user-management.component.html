@@ -1,0 +1,103 @@
+<div class="container">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Home</a>
+        </li>
+        <li class="active">
+            User Management
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-md-3">
+            <aside class="booking-filters text-white">
+                <ul class="list booking-filters-list">
+                    <!-- <li>
+                                <a href='/dashboard'>
+                                    <h5 class="booking-filters-title">Dashboard
+                                    </h5>
+                                </a>
+                            </li> -->
+                    <li>
+                        <a href='/reservation'>
+                            <h5 class="booking-filters-title">Reservation
+                            </h5>
+                        </a>
+                    </li>
+                    <li *ngIf='isSuperAdmin'>
+                        <a href='/user_management'>
+                            <h5 class="booking-filters-title" style="color: orange">User Management
+                            </h5>
+                        </a>
+                    </li>
+                    <li>
+                        <a href='/profile'>
+                            <h5 class="booking-filters-title">Profile
+                            </h5>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+        <div class="col-md-9">
+            <div *ngFor="let alert of alerts">
+                <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+                    {{ alert.msg }}</alert>
+            </div>
+            <div class="row">
+                <fieldset>
+                    <legend style="font-size: 16px">Portal Users</legend>
+                    <table class="table table-striped" [mfData]="portalUsers" #user="mfDataTable" [mfRowsOnPage]="10">
+                        <thead>
+                            <tr>
+                                <th style="width: 20%;">
+                                    <mfDefaultSorter style="font-size: 14px" by="firstName">First name
+                                    </mfDefaultSorter>
+                                </th>
+                                <th style="width: 20%;">
+                                    <mfDefaultSorter style="font-size: 14px" by="lastName">Last name
+                                    </mfDefaultSorter>
+                                </th>
+                                <th style="width: 20%;">
+                                    <mfDefaultSorter style="font-size: 14px" by="email">Email
+                                    </mfDefaultSorter>
+                                </th>
+                                <th style="width: 20%;">
+                                    <mfDefaultSorter style="font-size: 14px" by="phoneNumber">Phone number
+                                    </mfDefaultSorter>
+                                </th>
+                                <th style="width: 10%">
+                                    <mfDefaultSorter style="font-size: 14px" by="active">Status
+                                    </mfDefaultSorter>
+                                </th>
+                                <th style="width: 20%">
+                                    <mfDefaultSorter style="font-size: 14px"></mfDefaultSorter>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of user.data">
+                                <td style="font-size: 12px">{{item.firstName}}</td>
+                                <td style="font-size: 12px">{{item.lastName}}</td>
+                                <td style="font-size: 12px">{{item.email}}</td>
+                                <td style="font-size: 12px">{{item.phoneNumber}}</td>
+                                <td style="font-size: 12px" *ngIf="item.active">ACTIVE</td>
+                                <td style="font-size: 12px" *ngIf="!item.active">INACTIVE</td>
+                                <td style="font-size: 12px" *ngIf="item.active"><button class="btn btn-primary"
+                                    (click)="deactivateUser(item.id)">Deactivate</button></td>
+                                <td style="font-size: 12px" *ngIf="!item.active"><button class="btn btn-primary"
+                                    (click)="activateUser(item.id)">Activavte</button></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                    <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,7 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertComponent } from 'ngx-bootstrap';
 import { Router } from '@angular/router';
 import { User } from '../../model/user';
-import { Service } from '../../provider/api.service';
+import { LocalAPIService } from '../../provider/local.api.service';
 
 @Component({
     moduleId: module.id,
@@ -12,7 +12,7 @@ import { Service } from '../../provider/api.service';
     styleUrls: ['login-register.component.scss']
 })
 export class LoginRegisterComponent {
-    constructor(private router: Router, private service: Service, private spinnerService: NgxSpinnerService) {
+    constructor(private router: Router, private localAPIService: LocalAPIService, private spinnerService: NgxSpinnerService) {
 
     }
     user = new User();
@@ -44,7 +44,7 @@ export class LoginRegisterComponent {
         this.spinnerService.show();
 
         if (this.forgotPassword) {
-            this.service.callAPII(this.user, this.service.RESET_PASSWORD).subscribe(
+            this.localAPIService.postRequest(this.user, this.localAPIService.RESET_PASSWORD).subscribe(
                 data => {
                     this.add('success', 'Check your email for your default password.');
                     this.user = new User();
@@ -58,7 +58,7 @@ export class LoginRegisterComponent {
         }
 
         if (!this.forgotPassword) {
-            this.service.callAPII(this.user, this.service.LOGIN).subscribe(
+            this.localAPIService.postRequest(this.user, this.localAPIService.LOGIN).subscribe(
                 data => {
                     this.spinnerService.hide();
                     sessionStorage.setItem('user', JSON.stringify(data.data));

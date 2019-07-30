@@ -7,6 +7,9 @@ import {DataTableModule} from 'angular-6-datatable';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { Service } from '../provider/api.service';
+import { LocalAPIService } from '../provider/local.api.service';
+import { TravelbetaAPIService } from '../provider/travelbeta.api.service';
+import { InitAPIService } from '../provider/init.api.service';
 import { HomeComponent } from '../pages/home/home.component';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -68,7 +71,7 @@ import { HotelDetailsComponent } from '../pages/hotel-details/hotel-details.comp
     AlertModule.forRoot(),
     DataTableModule
   ],
-  providers: [Service, AuthGuard],
+  providers: [Service, AuthGuard, TravelbetaAPIService, LocalAPIService, InitAPIService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

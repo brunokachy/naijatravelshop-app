@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { User } from '../model/User';
 import { Country } from '../model/Country';
-import { Service } from '../provider/api.service';
-import { ApiResponse } from '../model/ApiResponse';
 import { InitModel } from '../model/InitModel';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { InitAPIService } from '../provider/init.api.service';
 
 @Component({
   selector: 'app-root',
@@ -17,21 +15,16 @@ export class AppComponent {
   isLogin = false;
   interval: any;
   firstname: string;
-  countryCode: string;
   phoneNumber: string;
-  countries: Country[] = [];
   initModel: InitModel = new InitModel();
 
-  constructor(private service: Service, private spinner: NgxSpinnerService) {
+  constructor(private initService: InitAPIService) {
 
-    this.populateInitModel();
-    console.log('url ' + window.location.origin);
+    this.initService.makeInitCall();
 
     const interval = setInterval(() => {
       if (JSON.parse(sessionStorage.getItem('initModel')) != null) {
         this.initModel = JSON.parse(sessionStorage.getItem('initModel'));
-        this.countries = this.initModel.countries;
-        this.countryCode = this.initModel.countryCode;
         clearInterval(interval);
       }
     }, 1000);
@@ -39,21 +32,6 @@ export class AppComponent {
     setInterval(() => {
       this.checkUserLogin();
     }, 1000);
-  }
-
-  populateInitModel() {
-    this.service.makeInitCall()
-      .subscribe((data: ApiResponse<Country[]>) => {
-      }, (error: any) => {
-        console.log(error);
-      });
-  }
-
-  signOut() {
-    sessionStorage.clear();
-    this.user = null;
-    this.isLogin = false;
-    window.location.reload();
   }
 
   checkUserLogin() {
@@ -68,7 +46,8 @@ export class AppComponent {
     }
   }
 
-  home() {
+  signOut() {
+    sessionStorage.removeItem('user');
     window.location.reload();
   }
 

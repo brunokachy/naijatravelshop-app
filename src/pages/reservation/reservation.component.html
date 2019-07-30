@@ -1,0 +1,585 @@
+<div class="container">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Home</a>
+        </li>
+        <li class="active">
+            Reservation
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-md-3">
+            <aside class="booking-filters text-white">
+                <ul class="list booking-filters-list">
+                    <!-- <li>
+                        <a href='/dashboard'>
+                            <h5 class="booking-filters-title">Dashboard
+                            </h5>
+                        </a>
+                    </li> -->
+                    <li>
+                        <a href='/reservation'>
+                            <h5 class="booking-filters-title" style="color: orange">Reservation
+                            </h5>
+                        </a>
+                    </li>
+                    <li *ngIf='isSuperAdmin'>
+                        <a href='/user_management'>
+                            <h5 class="booking-filters-title">User Management
+                            </h5>
+                        </a>
+                    </li>
+                    <li>
+                        <a href='/profile'>
+                            <h5 class="booking-filters-title">Profile
+                            </h5>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+        <div class="col-md-9">
+            <div class="tabbable">
+                <ul class="nav nav-pills nav-sm nav-no-br mb10" id="reservationTypeTab">
+                    <li class="active">
+                        <a href="#flight" data-toggle="tab">
+                            <h4>Flight</h4>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#hotel" data-toggle="tab">
+                            <h4>Hotel</h4>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#visa" data-toggle="tab">
+                            <h4>Visa Request</h4>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="flight">
+                        <div *ngFor="let alert of alerts">
+                            <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+                                {{ alert.msg }}</alert>
+                        </div>
+                        <form autocomplete="off" (ngSubmit)="searchFlight()" ngNativeValidate>
+                            <fieldset>
+                                <legend>Search</legend>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-lg">
+                                            <label>Booking No.</label>
+                                            <input class="form-control" name="bookingNumberFlight" type="text"
+                                                placeholder="Booking No./PNR" [(ngModel)]="bookingNumberFlight" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-lg">
+                                            <label>Start date</label>
+                                            <input type="text" class="date-pick form-control" name="startDateFlight"
+                                                placeholder="Start date" autocomplete="off"
+                                                [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                [(ngModel)]="startDateFlight" bsDatepicker>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-lg">
+                                            <label>End date</label>
+                                            <input type="text" class="date-pick form-control" name="endDateFlight"
+                                                placeholder="End date" autocomplete="off"
+                                                [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                [(ngModel)]="endDateFlight" bsDatepicker>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-lg">
+                                            <label>Status</label>
+                                            <select class="form-control" name="bookingStatusFlight"
+                                                id="bookingStatusFlight" [(ngModel)]="bookingStatusFlight">
+                                                <option value="ALL">ALL</option>
+                                                <option value="PENDING">PENDING</option>
+                                                <option value="PROCESSED">PROCESSED</option>
+                                                <option value="CANCELLED">CANCELLED</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary btn-lg" type="submit">Search for Flight
+                                    Reservations</button>
+                            </fieldset>
+                        </form>
+                        <div class="gap"></div>
+                        <fieldset>
+                            <legend style="font-size: 16px">Flight Reservations</legend>
+                            <table class="table table-striped" [mfData]="flightData" #flight="mfDataTable"
+                                [mfRowsOnPage]="10">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 20%;">
+                                            <mfDefaultSorter style="font-size: 14px" by="bookingNumber">Booking No.
+                                            </mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 50%">
+                                            <mfDefaultSorter style="font-size: 14px" by="bookingDate">Date Booked
+                                            </mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 10%">
+                                            <mfDefaultSorter style="font-size: 14px" by="bookingStatus">Status
+                                            </mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 20%">
+                                            <mfDefaultSorter style="font-size: 14px"></mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 20%">
+                                            <mfDefaultSorter style="font-size: 14px"></mfDefaultSorter>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr *ngFor="let item of flight.data">
+                                        <td style="font-size: 12px">{{item.bookingNumber}}</td>
+                                        <td style="font-size: 12px">{{item.bookingDate | date : "dd-MM-y  hh:mm"}}</td>
+                                        <td style="font-size: 12px">{{item.bookingStatus}}</td>
+                                        <td style="font-size: 12px"><select #myStatusValue
+                                                (change)="changeStatus(myStatusValue.value, item.bookingNumber)"
+                                                class="form-control">
+                                                <option value="">Change Status</option>
+                                                <option value="PENDING">PENDING</option>
+                                                <option value="PROCESSED">PROCESSED</option>
+                                                <option value="CANCELLED">CANCELLED</option>
+                                            </select></td>
+                                        <td style="font-size: 12px">
+                                            <button class="btn btn-primary"
+                                                (click)="getFlightReservationDetail(item.bookingNumber, template)">View
+                                                Details</button></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4">
+                                            <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </fieldset>
+                    </div>
+                    <div class="tab-pane" id="hotel">
+                        <div *ngFor="let alert of alerts">
+                            <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+                                {{ alert.msg }}</alert>
+                        </div>
+                        <form autocomplete="off" (ngSubmit)="searchHotel()" ngNativeValidate>
+                            <fieldset>
+                                <legend>Search</legend>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-lg">
+                                            <label>Booking No.</label>
+                                            <input class="form-control" name="bookingNumberHotel" type="text"
+                                                placeholder="Booking No" [(ngModel)]="bookingNumberHotel" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-lg">
+                                            <label>Start date</label>
+                                            <input type="text" class="date-pick form-control" name="startDateHotel"
+                                                placeholder="Start date" autocomplete="off"
+                                                [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                [(ngModel)]="startDateHotel" bsDatepicker>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-lg">
+                                            <label>End date</label>
+                                            <input type="text" class="date-pick form-control" name="endDateHotel"
+                                                placeholder="End date" autocomplete="off"
+                                                [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                [(ngModel)]="endDateHotel" bsDatepicker>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-lg">
+                                            <label>Status</label>
+                                            <select class="form-control" name="bookingStatusHotel"
+                                                id="bookingStatusHotel" [(ngModel)]="bookingStatusHotel">
+                                                <option value="ALL">ALL</option>
+                                                <option value="PENDING">PENDING</option>
+                                                <option value="PROCESSED">PROCESSED</option>
+                                                <option value="CANCELLED">CANCELLED</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary btn-lg" type="submit">Search for Hotel
+                                    Reservations</button>
+                            </fieldset>
+                        </form>
+                        <div class="gap"></div>
+                        <fieldset>
+                            <legend style="font-size: 16px">Hotel Reservations</legend>
+                            <!-- <table class="table table-striped" [mfData]="flightData" #mf="mfDataTable"
+                                [mfRowsOnPage]="10">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 20%;">
+                                            <mfDefaultSorter style="font-size: 14px" by="bookingNumber">Booking No.
+                                            </mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 50%">
+                                            <mfDefaultSorter style="font-size: 14px" by="bookingDate">Date Booked
+                                            </mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 10%">
+                                            <mfDefaultSorter style="font-size: 14px" by="bookingStatus">Status
+                                            </mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 20%">
+                                            <mfDefaultSorter style="font-size: 14px"></mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 20%">
+                                            <mfDefaultSorter style="font-size: 14px"></mfDefaultSorter>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr *ngFor="let item of mf.data">
+                                        <td style="font-size: 12px">{{item.bookingNumber}}</td>
+                                        <td style="font-size: 12px">{{item.bookingDate | date : "dd-MM-y  hh:mm"}}</td>
+                                        <td style="font-size: 12px">{{item.bookingStatus}}</td>
+                                        <td style="font-size: 12px"><select #myStatusValue
+                                                (change)="changeStatus(myStatusValue.value, item.bookingNumber)"
+                                                class="form-control">
+                                                <option value="">Change Status</option>
+                                                <option value="PENDING">PENDING</option>
+                                                <option value="PROCESSED">PROCESSED</option>
+                                                <option value="CANCELLED">CANCELLED</option>
+                                            </select></td>
+                                        <td style="font-size: 12px">
+                                            <button class="btn btn-primary"
+                                                (click)="getFlightReservationDetail(item.bookingNumber, template)">View
+                                                Details</button></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4">
+                                            <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table> -->
+                        </fieldset>
+                    </div>
+                    <div class="tab-pane" id="visa">
+                        <div *ngFor="let alert of alerts">
+                            <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+                                {{ alert.msg }}</alert>
+                        </div>
+                        <form autocomplete="off" (ngSubmit)="searchVisa()" ngNativeValidate>
+                            <fieldset>
+                                <legend>Search</legend>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-lg">
+                                            <label>Start date</label>
+                                            <input type="text" class="date-pick form-control" name="startDateVisa"
+                                                placeholder="Start date" autocomplete="off"
+                                                [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                [(ngModel)]="startDateVisa" bsDatepicker>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-lg">
+                                            <label>End date</label>
+                                            <input type="text" class="date-pick form-control" name="endDateVisa"
+                                                placeholder="End date" autocomplete="off"
+                                                [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                [(ngModel)]="endDateVisa" bsDatepicker>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group form-group-lg">
+                                            <label>Status</label>
+                                            <select class="form-control" name="bookingStatusVisa" id="bookingStatusVisa"
+                                                [(ngModel)]="bookingStatusVisa">
+                                                <option value="ALL">ALL</option>
+                                                <option value="FALSE">PENDING</option>
+                                                <option value="TRUE">PROCESSED</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary btn-lg" type="submit">Search for Visa Requests</button>
+                            </fieldset>
+                        </form>
+                        <div class="gap"></div>
+                        <fieldset>
+                            <legend style="font-size: 16px">Visa Requests</legend>
+                            <table class="table table-striped" [mfData]="visaData" #mf="mfDataTable"
+                                [mfRowsOnPage]="10">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%;">
+                                            <mfDefaultSorter style="font-size: 14px" by="id">Request Id
+                                            </mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 20%">
+                                            <mfDefaultSorter style="font-size: 14px" by="firstName">Name
+                                            </mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 20%">
+                                            <mfDefaultSorter style="font-size: 14px" by="departureDate">Departure Date
+                                            </mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 20%">
+                                            <mfDefaultSorter style="font-size: 14px" by="destinationCountry">Destination
+                                                Country
+                                            </mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 10%">
+                                            <mfDefaultSorter style="font-size: 14px" by="processed">Processed
+                                            </mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 50%">
+                                            <mfDefaultSorter style="font-size: 14px"></mfDefaultSorter>
+                                        </th>
+                                        <th style="width: 20%">
+                                            <mfDefaultSorter style="font-size: 14px"></mfDefaultSorter>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of mf.data">
+                                        <td style="font-size: 12px">{{item.id}}</td>
+                                        <td style="font-size: 12px">{{item.firstName}} {{item.lastName}}</td>
+                                        <td style="font-size: 12px">{{item.departureDate | date : "dd-MM-y  hh:mm"}}
+                                        </td>
+                                        <td style="font-size: 12px">{{item.destinationCountry}}</td>
+                                        <td style="font-size: 12px" *ngIf="item.processed">PROCESSED</td>
+                                        <td style="font-size: 12px" *ngIf="!item.processed">PENDING</td>
+                                        <td style="font-size: 12px"><select #myStatusValue
+                                                (change)="changeVisaStatus(myStatusValue.value, item.id)"
+                                                class="form-control">
+                                                <option value="">Change Status</option>
+                                                <option value="FALSE">PENDING</option>
+                                                <option value="TRUE">PROCESSED</option>
+                                            </select></td>
+                                        <td style="font-size: 12px">
+                                            <button class="btn btn-primary"
+                                                (click)="getVisaRequestDetail(item.id, visa)">View
+                                                Details</button></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4">
+                                            <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="gap"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #template>
+    <div class="modal-content  modal-lg">
+        <div class="modal-body">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="modalFlight.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="gap"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Booking Details</h3>
+                    <table class="table table-striped">
+                        <tr>
+                            <td style="font-size: 14px;">Reservation Date </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{flightBookingDetails.bookingDate | date : "dd-MM-y  hh:mm"}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Booking Number </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{flightBookingDetails.bookingNumber}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Amount </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{flightBookingDetails.sellingPrice}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Payment Reference </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{flightBookingDetails.transactionId}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Contact Name </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{flightBookingDetails.reservationOwner.firstName}}
+                                {{flightBookingDetails.reservationOwner.lastName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Contact Email </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{flightBookingDetails.reservationOwner.email}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Contact Phone No. </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{flightBookingDetails.reservationOwner.phoneNumber}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="gap"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Flight Details</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <td style="font-weight: bold">Departure Airport</td>
+                            <td style="font-weight: bold">Arrival Airport</td>
+                            <td style="font-weight: bold">Flight Time</td>
+                            <td style="font-weight: bold">Flight Duration</td>
+                            <td style="font-weight: bold">Airline</td>
+                            <td style="font-weight: bold">Booking Class</td>
+                            <td style="font-weight: bold">Flight Number</td>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of flightBookingDetails.flightRoutes">
+                                <td>{{item.departureAirportName}}, {{item.departureAirportCode}}</td>
+                                <td>{{item.arrivalAirportName}}, {{item.arrivalAirportCode}}</td>
+                                <td>{{item.departureTime}} TO {{item.arrivalTime}}</td>
+                                <td>{{item.journeyDuration}}</td>
+                                <td>{{item.airlineName}}</td>
+                                <td>{{item.bookingClass}}</td>
+                                <td>{{item.flightNumber}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="gap"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Traveller Details</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <td style="font-weight: bold">S/N</td>
+                            <td style="font-weight: bold">Name</td>
+                            <td style="font-weight: bold">Title</td>
+                            <td style="font-weight: bold">Date of Birth</td>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of flightBookingDetails.travellers; index as i">
+                                <td>{{i + 1}}</td>
+                                <td>{{item.firstName}} {{item.lastName}}</td>
+                                <td>{{item.title}}</td>
+                                <td>{{item.dateOfBirth | date : "dd MMMM, y"}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ng-template>
+
+<ng-template #visa>
+    <div class="modal-content  modal-lg">
+        <div class="modal-body">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="modalVisa.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="gap"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Visa Request Details</h3>
+                    <table class="table table-striped">
+                        <tr>
+                            <td style="font-size: 14px;">Name </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{selectedVisaData.firstName}} {{selectedVisaData.lastName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Departure Date </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{selectedVisaData.departureDate | date : "dd-MM-y  hh:mm"}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Return Date </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{selectedVisaData.returnDate | date : "dd-MM-y  hh:mm"}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Country of Residence </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{selectedVisaData.countryOfResidence}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Destination Country </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{selectedVisaData.destinationCountry}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Contact Email </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{selectedVisaData.email}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Contact Phone No. </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{selectedVisaData.phoneNumber}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px;">Message </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td style="font-size: 14px; text-align: right; font-weight: bold">
+                                {{selectedVisaData.message}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="gap"></div>
+        </div>
+    </div>
+</ng-template>

@@ -3,7 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertComponent } from 'ngx-bootstrap';
 import { Router } from '@angular/router';
 import { User } from '../../model/user';
-import { Service } from '../../provider/api.service';
+import { LocalAPIService } from '../../provider/local.api.service';
 
 @Component({
     moduleId: module.id,
@@ -13,7 +13,7 @@ import { Service } from '../../provider/api.service';
 })
 export class RegisterComponent {
 
-    constructor(private router: Router, private service: Service, private spinnerService: NgxSpinnerService) {
+    constructor(private router: Router, private localAPIService: LocalAPIService, private spinnerService: NgxSpinnerService) {
 
     }
 
@@ -35,10 +35,10 @@ export class RegisterComponent {
 
     signup() {
         this.spinnerService.show();
-        this.service.callAPII(this.user, this.service.CREATE_ACCOUNT).subscribe(
+        this.localAPIService.postRequest(this.user, this.localAPIService.CREATE_ACCOUNT).subscribe(
             data => {
                 this.add('success', 'User accounted created successfully.');
-                this.service.callAPII(this.user, this.service.LOGIN).subscribe(
+                this.localAPIService.postRequest(this.user, this.localAPIService.LOGIN).subscribe(
                     data => {
                         this.spinnerService.hide();
                         sessionStorage.setItem('user', JSON.stringify(data.data));

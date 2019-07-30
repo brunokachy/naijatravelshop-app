@@ -17,5 +17,6 @@ export class VisaRequest {
     public countryOfResidence: string;
 
     public destinationCountry: string;
-    
+
+    public requestById: string;
 }
