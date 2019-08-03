@@ -1,4 +1,129 @@
 <header id="main-header">
+    <div class="topbar primary-bg text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6 topbar-left">
+                    <span></span> <a href="emailto:travel@naijatravelshop.com"
+                        target="_blank">travel@naijatravelshop.com</a>
+                </div>
+                <div class="col-xs-6 topbar-right" *ngIf="!isLogin">
+                    <span></span> <a href="tel:+2349030009784">+234 903 000 9784</a>
+                </div>
+                <div class="col-xs-6 top-user-area-avatar" *ngIf="isLogin">
+                    <span></span> <a routerLink='/profile'>Hi, {{firstname}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <a class="logo" href="/">
+                        <img src="assets/images/nts-logo.png" alt="NaijaTravelShop Logo" />
+                    </a>
+                </div>
+                <div class="col-sm-5 col-md-6 col-lg-6">
+                    <nav>
+                        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                            data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <ul class="header-menu brand-blue navbar-collapse collapse">
+                            <a href="#">
+                                <li class="fl">Flights
+                                    <ul class="menu-info">
+                                        <figure>
+                                            <img src="assets/images/flight.png" alt="">
+                                            <figcaption class="dark-blue">Booking exciting and rewarding flight deals to
+                                                anywhere in the world.</figcaption>
+                                        </figure>
+                                    </ul>
+                                </li>
+                            </a>
+                            <a href="#">
+                                <li class="ho">Hotels
+                                    <ul class="menu-info">
+                                        <figure>
+                                            <img src="assets/images/hotel.png" alt="">
+                                            <figcaption class="brand-blue">Find, book and be received in some of the
+                                                best hotels in the world.</figcaption>
+                                        </figure>
+                                    </ul>
+                                </li>
+                            </a>
+                            <a href="#">
+                                <li class="vs">Visas
+                                    <ul class="menu-info">
+                                        <figure>
+                                            <img src="assets/images/visa.png" alt="">
+                                            <figcaption class="brand-green">We provide a highly personalized visa
+                                                assistance services to all destinations.</figcaption>
+                                        </figure>
+                                    </ul>
+                                </li>
+                            </a>
+                            <a href="#">
+                                <li class="to">Tours
+                                    <ul class="menu-info">
+                                        <figure>
+                                            <img src="assets/images/tour.png" alt="">
+                                            <figcaption class="brand-orange">Find attractive tours, group trip and
+                                                holiday packages. </figcaption>
+                                        </figure>
+                                    </ul>
+                                </li>
+                            </a>
+                            <a *ngIf="!isLogin" routerLink='/about'>
+                                <li class="fl">About us</li>
+                            </a>
+                            <a *ngIf="isLogin" routerLink='/reservation'>
+                                <li class="fl" style="color: brown">Portal</li>
+                            </a>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-sm-4 col-md-3 col-lg-3">
+                    <ul *ngIf="!isLogin" class="login-btns">
+                        <a routerLink='/login_register'>
+                            <li class="btn line-btn">Login</li>
+                        </a>
+                        <a routerLink='/register'>
+                            <li class="btn btn-primary">Sign up</li>
+                        </a>
+                    </ul>
+                    <ul *ngIf="isLogin" class="login-btns">
+                        <a (click)="signOut()" style="cursor:pointer">
+                            <li class="btn btn-primary">Sign Out</li>
+                        </a>
+                    </ul>
+                    <!-- <ul *ngIf="isLogin" class="top-user-area-list list list-horizontal list-border">
+                        <li class="top-user-area-avatar">
+                            <a routerLink='/profile'> Hi, {{firstname}}</a>
+                        </li>
+                        <li class="top-user-area-avatar">
+                            <a routerLink='/reservation'>Portal</a>
+                        </li>
+                        <li>
+                            <span (click)="signOut()" style="cursor:pointer">
+                                Sign Out
+                            </span>
+                        </li>
+                    </ul> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<!-- 
+<header id="main-header">
     <div class="header-top">
         <div class="container">
             <div class="row">
@@ -42,12 +167,12 @@
             </div>
         </div>
     </div>
-</header>
+</header> -->
 
 <router-outlet></router-outlet>
 <ngx-spinner loadingText="Please wait, we are finding the best deals for you..." bdColor="rgba(51, 51, 51, 0.8)"
     size="medium" color="#fff" type="ball-circus"><img src="assets/images/logo.jpg" /></ngx-spinner>
-<footer id="main-footer">
+<!-- <footer id="main-footer">
     <div class="container">
         <div class="row row-wrap">
             <div class="col-md-3">
@@ -102,5 +227,71 @@
                 <p>Shop 17, Festival Mall, Amuwo Odofin, Lagos. </p>
             </div>
         </div>
+    </div>
+</footer> -->
+<footer id="main-footer">
+    <div class="container">
+        <div class="row row-wrap">
+            <div class="col-xs-6 col-sm-6 col-md-3">
+                <div class="ft-wrap boxeq">
+                    <h4 class="fw-bold dark-blue mb20">Who We Are</h4>
+                    <a class="logo" href="/">
+                        <img src="assets/images/nts-logo.png" alt="NaijaTravelShop Logo" /><br>
+                    </a>
+                    <p class="mb20 mt20">NaijaTravelShop is a travel management company that offers you the most amazing
+                        tours around the world</p>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2">
+                <div class="ft-wrap boxeq">
+                    <h4 class="fw-bold dark-blue mb20">Links</h4>
+                    <ul class="list list-footer list-split">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Flights</a></li>
+                        <li><a href="#">Hotels</a></li>
+                        <li><a href="#">Tour Packages</a></li>
+                    </ul>
+                    <ul class="list list-footer list-split">
+                        <li><a routerLink='/about'>About Us</a></li>
+                        <li><a routerLink='/contactus'>Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Use</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3">
+                <div class="ft-wrap boxeq">
+                    <h4 class="fw-bold dark-blue mb20">Office Locations</h4>
+                    <p class="mb20 mt20">Shop 17, Festival Mall (FESTAC Shoprite), FESTAC Road, Amuwo Odofin, Lagos </p>
+                    <p class="mb20">Crystal Estate Complex, Ondo Close, Beside Green Park, Crystal Estate, Amuwo Odofin,
+                        Lagos</p>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-4">
+                <h4 class="fw-bold dark-blue mb20">Have Questions?</h4>
+                <p><span class="fa fa-mobile"></span> <a href="tel:+2349030009784" class="dark-blue">+234 (0)903 000
+                        9784</a></p>
+                <p><span class="fa fa-phone"></span> <a href="tel:+2348141500042" class="dark-blue">+234 814 150
+                        0042</a></p>
+                <p><span class="fa fa-envelope-o"></span> <a href="mailto:travel@naijatravelshop.com"
+                        class="dark-blue">travel@naijatravelshop.com</a></p>
+
+                <ul class="list list-horizontal list-space icon-footer mt-30">
+                    <li>
+                        <a class="fa fa-facebook box-icon-normal round animate-icon-bottom-to-top" href="#"></a>
+                    </li>
+                    <li>
+                        <a class="fa fa-twitter box-icon-normal round animate-icon-bottom-to-top" href="#"></a>
+                    </li>
+                    <li>
+                        <a class="fa fa-instagram box-icon-normal round animate-icon-bottom-to-top" href="#"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <p class="ft-top-bdr text-center">This is the official website of NaijaTravelShop & LifeStyle Company Limited.
+            Copyright © <span id="copyright-year"></span> | All rights reserved </p>
     </div>
 </footer>

@@ -29,16 +29,13 @@ export class TravelbetaAPIService {
     public FLIGHT_RESERVATION_STATUS = 'affiliate/booking/get-flight-reservation-status';
 
     postRequest(requestData: any, url: string): Observable<any> {
-        console.log()
         let token = this.getSavedToken();
         const isValid = this.validateToken(token);
         if (isValid) {
             token = this.getSavedToken().token;
-            console.log(this.initModel.apiURL + url);
             return this.httpClient
                 .post(this.initModel.apiURL + url, requestData, this.header(token));
         } else {
-            console.log(this.initModel.apiURL + url);
             return this.generateToken(requestData, this.initModel.apiURL + url);
         }
     }
@@ -76,7 +73,6 @@ export class TravelbetaAPIService {
                     const tokenString: string = JSON.stringify(tokenResponse);
                     const tokenObject: ApiResponse<TokenObject> = JSON.parse(tokenString);
                     token.expirationTime = tokenObject.data.expirationTime;
-                    console.log(token.expirationTime)
                     token.token = tokenObject.data.token;
                     localStorage.setItem('token', JSON.stringify(token));
                     return this.httpClient

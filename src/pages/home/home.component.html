@@ -1,17 +1,9 @@
 <!-- TOP AREA -->
-<div class="top-area show-onload auto-height">
+<div class="top-area show-onload">
     <div class="bg-holder full">
         <div class="bg-front full-height bg-front-mob-rel">
             <div class="container full-height">
                 <div class="rel full-height">
-                    <div class="tagline visible-lg" id="tagline">
-                        <span>Search your top</span>
-                        <ul>
-                            <li>flight deals</li>
-                            <li>hotel deals</li>
-                            <li class="active">discover</li>
-                        </ul>
-                    </div>
                     <div class="search-tabs search-tabs-bg search-tabs-bottom mb50">
                         <div class="tabbable">
                             <ul class="nav nav-tabs" id="myTab">
@@ -413,7 +405,7 @@
                                 <div #tab3 class="tab-pane" id="tab3">
                                     <form autocomplete="off" (ngSubmit)="visaRequestSubmit()" ngNativeValidate>
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group form-group-lg form-group-icon-left">
                                                     <label>First name</label>
                                                     <input [(ngModel)]="visaRequest.firstName" type="text"
@@ -421,7 +413,7 @@
                                                         autocomplete="off" required />
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group form-group-lg form-group-icon-left">
                                                     <label>Last name</label>
                                                     <input [(ngModel)]="visaRequest.lastName" type="text"
@@ -429,7 +421,7 @@
                                                         autocomplete="off" required />
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group form-group-lg form-group-icon-left">
                                                     <label>Email</label>
                                                     <input [(ngModel)]="visaRequest.email" type="email" name="email"
@@ -437,9 +429,17 @@
                                                         required />
                                                 </div>
                                             </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-lg form-group-icon-left">
+                                                    <label>Phone number</label>
+                                                    <input [(ngModel)]="visaRequest.phoneNumber" type="text"
+                                                        name="phoneNumber" placeholder="Phone number"
+                                                        class="form-control" autocomplete="off" />
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group form-group-lg form-group-icon-left">
                                                     <i class="fa fa-calendar input-icon input-icon-highlight"></i>
                                                     <label>Departure date</label>
@@ -452,7 +452,7 @@
                                                         required [(ngModel)]="visaDepartureDate" bsDatepicker>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group form-group-lg form-group-icon-left">
                                                     <i class="fa fa-calendar input-icon input-icon-highlight"></i>
                                                     <label>Return date</label>
@@ -464,16 +464,6 @@
                                                         required [(ngModel)]="visaReturnDate" bsDatepicker>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group form-group-lg form-group-icon-left">
-                                                    <label>Phone number</label>
-                                                    <input [(ngModel)]="visaRequest.phoneNumber" type="text"
-                                                        name="phoneNumber" placeholder="Phone number"
-                                                        class="form-control" autocomplete="off" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="col-md-3">
                                                 <div class="form-group form-group-lg form-group-icon-left">
                                                     <label>Country of residence</label>
@@ -492,18 +482,26 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
                                                 <div class="form-group form-group-lg form-group-icon-left">
                                                     <label>Message</label>
                                                     <textarea rows="50" cols="50" class="form-control" name="message"
                                                         [(ngModel)]="visaRequest.message" placeholder="Message">
-                                                                                </textarea>
+                                                                                        </textarea>
                                                 </div>
                                             </div>
-
+                                            <div class="col-md-4">
+                                                    <div class="form-group form-group-lg form-group-icon-left">
+                                                            <label>&nbsp;</label>
+                                                            <button class="btn btn-primary" type="submit">Submit Request</button>
+                                                        </div>
+                                                    
+                                       
+                                                </div>
                                         </div>
-
-                                        <button class="btn btn-primary btn-lg" type="submit">Submit Request</button>
+                                        
                                     </form>
                                 </div>
                             </div>
@@ -512,26 +510,545 @@
                 </div>
             </div>
         </div>
-        <div class="owl-carousel owl-slider owl-carousel-area visible-lg" id="owl-carousel-slider" data-nav="false">
+        <div class="owl-carousel owl-slider owl-carousel-area" id="owl-carousel-slider" data-nav="false">
             <div class="bg-holder full">
-                <div class="bg-mask"></div>
-                <div class="bg-img" style="background-image:url(assets/img/hero-banc.png);"></div>
+                <div class="bg-img" style="background-image:url(assets/images/slide01.jpg);"></div>
             </div>
             <div class="bg-holder full">
-                <div class="bg-mask"></div>
-                <div class="bg-img" style="background-image:url(assets/img/backgrounds/nature.jpg);"></div>
-            </div>
-            <div class="bg-holder full">
-                <div class="bg-mask"></div>
-                <div class="bg-img" style="background-image:url(assets/img/backgrounds/beach.jpg);"></div>
+                <div class="bg-img" style="background-image:url(assets/images/slide02.jpg);"></div>
             </div>
         </div>
 
-        <div class="bg-mask hidden-lg"></div>
     </div>
 </div>
 <!-- END TOP AREA  -->
 
+
+
+<div class="container-fluid bg-white pt-50 pb-50">
+    <div class="container">
+        <div class="carousel-nav">
+            <span class="fa fa-chevron-left prev2"></span> <span class="fa fa-chevron-right next2"></span>
+        </div>
+        <h3 class="text-left fw-bold dark-blue mb20">Latest Flight Deals</h3>
+
+        <div class="row row-wrap flight-slide">
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-logo">
+                        <a class="hover-img" href="#">
+                            <img src="assets/images/airlines/virgin-atlantic.png" alt="Virgin Atlantic"
+                                title="Virgin Atlantic" />
+                        </a>
+                    </header>
+                    <div class="primary-bg p-20 text-white">
+
+                        <h5 class="thumb-title fs-l fw-semibold">
+                            Lagos - Amsterdam
+                        </h5>
+                        <p>
+                            <small>
+                                Availability: Oct 23 - Nov 08</small>
+                        </p>
+                        <p class="mt-10">
+                            <span class="fs-xl fw-semibold">₦300,000</span>
+                            <a href="#"><span class="btn btn-orange pull-right fs-s">Book Now</span></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-logo">
+                        <a class="hover-img" href="#">
+                            <img src="assets/images/airlines/emirates.jpg" alt="Emirate" title="Emirate Airline" />
+                        </a>
+                    </header>
+                    <div class="primary-bg p-20 text-white">
+
+                        <h5 class="thumb-title fs-l fw-semibold">
+                            Lagos - New York
+                        </h5>
+                        <p>
+                            <small>
+                                Availability: Oct 27 - Nov 09</small>
+                        </p>
+                        <p class="mt-10">
+                            <span class="fs-xl fw-semibold">₦340,000</span>
+                            <a href="#"><span class="btn btn-orange pull-right fs-s">Book Now</span></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-logo">
+                        <a class="hover-img" href="#">
+                            <img src="assets/images/airlines/klm-airline.jpg" alt="KLM Airline" title="KLM Airline" />
+                        </a>
+                    </header>
+                    <div class="primary-bg p-20 text-white">
+
+                        <h5 class="thumb-title fs-l fw-semibold">
+                            Lagos - London
+                        </h5>
+                        <p>
+                            <small>
+                                Availability: Oct 07 - Nov 01</small>
+                        </p>
+                        <p class="mt-10">
+                            <span class="fs-xl fw-semibold">₦140,000</span>
+                            <a href="#"><span class="btn btn-orange pull-right fs-s">Book Now</span></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-logo">
+                        <a class="hover-img" href="#">
+                            <img src="assets/images/airlines/ethiopian-airways.jpg" alt="Ethiopian Airways"
+                                title="Ethiopian Airways" />
+                        </a>
+                    </header>
+                    <div class="primary-bg p-20 text-white">
+
+                        <h5 class="thumb-title fs-l fw-semibold">
+                            Abuja - Dubai
+                        </h5>
+                        <p>
+                            <small>
+                                Availability: Aug 20 - Aug 27</small>
+                        </p>
+                        <p class="mt-10">
+                            <span class="fs-xl fw-semibold">₦137,000</span>
+                            <a href="#"><span class="btn btn-orange pull-right fs-s">Book Now</span></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-logo">
+                        <a class="hover-img" href="#">
+                            <img src="assets/images/airlines/south-african-airway.png" alt="South African Airway"
+                                title="South African Airway" />
+                        </a>
+                    </header>
+                    <div class="primary-bg p-20 text-white">
+
+                        <h5 class="thumb-title fs-l fw-semibold">
+                            Abuja - South Africa
+                        </h5>
+                        <p>
+                            <small>
+                                Availability: Aug 10 - Aug 17</small>
+                        </p>
+                        <p class="mt-10">
+                            <span class="fs-xl fw-semibold">₦180,000</span>
+                            <a href="#"><span class="btn btn-orange pull-right fs-s">Book Now</span></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="container-fluid bg-light-grey2 pt-50 pb-50">
+    <div class="container">
+        <div class="carousel-nav">
+            <span class="fa fa-chevron-left prev"></span> <span class="fa fa-chevron-right next"></span>
+        </div>
+        <h3 class="text-left fw-bold dark-blue mb20">Latest Hotel Deals</h3>
+        <div class="row row-wrap hotel-slide">
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-header">
+                        <a class="hover-img" href="#">
+                            <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                title="Waldorf Astoria New York" />
+                            <h5 class="hover-title-center">Book Now</h5>
+                        </a>
+                    </header>
+                    <div class="last-minute-caption">
+                        <ul class="icon-group text-tiny text-color">
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star-half-empty"></i>
+                            </li>
+                        </ul>
+                        <h5 class="thumb-title">
+                            <a class="dark-blue" href="#">Waldorf Astoria New York</a>
+                        </h5>
+                        <p class="mb0">
+                            <small>
+                                <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
+                        </p>
+                        <p class="mb0 dark-blue">
+                            <span class="fs-xl fw-semibold brand-orange">₦30,000</span>
+                            <small> per night</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-header">
+                        <a class="hover-img" href="#">
+                            <img src="assets/img/waldorf-astoria.png" alt="Image Alternative text"
+                                title="hotel PORTO BAY RIO INTERNACIONAL de luxe" />
+                            <h5 class="hover-title-center">Book Now</h5>
+                        </a>
+                    </header>
+                    <div class="last-minute-caption">
+                        <ul class="icon-group text-tiny text-color">
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                        </ul>
+                        <h5 class="thumb-title">
+                            <a class="dark-blue" href="#">The London NYC</a>
+                        </h5>
+                        <p class="mb0">
+                            <small>
+                                <i class="fa fa-map-marker"></i> New York, NY (Chelsea)</small>
+                        </p>
+                        <p class="mb0 dark-blue">
+                            <span class="fs-xl fw-semibold brand-orange">₦17,000</span>
+                            <small> / per night</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-header">
+                        <a class="hover-img" href="#">
+                            <img src="assets/img/waldorf-astoria.png" alt="Image Alternative text" title="hotel 1" />
+                            <h5 class="hover-title-center">Book Now</h5>
+                        </a>
+                    </header>
+                    <div class="last-minute-caption">
+                        <ul class="icon-group text-tiny text-color">
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star-half-empty"></i>
+                            </li>
+                        </ul>
+                        <h5 class="thumb-title">
+                            <a class="dark-blue" href="#">Grand Hyatt New York</a>
+                        </h5>
+                        <p class="mb0">
+                            <small>
+                                <i class="fa fa-map-marker"></i> Ozone Park, NY (Kennedy Airport (JFK))</small>
+                        </p>
+                        <p class="mb0 dark-blue">
+                            <span class="fs-xl fw-semibold brand-orange">₦26,000</span>
+                            <small> /per night</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-header">
+                        <a class="hover-img" href="#">
+                            <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                title="Waldorf Astoria New York" />
+                            <h5 class="hover-title-center">Book Now</h5>
+                        </a>
+                    </header>
+                    <div class="last-minute-caption">
+                        <ul class="icon-group text-tiny text-color">
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star-o"></i>
+                            </li>
+                        </ul>
+                        <h5 class="thumb-title">
+                            <a class="dark-blue" href="#">Affinia Shelburne</a>
+                        </h5>
+                        <p class="mb0">
+                            <small>
+                                <i class="fa fa-map-marker"></i> Brooklyn, NY (Brooklyn)</small>
+                        </p>
+                        <p class="mb0 dark-blue">
+                            <span class="fs-xl fw-semibold brand-orange">₦43,000</span>
+                            <small> / per night</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-header">
+                        <a class="hover-img" href="#">
+                            <img src="assets/img/waldorf-astoria.png" alt="Image Alternative text" title="hotel 1" />
+                            <h5 class="hover-title-center">Book Now</h5>
+                        </a>
+                    </header>
+                    <div class="last-minute-caption">
+                        <ul class="icon-group text-tiny text-color">
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star-half-empty"></i>
+                            </li>
+                        </ul>
+                        <h5 class="thumb-title">
+                            <a class="dark-blue" href="#">Grand Hyatt New York</a>
+                        </h5>
+                        <p class="mb0">
+                            <small>
+                                <i class="fa fa-map-marker"></i> Ozone Park, NY (Kennedy Airport (JFK))</small>
+                        </p>
+                        <p class="mb0 dark-blue">
+                            <span class="fs-xl fw-semibold brand-orange">₦26,000</span>
+                            <small> /per night</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gap gap-small"></div>
+    </div>
+</div>
+<div class="container-fluid bg-white pt-50 pb-50">
+    <div class="container">
+        <h3 class="text-left fw-bold dark-blue mb20">Top Destinations</h3>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="tourbx">
+                    <img src="assets/images/nyc.jpg" alt="newyork city">
+                    <div class="overlay overlay-bl">
+                        <div class="tourbx-details text-white">
+                            <h4 class="thumb-title">New York City</h4>
+                            <a href="#">
+                                <div class="btn btn-orange fs-s">9 Tours <span></span></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="tourbx">
+                    <img src="assets/images/dubai.jpg" alt="Dubai">
+                    <div class="overlay overlay-dbl">
+                        <div class="tourbx-details text-white">
+                            <h4 class="thumb-title">Dubai</h4>
+                            <a href="#">
+                                <div class="btn btn-orange fs-s">12 Tours <span></span></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--row-->
+        <div class="row">
+            <div class="col-sm-4 col-md-4">
+                <div class="tourbx">
+                    <img src="assets/images/amsterdam.jpg" alt="Amsterdam">
+                    <div class="overlay overlay-bl">
+                        <div class="tourbx-details text-white">
+                            <h4 class="thumb-title">Amsterdam</h4>
+                            <a href="#">
+                                <div class="btn btn-orange fs-s">4 Tours <span></span></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="tourbx">
+                    <img src="assets/images/london.jpg" alt="London">
+                    <div class="overlay overlay-or">
+                        <div class="tourbx-details text-white">
+                            <h4 class="thumb-title">London</h4>
+                            <a href="#">
+                                <div class="btn btn-orange fs-s">5 Tours <span></span></div>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="tourbx">
+                    <img src="assets/images/safari.jpg" alt="Kenya safari">
+                    <div class="overlay overlay-gr">
+                        <div class="tourbx-details text-white">
+                            <h4 class="thumb-title">Kenya</h4>
+                            <a href="#">
+                                <div class="btn btn-orange fs-s">3 Tours <span></span></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--row-->
+    </div>
+    <!--container-->
+</div>
+<!--container-fluid-->
+
+<div class="container-fluid bg-flight-illustration pt-20 pb-30">
+    <div class="container ">
+        <div class="row">
+            <div class="gap"></div>
+            <h2 class="text-center text-white fw-semibold">Why NaijaTravelShop?</h2>
+            <div class="gap"></div>
+            <div class="col-md-12">
+
+                <div class="row row-wrap" data-gutter="60">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumb text-center thumb-overlay boxeq">
+                            <header class="thumb-header">
+                                <i
+                                    class="fa fa-headphones box-icon-black round box-icon-big animate-icon-top-to-bottom"></i>
+                            </header>
+                            <div class="thumb-caption">
+                                <h5 class="thumb-title pt-10 pb-10">
+                                    <a class="text-title" href="#">247 Support</a>
+                                </h5>
+                                <p class="thumb-desc">We provide end-to-end support to give you your desired travel
+                                    experience. </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumb text-center thumb-overlay boxeq">
+                            <header class="thumb-header">
+                                <i class="fa fa-plane box-icon-black round box-icon-big animate-icon-top-to-bottom"></i>
+                            </header>
+                            <div class="thumb-caption">
+                                <h5 class="thumb-title pt-10 pb-10">
+                                    <a class="thumb-title" href="#">Best Travel Deals</a>
+                                </h5>
+                                <p class="thumb-desc">We can always give you the best travel deals you can ever find
+                                    anywhere. You earn points for every flight or hotel you book with us. </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumb text-center thumb-overlay boxeq">
+                            <header class="thumb-header">
+                                <i
+                                    class="fa fa-thumbs-o-up box-icon-black round box-icon-big animate-icon-top-to-bottom"></i>
+                            </header>
+                            <div class="thumb-caption">
+                                <h5 class="thumb-title pt-10 pb-10">
+                                    <a class="thumb-title" href="#">Valuable VISA</a>
+                                </h5>
+                                <p class="thumb-desc">We provide valuable visa information and assistance and make your
+                                    visa application process seamless and highly likely to succeed.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumb text-center thumb-overlay boxeq">
+                            <header class="thumb-header">
+                                <i class="fa fa-send box-icon-black round box-icon-big animate-icon-top-to-bottom"></i>
+                            </header>
+                            <div class="thumb-caption">
+                                <h5 class="thumb-title pt-10 pb-10">
+                                    <a class="thumb-title" href="#">Best Destinations</a>
+                                </h5>
+                                <p class="thumb-desc">We are connected to the most amazing hotels in the world. We can
+                                    completely manage your itinerary including all personal and business travels.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gap gap-small"></div>
+    </div>
+</div>
+<div class="container-fluid brand-blue-bg  pt-50 pb-40">
+    <div class="container text-white">
+        <div class="row">
+            <div class="col-sm-6 col-md-5">
+
+                <h5 class="fw-bold">
+                    <span class="newsicon"></span>
+                    SUBSCRIBE TO OUR NEWSLETTERS, PROMOS AND BROADCASTS
+                </h5>
+            </div>
+
+            <div class="col-sm-6 col-md-7">
+                <form class="newsletter">
+                    <input type="email" placeholder="YOUR EMAIL" class="form-control">
+                    <input type="submit" value="Subscribe">
+                    <p class="mt5">
+                        <small>*We Never Send Spam</small>
+                    </p>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 <ng-template #popTemplate>
     <div>
         <p>
@@ -627,253 +1144,5 @@
                 <p class="mb30" style="color: red">Error retrieving search results, Please try again</p>
             </div>
         </div>
-    </div>
-</div>
-<!-- END TOP AREA -->
-
-<!-- <div class="container-fluid bg-light-grey">
-    <div class="container">
-        <div class="gap"></div>
-        <h2 class="text-left mb20">Last Minute Deals</h2>
-        <div class="row row-wrap">
-            <div class="col-md-3">
-                <div class="thumb last-minute-card">
-                    <header class="thumb-header">
-                        <a class="hover-img" href="#">
-                            <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
-                                title="Waldorf Astoria New York" />
-                            <h5 class="hover-title-center">Book Now</h5>
-                        </a>
-                    </header>
-                    <div class="last-minute-caption">
-                        <ul class="icon-group text-tiny text-color">
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star-half-empty"></i>
-                            </li>
-                        </ul>
-                        <h5 class="thumb-title">
-                            <a class="text-darken" href="#">Waldorf Astoria New York</a>
-                        </h5>
-                        <p class="mb0">
-                            <small>
-                                <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
-                        </p>
-                        <p class="mb0 text-darken">
-                            <span class="text-lg lh1em text-color">NGN 30,000</span>
-                            <small> per night</small>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="thumb last-minute-card">
-                    <header class="thumb-header">
-                        <a class="hover-img" href="#">
-                            <img src="assets/img/waldorf-astoria.png" alt="Image Alternative text"
-                                title="hotel PORTO BAY RIO INTERNACIONAL de luxe" />
-                            <h5 class="hover-title-center">Book Now</h5>
-                        </a>
-                    </header>
-                    <div class="last-minute-caption">
-                        <ul class="icon-group text-tiny text-color">
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                        </ul>
-                        <h5 class="thumb-title">
-                            <a class="text-darken" href="#">The London NYC</a>
-                        </h5>
-                        <p class="mb0">
-                            <small>
-                                <i class="fa fa-map-marker"></i> New York, NY (Chelsea)</small>
-                        </p>
-                        <p class="mb0 text-darken">
-                            <span class="text-lg lh1em text-color">NGN 17,000</span>
-                            <small> / per night</small>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="thumb last-minute-card">
-                    <header class="thumb-header">
-                        <a class="hover-img" href="#">
-                            <img src="assets/img/waldorf-astoria.png" alt="Image Alternative text" title="hotel 1" />
-                            <h5 class="hover-title-center">Book Now</h5>
-                        </a>
-                    </header>
-                    <div class="last-minute-caption">
-                        <ul class="icon-group text-tiny text-color">
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star-half-empty"></i>
-                            </li>
-                        </ul>
-                        <h5 class="thumb-title">
-                            <a class="text-darken" href="#">Grand Hyatt New York</a>
-                        </h5>
-                        <p class="mb0">
-                            <small>
-                                <i class="fa fa-map-marker"></i> Ozone Park, NY (Kennedy Airport (JFK))</small>
-                        </p>
-                        <p class="mb0 text-darken">
-                            <span class="text-lg lh1em text-color">NGN 26,000</span>
-                            <small> /per night</small>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="thumb last-minute-card">
-                    <header class="thumb-header">
-                        <a class="hover-img" href="#">
-                            <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
-                                title="Waldorf Astoria New York" />
-                            <h5 class="hover-title-center">Book Now</h5>
-                        </a>
-                    </header>
-                    <div class="last-minute-caption">
-                        <ul class="icon-group text-tiny text-color">
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star"></i>
-                            </li>
-                            <li>
-                                <i class="fa fa-star-o"></i>
-                            </li>
-                        </ul>
-                        <h5 class="thumb-title">
-                            <a class="text-darken" href="#">Affinia Shelburne</a>
-                        </h5>
-                        <p class="mb0">
-                            <small>
-                                <i class="fa fa-map-marker"></i> Brooklyn, NY (Brooklyn)</small>
-                        </p>
-                        <p class="mb0 text-darken">
-                            <span class="text-lg lh1em text-color">NGN 43,000</span>
-                            <small> / per night</small>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="gap gap-small"></div>
-    </div>
-</div> -->
-
-<div class="container-fluid bg-flight-illustration">
-    <div class="container ">
-        <div class="row">
-            <div class="gap"></div>
-            <h2 class="text-center">Why NaijaTravelShop?</h2>
-            <div class="gap"></div>
-            <div class="col-md-12">
-
-                <div class="row row-wrap" data-gutter="60">
-                    <div class="col-md-3">
-                        <div class="thumb">
-                            <header class="thumb-header">
-                                <i
-                                    class="fa fa-headphones box-icon-black round box-icon-big animate-icon-top-to-bottom"></i>
-                            </header>
-                            <div class="thumb-caption">
-                                <h5 class="thumb-title">
-                                    <a class="text-darken" href="#">247 Support</a>
-                                </h5>
-                                <p class="thumb-desc">We provide end-to-end support to give you your desired travel
-                                    experience. </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="thumb">
-                            <header class="thumb-header">
-                                <i class="fa fa-plane box-icon-black round box-icon-big animate-icon-top-to-bottom"></i>
-                            </header>
-                            <div class="thumb-caption">
-                                <h5 class="thumb-title">
-                                    <a class="text-darken" href="#">Best Travel Deals</a>
-                                </h5>
-                                <p class="thumb-desc">We can always give you the best travel deal you can ever find
-                                    anywhere. You earn points for every flight or hotel you book with us. </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="thumb">
-                            <header class="thumb-header">
-                                <i
-                                    class="fa fa-thumbs-o-up box-icon-black round box-icon-big animate-icon-top-to-bottom"></i>
-                            </header>
-                            <div class="thumb-caption">
-                                <h5 class="thumb-title">
-                                    <a class="text-darken" href="#">Valuable VISA</a>
-                                </h5>
-                                <p class="thumb-desc">We provide valuable visa information and assistance and make your
-                                    visa application process seamless and highly likely to succeed.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="thumb">
-                            <header class="thumb-header">
-                                <i class="fa fa-send box-icon-black round box-icon-big animate-icon-top-to-bottom"></i>
-                            </header>
-                            <div class="thumb-caption">
-                                <h5 class="thumb-title">
-                                    <a class="text-darken" href="#">Best Destinations</a>
-                                </h5>
-                                <p class="thumb-desc">We are connected to the most amazing hotels in the world. We can
-                                    completely manage your itinerary including all personal and business travel.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="gap gap-small"></div>
     </div>
 </div>

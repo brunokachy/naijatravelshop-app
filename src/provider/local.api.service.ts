@@ -10,8 +10,8 @@ import { TokenObject } from '../model/TokenObject';
 export class LocalAPIService {
     constructor(private httpClient: HttpClient) { }
 
-    // private naijaTravelShopAPIBaseURL = window.location.origin + '/naijatravelshop/api/';
-    private naijaTravelShopAPIBaseURL = 'http://localhost:8080/naijatravelshop/api/';
+      private naijaTravelShopAPIBaseURL = window.location.origin + '/naijatravelshop/api/';
+   // private naijaTravelShopAPIBaseURL = 'http://localhost:8080/naijatravelshop/api/';
 
     public CONFIRM_REGISTRATION = this.naijaTravelShopAPIBaseURL + 'confirm_registration';
     public CREATE_ACCOUNT = this.naijaTravelShopAPIBaseURL + 'admin/create_account';
@@ -34,16 +34,21 @@ export class LocalAPIService {
     public GET_FLIGHT_RESERVATION_DETAILS = this.naijaTravelShopAPIBaseURL + 'admin/get_flight_reservation_details';
     public BANK_PAYMENT = this.naijaTravelShopAPIBaseURL + 'payment/bank_payment';
 
+    // postRequest(requestData: any, url: string): Observable<any> {
+    //     let token = this.getSavedToken();
+    //     const isValid = this.validateToken(token);
+    //     if (isValid) {
+    //         token = this.getSavedToken().token;
+    //         return this.httpClient
+    //             .post(url, requestData, this.header(token));
+    //     } else {
+    //         return this.generateToken(requestData, url);
+    //     }
+    // }
+
     postRequest(requestData: any, url: string): Observable<any> {
-        let token = this.getSavedToken();
-        const isValid = this.validateToken(token);
-        if (isValid) {
-            token = this.getSavedToken().token;
-            return this.httpClient
-                .post(url, requestData, this.header(token));
-        } else {
-            return this.generateToken(requestData, url);
-        }
+        return this.httpClient
+            .post(url, requestData, this.header(''));
     }
 
     getRequest(url: string): Observable<any> {
@@ -64,7 +69,7 @@ export class LocalAPIService {
         return token;
     }
 
-    generateToken(requestData: any, url: string) {
+    private generateToken(requestData: any, url: string) {
         const tokenURL = 'http://localhost:8080/authenticate';
         const body = { username: 'kachybrunokachiotas', password: '701c12446da86736e088cc0683802991' };
         return this.httpClient
@@ -82,7 +87,7 @@ export class LocalAPIService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: token
+              //  Authorization: token
             })
         };
         return httpOptions;

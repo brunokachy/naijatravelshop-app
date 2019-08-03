@@ -7,7 +7,7 @@ import { User } from '../../model/user';
 import { Passenger } from '../../model/passenger';
 import { FlightDataSearch } from '../../model/FlightDataSearch';
 import { Country } from '../../model/country';
-import { BsModalRef, BsModalService, ModalDirective } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService, ModalDirective, AlertComponent } from 'ngx-bootstrap';
 import { BookingResponse } from '../../model/bookingResponse';
 import { ReservationOwner } from '../../model/reservationowner';
 import { Booking } from '../../model/booking';
@@ -58,6 +58,18 @@ export class FlightDetailComponent {
     password: string;
     shouldRegister = false;
     alertMessage: string;
+    alerts: any[] = [];
+    add(type, message): void {
+        this.alerts.push({
+            type,
+            msg: message,
+            timeout: 5000
+        });
+    }
+
+    onClosed(dismissedAlert: AlertComponent): void {
+        this.alerts = this.alerts.filter(alert => alert !== dismissedAlert);
+    }
 
     @ViewChild('autoShownModal') autoShownModal: ModalDirective;
     isModalShown = false;
@@ -296,9 +308,14 @@ export class FlightDetailComponent {
                     const bookingResponse: BookingResponse = booking.data;
                     localStorage.setItem('bookingResponse', JSON.stringify(bookingResponse));
                     localStorage.setItem('contactDetail', JSON.stringify(this.contactDetail));
-                    this.secondBooking(bookingResponse);
-                    localStorage.setItem('viewFlightPayment', 'true');
-                    this.router.navigate(['/flight_payment']);
+                    if (booking.data.successful === false) {
+                        this.spinnerService.hide();
+                        this.add('danger', booking.data.message);
+                    } else {
+                        this.secondBooking(bookingResponse);
+                        localStorage.setItem('viewFlightPayment', 'true');
+                        this.router.navigate(['/flight_payment']);
+                    }
                 }
             },
             error => {

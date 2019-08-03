@@ -80,6 +80,10 @@
         </div>
 
         <div class="col-md-8">
+            <div *ngFor="let alert of alerts">
+                <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+                    {{ alert.msg }}</alert>
+            </div>
             <h3>Flight Booking</h3>
             <!-- <p *ngIf="!login">To book faster,
                 <a class="popup-text" href="#" data-toggle="modal" (click)="openSearchModal(template)">sign in to
@@ -163,7 +167,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group" >
+                    <div class="form-group">
                         <label *ngIf="!login">
                             <input class="i-check" name="shouldRegister" type="checkbox" [(ngModel)]="shouldRegister"
                                 checked />Create NaijaTravelShop account?

@@ -51,6 +51,101 @@ $(document).ready(function(){
   });
 
 
+// slick-carousel 
+$(document).ready(function(){
+    $('.flight-slide').slick({
+        centerMode: true,
+        centerPadding: '0',
+        arrows: true,
+        dots: false,
+        infinite: true,
+        autoplay: true,
+        speed: 300,
+        slidesToShow: 4,
+        slidesToScroll: 4,
+        prevArrow: $('.prev2'),
+        nextArrow: $('.next2'),
+        responsive: [
+          {
+            breakpoint: 1200,
+            settings: {
+              slidesToShow: 3,
+              slidesToScroll: 3,
+              infinite: true,
+              dots: true
+            }
+          },
+          {
+            breakpoint: 991,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 2
+            }
+          },
+          {
+            breakpoint: 560,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+            }
+          }
+          // You can unslick at a given breakpoint now by adding:
+          // settings: "unslick"
+          // instead of a settings object
+        ]
+      });
+  });
+
+
+// slick-carousel 
+$(document).ready(function(){
+    $('.hotel-slide').slick({
+        centerMode: true,
+        centerPadding: '0',
+        arrows: true,
+        dots: false,
+        infinite: true,
+        autoplay: true,
+        speed: 300,
+        slidesToShow: 4,
+        slidesToScroll: 4,
+        prevArrow: $('.prev'),
+        nextArrow: $('.next'),
+        responsive: [
+          {
+            breakpoint: 1200,
+            settings: {
+              slidesToShow: 3,
+              slidesToScroll: 3,
+              infinite: true,
+              dots: true
+            }
+          },
+          {
+            breakpoint: 991,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 2
+            }
+          },
+          {
+            breakpoint: 560,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+            }
+          }
+          // You can unslick at a given breakpoint now by adding:
+          // settings: "unslick"
+          // instead of a settings object
+        ]
+      });
+  });
+
+
+
+
+
 // Countdown
 $('.countdown').each(function() {
     var count = $(this);
@@ -241,10 +336,10 @@ $(document).ready(
             paginationSpeed: 400,
             // pagination: owlSliderPagination,
             singleItem: true,
-            navigation: true,
+            navigation: false,
             navigationText: ['', ''],
             transitionStyle: 'fade',
-            autoPlay: 4500
+            autoPlay: 8500
         });
 
 
@@ -551,3 +646,39 @@ function abortTimer() { // to be called when you want to stop the timer
     clearInterval(tid);
 }
 
+
+$(document).ready(function(){
+
+    // Select and loop the container element of the elements you want to equalise
+    $('.container').each(function(){  
+      
+      // Cache the highest
+      var highestBox = 0;
+      
+      // Select and loop the elements you want to equalise
+      $('.boxeq', this).each(function(){
+        
+        // If this box is higher than the cached highest then store it
+        if($(this).height() > highestBox) {
+          highestBox = $(this).height(); 
+        }
+      
+      });  
+            
+      // Set the height of all those children to whichever was highest 
+      $('.boxeq',this).height(highestBox);
+                    
+    }); 
+
+});
+
+
+/* Copyright Year
+
+ ========================================================*/
+var currentYear = (new Date).getFullYear();
+jQuery(function($) {
+    $(document).ready(function () {
+        $("#copyright-year").text((new Date).getFullYear());
+    });
+});

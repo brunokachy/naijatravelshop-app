@@ -11,8 +11,8 @@
 }
 
 .logo img {
-    width: 200px;
     float: left;
+    margin-top: 10px;
 }
 
 ul.tr-menu {
@@ -35,20 +35,20 @@ ul.tr-menu li i {
 
 
 @media (max-width: 480px) {
-.logo img {
-    width: 150px;
-}
+    .logo img {
+        width: 150px;
+    }
 
-ul.tr-menu li {
-    padding-left: 0;
-    font-size: 12px;
-}
+    ul.tr-menu li {
+        padding-left: 0;
+        font-size: 12px;
+    }
 
-.top-user-area .top-user-area-list, ul.tr-menu {
-    top: 0px;
-}
+    .top-user-area .top-user-area-list, ul.tr-menu {
+        top: 0px;
+    }
 
-.header-top {
-    max-height: 120px;
-}
+    .header-top {
+        max-height: 120px;
+    }
 }

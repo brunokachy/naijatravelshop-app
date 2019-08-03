@@ -19,8 +19,8 @@ export class InitAPIService {
     constructor(private httpClient: HttpClient) {
         this.checkInitModel();
     }
-    // private naijaTravelShopAPIBaseURL = window.location.origin + '/naijatravelshop/api/';
-    private naijaTravelShopAPIBaseURL = 'http://localhost:8080/naijatravelshop/api/';
+     private naijaTravelShopAPIBaseURL = window.location.origin + '/naijatravelshop/api/';
+    //private naijaTravelShopAPIBaseURL = 'http://localhost:8080/naijatravelshop/api/';
     private GET_BASE_URL = this.naijaTravelShopAPIBaseURL + 'admin/get_base_url';
     private GET_AFFILIATE_ACCOUNT = this.naijaTravelShopAPIBaseURL + 'admin/get_affiliate_account_details';
     private GET_FLUTTERWAVE_ACCOUNT_DETAILS = this.naijaTravelShopAPIBaseURL + 'payment/get_flw_account_details';
@@ -80,7 +80,7 @@ export class InitAPIService {
 
         const getCountries = () => {
             return new Promise((resolve) => {
-                this.postRequest('', this.initModel.apiURL + this.GET_COUNTRIES).subscribe(data => {
+                this.postRequest('', this.GET_COUNTRIES).subscribe(data => {
                     const countryResponseString: string = JSON.stringify(data);
                     const countries: ApiResponse<Country[]> = JSON.parse(countryResponseString);
                     this.initModel.countries = countries.data;
@@ -115,7 +115,7 @@ export class InitAPIService {
         if (isValid) {
             token = this.getSavedToken().token;
             return this.httpClient
-                .post(url, requestData, this.header(token));
+                .post(this.initModel.apiURL + url, requestData, this.header(token));
         } else {
             return this.generateToken(requestData, this.initModel.apiURL + url);
         }
@@ -165,7 +165,7 @@ export class InitAPIService {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                Authorization: token
+                 Authorization: token
             })
         };
         return httpOptions;
