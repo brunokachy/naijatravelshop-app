@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { User } from '../model/User';
-import { Country } from '../model/Country';
-import { InitModel } from '../model/InitModel';
 import { InitAPIService } from '../provider/init.api.service';
 
 @Component({
@@ -16,18 +14,9 @@ export class AppComponent {
   interval: any;
   firstname: string;
   phoneNumber: string;
-  initModel: InitModel = new InitModel();
 
   constructor(private initService: InitAPIService) {
-
     this.initService.makeInitCall();
-
-    const interval = setInterval(() => {
-      if (JSON.parse(sessionStorage.getItem('initModel')) != null) {
-        this.initModel = JSON.parse(sessionStorage.getItem('initModel'));
-        clearInterval(interval);
-      }
-    }, 1000);
 
     setInterval(() => {
       this.checkUserLogin();
@@ -35,19 +24,19 @@ export class AppComponent {
   }
 
   checkUserLogin() {
-    if (JSON.parse(sessionStorage.getItem('user')) == null) {
+    if (JSON.parse(localStorage.getItem('user')) == null) {
       this.user = null;
       this.isLogin = false;
     }
-    if (JSON.parse(sessionStorage.getItem('user')) != null) {
-      this.user = JSON.parse(sessionStorage.getItem('user'));
+    if (JSON.parse(localStorage.getItem('user')) != null) {
+      this.user = JSON.parse(localStorage.getItem('user'));
       this.firstname = this.user.firstName;
       this.isLogin = true;
     }
   }
 
   signOut() {
-    sessionStorage.removeItem('user');
+    localStorage.removeItem('user');
     window.location.reload();
   }
 

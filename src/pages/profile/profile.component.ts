@@ -11,8 +11,8 @@ import { LocalAPIService } from '../../provider/local.api.service';
 })
 export class ProfileComponent {
     constructor(private localAPIService: LocalAPIService) {
-        this.user = JSON.parse(sessionStorage.getItem('user'));
-        this.isSuperAdmin = JSON.parse(sessionStorage.getItem('isSuperAdmin'));
+        this.user = JSON.parse(localStorage.getItem('user'));
+        this.isSuperAdmin = JSON.parse(localStorage.getItem('isSuperAdmin'));
         this.profileUser = this.user;
     }
 

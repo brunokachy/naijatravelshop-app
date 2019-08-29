@@ -7,11 +7,9 @@ import { BsModalService, BsModalRef, TypeaheadMatch } from 'ngx-bootstrap';
 import { Router } from '@angular/router';
 import { FlightDataSearch } from '../../model/FlightDataSearch';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { of, Observable } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
-import { InitModel } from '../../model/InitModel';
 import { Country } from '../../model/Country';
 import { TravelbetaAPIService } from '../../provider/travelbeta.api.service';
+import { Airport } from '../../model/Airport';
 
 
 @Component({
@@ -23,10 +21,9 @@ import { TravelbetaAPIService } from '../../provider/travelbeta.api.service';
 export class FlightSearchResultComponent {
     flight: Flight;
     pricedItineraries: PricedItineraries[] = [];
-    initModel: InitModel = new InitModel();
     modalRef: BsModalRef;
     config = {
-        animated: false,
+        //animated: false,
         //  backdrop: 'static'
     };
     pricedItinerary: PricedItineraries;
@@ -40,12 +37,11 @@ export class FlightSearchResultComponent {
     departureDate = '';
     returnDate = '';
 
-    departureCity: string;
-    destinationCity: string;
-    airports: any[] = [];
-    departureAirport: any;
-    destinationAirport: any;
-    datasource: Observable<any> = of([]);
+    airports: Airport[] = [];
+    departureAirport: Airport;
+    destinationAirport: Airport;
+    departure: string;
+    destination: string;
 
     adultTraveller = 1;
     childTraveller = 0;
@@ -55,10 +51,10 @@ export class FlightSearchResultComponent {
     tripType = '2';
     seatclass = '1';
     flightSearch: any;
+    multipleDest: { 'departureAirport': Airport, 'arrivalAirport': Airport, 'departureDate': string }[] = [];
 
     isOpen = true;
 
-    multipleDest: { 'departureAirport': any, 'arrivalAirport': any, 'departureDate': string }[] = [];
     airlines: { 'name': string, 'code': string, 'minPrice': number }[] = [];
 
     sortValue = 'Lowest Price';
@@ -68,9 +64,9 @@ export class FlightSearchResultComponent {
 
     constructor(private modalService: BsModalService, private travelbetaAPIService: TravelbetaAPIService, private router: Router,
         private spinnerService: NgxSpinnerService) {
-        this.initModel = JSON.parse(sessionStorage.getItem('initModel'));
-        this.flight = JSON.parse(localStorage.getItem('flight'));
-        this.flightHeader = JSON.parse(localStorage.getItem('flightHeader'));
+        this.flight = JSON.parse(sessionStorage.getItem('flight'));
+        this.flightHeader = JSON.parse(sessionStorage.getItem('flightHeader'));
+        this.airports = JSON.parse(localStorage.getItem('airports'));
         this.popluateFlights();
         this.getAirlineList();
     }
@@ -87,17 +83,17 @@ export class FlightSearchResultComponent {
 
     sort() {
         if (this.sortValue === 'Lowest Price') {
-            this.pricedItineraries.sort(function (obj1, obj2) {
+            this.pricedItineraries.sort((obj1, obj2) => {
                 return obj1.totalFare - obj2.totalFare;
             });
         }
         if (this.sortValue === 'Highest Price') {
-            this.pricedItineraries.sort(function (obj1, obj2) {
+            this.pricedItineraries.sort((obj1, obj2) => {
                 return obj2.totalFare - obj1.totalFare;
             });
         }
         if (this.sortValue === 'Earliest Departure') {
-            this.pricedItineraries.sort(function (obj1, obj2) {
+            this.pricedItineraries.sort((obj1, obj2) => {
                 const a = moment(obj1.originDestinationOptions[0].flightSegments[0].departureTime, 'dd/MM/YYYY HH:mm').valueOf();
                 const b = moment(obj2.originDestinationOptions[0].flightSegments[0].departureTime, 'dd/MM/YYYY HH:mm').valueOf();
                 return a - b;
@@ -105,7 +101,7 @@ export class FlightSearchResultComponent {
         }
 
         if (this.sortValue === 'Latest Departure') {
-            this.pricedItineraries.sort(function (obj1, obj2) {
+            this.pricedItineraries.sort((obj1, obj2) => {
                 const a = moment(obj1.originDestinationOptions[0].flightSegments[0].departureTime, 'dd/MM/YYYY HH:mm').valueOf();
                 const b = moment(obj2.originDestinationOptions[0].flightSegments[0].departureTime, 'dd/MM/YYYY HH:mm').valueOf();
                 return b - a;
@@ -115,8 +111,8 @@ export class FlightSearchResultComponent {
 
 
     selectFlight(pricedItineraries: PricedItineraries) {
-        localStorage.setItem('pricedItineraries', JSON.stringify(pricedItineraries));
-        localStorage.setItem('viewFlightDetail', 'true');
+        sessionStorage.setItem('pricedItineraries', JSON.stringify(pricedItineraries));
+        sessionStorage.setItem('viewFlightDetail', 'true');
         this.router.navigate(['/flight_detail']);
     }
 
@@ -226,7 +222,7 @@ export class FlightSearchResultComponent {
     formateDate3(checkinDate) {
         const msec = Date.parse(checkinDate);
         const d = moment(msec).format('MMM DD, YYYY');
-        if (d == 'Invalid date') {
+        if (d === 'Invalid date') {
             return checkinDate;
         }
         return d;
@@ -285,10 +281,10 @@ export class FlightSearchResultComponent {
     }
 
     openSearchModal(template: TemplateRef<any>) {
-        this.flightSearch = JSON.parse(localStorage.getItem('flightSearch'));
+        this.flightSearch = JSON.parse(sessionStorage.getItem('flightSearch'));
 
-        this.departureCity = this.flightHeader.departureAirport.displayName;
-        this.destinationCity = this.flightHeader.destinationAirport.displayName;
+        this.departure = this.flightHeader.departureAirport.displayName;
+        this.destination = this.flightHeader.destinationAirport.displayName;
         this.departureAirport = this.flightHeader.departureAirport;
         this.destinationAirport = this.flightHeader.destinationAirport;
         this.seatclass = this.flightSearch.ticketClass;
@@ -297,7 +293,7 @@ export class FlightSearchResultComponent {
         this.infantTraveller = this.flightSearch.travellerDetail.infants;
         this.formatDepartureDate();
 
-        if (JSON.parse(localStorage.getItem('multipleDest')) == null) {
+        if (JSON.parse(sessionStorage.getItem('multipleDest')) == null) {
             this.populateMultipleDest();
         }
         if (this.flightHeader.tripType === 'One-way Trip') {
@@ -310,18 +306,12 @@ export class FlightSearchResultComponent {
         }
 
         if (this.flightHeader.tripType === 'Multi Trip') {
-            this.multipleDest = JSON.parse(localStorage.getItem('multipleDest'));
+            this.multipleDest = JSON.parse(sessionStorage.getItem('multipleDest'));
             for (const m of this.multipleDest) {
                 m.departureDate = this.formatDate4(m.departureDate);
             }
         }
-        this.datasource = Observable.create((observer: any) => {
-            observer.next(this.airports);
-        }).pipe(
-            mergeMap((token: string) => of(this.airports))
-        );
         this.modalRef = this.modalService.show(template, this.config);
-
     }
 
     getTotalTraveller(): string {
@@ -346,23 +336,18 @@ export class FlightSearchResultComponent {
     typeaheadOnSelect(e: TypeaheadMatch, type: string): void {
         if (type === 'Departure') {
             this.departureAirport = e.item;
-            this.getAirportCountry(this.departureAirport);
-
         }
         if (type === 'Destination') {
             this.destinationAirport = e.item;
-            this.getAirportCountry(this.destinationAirport);
         }
     }
 
     typeaheadOnSelectM(e: TypeaheadMatch, type: string, index: number): void {
         if (type === 'Departure') {
             this.multipleDest[index].departureAirport = e.item;
-            this.getAirportCountry(this.departureAirport);
         }
         if (type === 'Destination') {
             this.multipleDest[index].arrivalAirport = e.item;
-            this.getAirportCountry(this.destinationAirport);
         }
     }
 
@@ -370,7 +355,7 @@ export class FlightSearchResultComponent {
         this.travelbetaAPIService.postRequest(JSON.stringify({ cityCode: airport.cityCode }), this.travelbetaAPIService.GET_CITY).subscribe(
             city => {
                 if (city.status === 0) {
-                    const countries: Country[] = this.initModel.countries;
+                    const countries: Country[] = JSON.parse(sessionStorage.getItem('countries'));
                     for (const c of countries) {
                         if (c.code === city.data.countryCode) {
                             airport.country = c.name;
@@ -520,8 +505,8 @@ export class FlightSearchResultComponent {
         let tripTypeString = '';
         const flightSearch = new FlightDataSearch();
         const flightItineraryDetails = flightSearch.flightItineraryDetail;
-        flightSearch.ticketClass = parseInt(this.seatclass);
-        flightSearch.tripType = parseInt(tripType);
+        flightSearch.ticketClass = parseInt(this.seatclass, 10);
+        flightSearch.tripType = parseInt(tripType, 10);
         flightSearch.travellerDetail = { adults: this.adultTraveller, children: this.childTraveller, infants: this.infantTraveller };
         if (tripType === '1') {
             tripTypeString = 'One-way Trip';
@@ -535,7 +520,7 @@ export class FlightSearchResultComponent {
                 ticketClass: this.getTicketClass(flightSearch.ticketClass), depatureDate: this.departureDate,
                 arrivalDate: this.returnDate, tripType: tripTypeString
             };
-            localStorage.setItem('flightHeader', JSON.stringify(flightHeader));
+            sessionStorage.setItem('flightHeader', JSON.stringify(flightHeader));
         }
         if (tripType === '2') {
             tripTypeString = 'Round Trip';
@@ -552,7 +537,7 @@ export class FlightSearchResultComponent {
                 totalTravelers: this.getTotalTraveller(), ticketClass: this.getTicketClass(flightSearch.ticketClass),
                 depatureDate: this.departureDate, arrivalDate: this.returnDate, tripType: tripTypeString
             };
-            localStorage.setItem('flightHeader', JSON.stringify(flightHeader));
+            sessionStorage.setItem('flightHeader', JSON.stringify(flightHeader));
         }
         if (tripType === '3') {
             const index = this.multipleDest.length - 1;
@@ -569,26 +554,27 @@ export class FlightSearchResultComponent {
                 ticketClass: this.getTicketClass(flightSearch.ticketClass), depatureDate: this.departureDate,
                 arrivalDate: this.returnDate, tripType: tripTypeString
             };
-            localStorage.setItem('flightHeader', JSON.stringify(flightHeader));
-            localStorage.setItem('multipleDest', JSON.stringify(this.multipleDest));
+            sessionStorage.setItem('flightHeader', JSON.stringify(flightHeader));
+            sessionStorage.setItem('multipleDest', JSON.stringify(this.multipleDest));
         }
         this.spinnerService.show();
         this.travelbetaAPIService.postRequest(flightSearch, this.travelbetaAPIService.PROCESS_FLIGHT_SEARCH).subscribe(
             flight => {
-                if (flight.status == 0) {
-                    this.flightHeader = JSON.parse(localStorage.getItem('flightHeader'));
-                    localStorage.setItem('flight', JSON.stringify(flight.data));
+                if (flight.status === 0) {
+                    this.flightHeader = JSON.parse(sessionStorage.getItem('flightHeader'));
+                    sessionStorage.setItem('flight', JSON.stringify(flight.data));
                     this.flight = flight.data;
                     this.popluateFlights();
                     this.getAirlineList();
                     flightSearch.flightItineraryDetail = flightItineraryDetails;
-                    localStorage.setItem('flightSearch', JSON.stringify(flightSearch));
+                    sessionStorage.setItem('flightSearch', JSON.stringify(flightSearch));
                     this.flightSearch = flightSearch;
                     this.spinnerService.hide();
                     this.modalRef.hide();
                 }
             },
             error => {
+                this.spinnerService.hide();
                 console.log(error);
             });
     }
@@ -627,9 +613,15 @@ export class FlightSearchResultComponent {
             a.minPrice = min;
         }
 
-        this.airlines.sort(function (a, b) {
-            const textA = a.name.toUpperCase();
-            const textB = b.name.toUpperCase();
+        // this.airlines.sort(function (a, b) {
+        //     const textA = a.name.toUpperCase();
+        //     const textB = b.name.toUpperCase();
+        //     return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        // });
+
+        this.airlines.sort((a, b) => {
+            const textA = a.minPrice;
+            const textB = b.minPrice;
             return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
         });
     }

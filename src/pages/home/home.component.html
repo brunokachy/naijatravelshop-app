@@ -13,12 +13,12 @@
                                         <span>Flights</span>
                                     </a>
                                 </li>
-                                <!-- <li>
+                                <li>
                                     <a href="#tab1" data-toggle="tab">
                                         <i class="fa fa-building-o"></i>
                                         <span>Hotels</span>
                                     </a>
-                                </li> -->
+                                </li>
                                 <li>
                                     <a href="#tab3" data-toggle="tab">
                                         <i class="fa fa-map-marker"></i>
@@ -49,15 +49,14 @@
                                                             <div class="form-group form-group-lg form-group-icon-left">
                                                                 <i class="fa fa-plane input-icon"></i>
                                                                 <label>Flying from</label>
-                                                                <input [(ngModel)]="departureCity" name="departureCity"
-                                                                    [typeahead]="datasource"
-                                                                    (typeaheadOnSelect)="typeaheadOnSelect($event, 'Departure')"
-                                                                    [typeaheadOptionsLimit]="10"
+                                                                <input [(ngModel)]="departure" name="departureCity"
+                                                                    [typeahead]="airports" #departureCity1
                                                                     typeaheadOptionField="displayName"
-                                                                    placeholder="Enter name of city or airport"
-                                                                    class="typeahead form-control"
-                                                                    [typeaheadMinLength]="2" autocomplete="off"
-                                                                    (ngModelChange)="checkInput($event)" required />
+                                                                    [typeaheadOptionsLimit]="7"
+                                                                    (keypress)="checkForAirportList('Departure1')"
+                                                                    (typeaheadOnSelect)="typeaheadOnSelect($event, 'Departure')"
+                                                                    placeholder="Enter name of city or airport" required
+                                                                    autocomplete="off" class="typeahead form-control">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -65,14 +64,13 @@
                                                                 <i class="fa fa-plane fa-flip-vertical input-icon"></i>
                                                                 <label>Flying to</label>
                                                                 <input type="text" class="typeahead form-control"
-                                                                    [(ngModel)]="destinationCity" name="destinationCity"
+                                                                    [(ngModel)]="destination" name="destinationCity"
                                                                     placeholder="Enter name of city or airport"
-                                                                    [typeaheadMinLength]="2" [typeahead]="datasource"
+                                                                    [typeahead]="airports" #destinationCity1
+                                                                    (keypress)="checkForAirportList('Destination1')"
                                                                     (typeaheadOnSelect)="typeaheadOnSelect($event, 'Destination')"
-                                                                    [typeaheadOptionsLimit]="10"
-                                                                    typeaheadOptionField="displayName"
-                                                                    (ngModelChange)="checkInput($event)"
-                                                                    autocomplete="off" required>
+                                                                    [typeaheadOptionsLimit]="7" autocomplete="off"
+                                                                    typeaheadOptionField="displayName" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -125,15 +123,14 @@
                                                             <div class="form-group form-group-lg form-group-icon-left">
                                                                 <i class="fa fa-plane input-icon"></i>
                                                                 <label>Flying from</label>
-                                                                <input [(ngModel)]="departureCity" name="departureCity"
-                                                                    [typeahead]="datasource"
-                                                                    (typeaheadOnSelect)="typeaheadOnSelect($event, 'Departure')"
-                                                                    [typeaheadOptionsLimit]="10"
+                                                                <input [(ngModel)]="departure" name="departureCity"
+                                                                    [typeahead]="airports" #departureCity2
                                                                     typeaheadOptionField="displayName"
-                                                                    placeholder="Enter name of city or airport"
-                                                                    class="typeahead form-control"
-                                                                    [typeaheadMinLength]="2" autocomplete="off"
-                                                                    (ngModelChange)="checkInput($event)" required />
+                                                                    [typeaheadOptionsLimit]="7"
+                                                                    (keypress)="checkForAirportList('Departure2')"
+                                                                    (typeaheadOnSelect)="typeaheadOnSelect($event, 'Departure')"
+                                                                    placeholder="Enter name of city or airport" required
+                                                                    autocomplete="off" class="typeahead form-control">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -141,13 +138,13 @@
                                                                 <i class="fa fa-plane fa-flip-vertical input-icon"></i>
                                                                 <label>Flying to</label>
                                                                 <input type="text" class="typeahead form-control"
-                                                                    [(ngModel)]="destinationCity" name="destinationCity"
+                                                                    [(ngModel)]="destination" name="destinationCity"
                                                                     placeholder="Enter name of city or airport"
-                                                                    [typeaheadMinLength]="2" [typeahead]="datasource"
+                                                                    [typeahead]="airports" #destinationCity2
+                                                                    (keypress)="checkForAirportList('Destination2')"
                                                                     (typeaheadOnSelect)="typeaheadOnSelect($event, 'Destination')"
-                                                                    [typeaheadOptionsLimit]="10" autocomplete="off"
-                                                                    typeaheadOptionField="displayName"
-                                                                    (ngModelChange)="checkInput($event)" required>
+                                                                    [typeaheadOptionsLimit]="7" autocomplete="off"
+                                                                    typeaheadOptionField="displayName" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -215,14 +212,14 @@
                                                                 <i class="fa fa-plane input-icon"></i>
                                                                 <label>Flying from</label>
                                                                 <input ngModel name="departureCity{{i}}"
-                                                                    [typeahead]="datasource"
+                                                                    [typeahead]="airports"
+                                                                    (keypress)="checkForAirportList('Departure')"
                                                                     (typeaheadOnSelect)="typeaheadOnSelectM($event, 'Departure', i)"
-                                                                    [typeaheadOptionsLimit]="10"
+                                                                    [typeaheadOptionsLimit]="7"
                                                                     typeaheadOptionField="displayName"
                                                                     placeholder="Enter name of city or airport"
                                                                     class="typeahead form-control" autocomplete="off"
-                                                                    [typeaheadMinLength]="2"
-                                                                    (ngModelChange)="checkInput($event)" required />
+                                                                    required />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -232,11 +229,11 @@
                                                                 <input type="text" class="typeahead form-control"
                                                                     ngModel name="destinationCity{{i}}"
                                                                     placeholder="Enter name of city or airport"
-                                                                    [typeaheadMinLength]="2" [typeahead]="datasource"
+                                                                    [typeahead]="airports"
+                                                                    (keypress)="checkForAirportList('Destination')"
                                                                     (typeaheadOnSelect)="typeaheadOnSelectM($event, 'Destination', i)"
-                                                                    [typeaheadOptionsLimit]="10" autocomplete="off"
-                                                                    typeaheadOptionField="displayName"
-                                                                    (ngModelChange)="checkInput($event)" required>
+                                                                    [typeaheadOptionsLimit]="7" autocomplete="off"
+                                                                    typeaheadOptionField="displayName" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
@@ -304,98 +301,120 @@
                                             <div class="col-md-4">
                                                 <div class="form-group form-group-lg form-group-icon-left">
                                                     <i class="fa fa-map-marker input-icon"></i>
-                                                    <label>Where are you going?</label>
-                                                    <input class="typeahead form-control"
-                                                        placeholder="City, Airport, Point of Interest or U.S. Zip Code"
-                                                        type="text" />
+                                                    <label>City</label>
+                                                    <input [(ngModel)]="city" name="hotelCity" [typeahead]="hotelCities"
+                                                        #hotelCityElement typeaheadOptionField="displayName"
+                                                        [typeaheadOptionsLimit]="7" (keypress)="checkForHotelCityList()"
+                                                        (typeaheadOnSelect)="typeaheadOnSelectH($event)"
+                                                        placeholder="Enter name of city" required autocomplete="off"
+                                                        class="typeahead form-control">
                                                 </div>
                                             </div>
                                             <div class="col-md-8">
                                                 <div class="input-daterange" data-date-format="M d, D">
                                                     <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <div class="form-group form-group-lg form-group-icon-left">
                                                                 <i
                                                                     class="fa fa-calendar input-icon input-icon-highlight"></i>
                                                                 <label>Check-in</label>
-                                                                <input class="form-control" name="start" type="text" />
+                                                                <input type="text" class="date-pick form-control"
+                                                                    name="checkinDate" placeholder="Check-in Date"
+                                                                    [maxDate]="maxCheckinDate"
+                                                                    [minDate]="minCheckinDate"
+                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange'}"
+                                                                    (bsValueChange)="formateCheckoutDate($event)"
+                                                                    required [(ngModel)]="checkinDate" bsDatepicker>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <div class="form-group form-group-lg form-group-icon-left">
                                                                 <i
                                                                     class="fa fa-calendar input-icon input-icon-highlight"></i>
                                                                 <label>Check-out</label>
-                                                                <input class="form-control" name="end" type="text" />
+                                                                <input type="text" class="date-pick form-control"
+                                                                    name="checkoutDate" placeholder="Check-out Date"
+                                                                    [maxDate]="maxCheckoutDate"
+                                                                    [minDate]="minCheckoutDate"
+                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                                    required [(ngModel)]="checkoutDate" bsDatepicker>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <div
                                                                 class="form-group form-group-lg form-group-select-plus">
                                                                 <label>Rooms</label>
-                                                                <div class="btn-group btn-group-select-num"
-                                                                    data-toggle="buttons">
-                                                                    <label class="btn btn-primary active">
-                                                                        <input type="radio" name="options" />1</label>
-                                                                    <label class="btn btn-primary">
-                                                                        <input type="radio" name="options" />2</label>
-                                                                    <label class="btn btn-primary">
-                                                                        <input type="radio" name="options" />3</label>
-                                                                    <label class="btn btn-primary">
-                                                                        <input type="radio" name="options" />3+</label>
-                                                                </div>
-                                                                <select class="form-control hidden">
-                                                                    <option>1</option>
-                                                                    <option>2</option>
-                                                                    <option>3</option>
-                                                                    <option selected="selected">4</option>
-                                                                    <option>5</option>
-                                                                    <option>6</option>
-                                                                    <option>7</option>
-                                                                    <option>8</option>
-                                                                    <option>9</option>
-                                                                    <option>10</option>
-                                                                    <option>11</option>
-                                                                    <option>12</option>
-                                                                    <option>13</option>
-                                                                    <option>14</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <div
-                                                                class="form-group form-group-lg form-group-select-plus">
-                                                                <label>Guests</label>
-                                                                <div class="btn-group btn-group-select-num"
-                                                                    data-toggle="buttons">
-                                                                    <label class="btn btn-primary active">
-                                                                        <input type="radio" name="options" />1</label>
-                                                                    <label class="btn btn-primary">
-                                                                        <input type="radio" name="options" />2</label>
-                                                                    <label class="btn btn-primary">
-                                                                        <input type="radio" name="options" />3</label>
-                                                                    <label class="btn btn-primary">
-                                                                        <input type="radio" name="options" />3+</label>
-                                                                </div>
-                                                                <select class="form-control hidden">
-                                                                    <option>1</option>
-                                                                    <option>2</option>
-                                                                    <option>3</option>
-                                                                    <option selected="selected">4</option>
-                                                                    <option>5</option>
-                                                                    <option>6</option>
-                                                                    <option>7</option>
-                                                                    <option>8</option>
-                                                                    <option>9</option>
-                                                                    <option>10</option>
-                                                                    <option>11</option>
-                                                                    <option>12</option>
-                                                                    <option>13</option>
-                                                                    <option>14</option>
+                                                                <select class="form-control"
+                                                                    (ngModelChange)="checkRooms($event)"
+                                                                    name="noOfRooms" [(ngModel)]="noOfRooms" required>
+                                                                    <option value="1">1</option>
+                                                                    <option value="2">2</option>
+                                                                    <!-- <option value="3">3</option>
+                                                                    <option value="4">4</option> -->
                                                                 </select>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" *ngFor="let u of roomDetailLists; let i = index">
+                                            <div class="col-md-2">
+                                                <div class="form-group form-group-lg form-group-select-plus">
+                                                    <label for="noOfRooms">Adults (18yrs+)</label>
+                                                    <select class="form-control" name="adult{{i}}"
+                                                        (ngModelChange)="setAdultAge($event, i)"
+                                                        [(ngModel)]="u.numberOfAdults" required>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group form-group-lg form-group-select-plus">
+                                                    <label for="child{{i}}">Child(0 - 17yrs)</label>
+                                                    <select class="form-control" name="child{{i}}"
+                                                        (ngModelChange)="setChildrenAge($event, i)"
+                                                        [(ngModel)]="u.numberOfChildren" required>
+                                                        <option value="0">--</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2" *ngFor="let v of u.childrenAgeList; let j = index">
+                                                <div class="form-group form-group-lg form-group-select-plus">
+                                                    <label for="childAge{{j}}">Age of Child {{j + 1}}</label>
+                                                    <select class="form-control" name="childAge{{j}}"
+                                                        [(ngModel)]="roomDetailLists[i].childrenAgeList[j]" required>
+                                                        <option value="0">Under 1</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+                                                        <option value="13">13</option>
+                                                        <option value="14">14</option>
+                                                        <option value="15">15</option>
+                                                        <option value="16">16</option>
+                                                        <option value="17">17</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -493,15 +512,16 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                    <div class="form-group form-group-lg form-group-icon-left">
-                                                            <label>&nbsp;</label>
-                                                            <button class="btn btn-primary" type="submit">Submit Request</button>
-                                                        </div>
-                                                    
-                                       
+                                                <div class="form-group form-group-lg form-group-icon-left">
+                                                    <label>&nbsp;</label>
+                                                    <button class="btn btn-primary btn-lg" type="submit">Submit
+                                                        Request</button>
                                                 </div>
+
+
+                                            </div>
                                         </div>
-                                        
+
                                     </form>
                                 </div>
                             </div>
@@ -525,7 +545,7 @@
 
 
 
-<div class="container-fluid bg-white pt-50 pb-50">
+<div class="container-fluid bg-white pt-50 pb-50" *ngIf="topDeals.length > 0">
     <div class="container">
         <div class="carousel-nav">
             <span class="fa fa-chevron-left prev2"></span> <span class="fa fa-chevron-right next2"></span>
@@ -533,128 +553,32 @@
         <h3 class="text-left fw-bold dark-blue mb20">Latest Flight Deals</h3>
 
         <div class="row row-wrap flight-slide">
-            <div class="col-md-3">
+            <div class="col-md-3" *ngFor="let deal of topDeals">
                 <div class="thumb last-minute-card">
                     <header class="thumb-logo">
                         <a class="hover-img" href="#">
-                            <img src="assets/images/airlines/virgin-atlantic.png" alt="Virgin Atlantic"
-                                title="Virgin Atlantic" />
+                            <img src="https://api.travelbeta.com/get-airline-image/{{deal.airlineCode}}"
+                                alt="{{deal.airlineName}}" title="{{deal.airlineName}}">
                         </a>
                     </header>
                     <div class="primary-bg p-20 text-white">
 
                         <h5 class="thumb-title fs-l fw-semibold">
-                            Lagos - Amsterdam
+                            {{deal.originCityName}} - {{deal.destinationCityName}}
                         </h5>
                         <p>
                             <small>
-                                Availability: Oct 23 - Nov 08</small>
+                                Availability: {{formatTopDealDate(deal.availibilityStartDate)}} -
+                                {{formatTopDealDate(deal.availibilityEndDate)}}</small>
                         </p>
                         <p class="mt-10">
-                            <span class="fs-xl fw-semibold">₦300,000</span>
-                            <a href="#"><span class="btn btn-orange pull-right fs-s">Book Now</span></a>
+                            <span class="fs-xl fw-semibold">₦{{formatCurrency(deal.dealAmountInKobo)|number}}</span>
+                            <button class="btn btn-orange pull-right fs-s" (click)="bookTopDeal(deal)"
+                                type="button">Book Now</button>
                         </p>
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-3">
-                <div class="thumb last-minute-card">
-                    <header class="thumb-logo">
-                        <a class="hover-img" href="#">
-                            <img src="assets/images/airlines/emirates.jpg" alt="Emirate" title="Emirate Airline" />
-                        </a>
-                    </header>
-                    <div class="primary-bg p-20 text-white">
-
-                        <h5 class="thumb-title fs-l fw-semibold">
-                            Lagos - New York
-                        </h5>
-                        <p>
-                            <small>
-                                Availability: Oct 27 - Nov 09</small>
-                        </p>
-                        <p class="mt-10">
-                            <span class="fs-xl fw-semibold">₦340,000</span>
-                            <a href="#"><span class="btn btn-orange pull-right fs-s">Book Now</span></a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="thumb last-minute-card">
-                    <header class="thumb-logo">
-                        <a class="hover-img" href="#">
-                            <img src="assets/images/airlines/klm-airline.jpg" alt="KLM Airline" title="KLM Airline" />
-                        </a>
-                    </header>
-                    <div class="primary-bg p-20 text-white">
-
-                        <h5 class="thumb-title fs-l fw-semibold">
-                            Lagos - London
-                        </h5>
-                        <p>
-                            <small>
-                                Availability: Oct 07 - Nov 01</small>
-                        </p>
-                        <p class="mt-10">
-                            <span class="fs-xl fw-semibold">₦140,000</span>
-                            <a href="#"><span class="btn btn-orange pull-right fs-s">Book Now</span></a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="thumb last-minute-card">
-                    <header class="thumb-logo">
-                        <a class="hover-img" href="#">
-                            <img src="assets/images/airlines/ethiopian-airways.jpg" alt="Ethiopian Airways"
-                                title="Ethiopian Airways" />
-                        </a>
-                    </header>
-                    <div class="primary-bg p-20 text-white">
-
-                        <h5 class="thumb-title fs-l fw-semibold">
-                            Abuja - Dubai
-                        </h5>
-                        <p>
-                            <small>
-                                Availability: Aug 20 - Aug 27</small>
-                        </p>
-                        <p class="mt-10">
-                            <span class="fs-xl fw-semibold">₦137,000</span>
-                            <a href="#"><span class="btn btn-orange pull-right fs-s">Book Now</span></a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="thumb last-minute-card">
-                    <header class="thumb-logo">
-                        <a class="hover-img" href="#">
-                            <img src="assets/images/airlines/south-african-airway.png" alt="South African Airway"
-                                title="South African Airway" />
-                        </a>
-                    </header>
-                    <div class="primary-bg p-20 text-white">
-
-                        <h5 class="thumb-title fs-l fw-semibold">
-                            Abuja - South Africa
-                        </h5>
-                        <p>
-                            <small>
-                                Availability: Aug 10 - Aug 17</small>
-                        </p>
-                        <p class="mt-10">
-                            <span class="fs-xl fw-semibold">₦180,000</span>
-                            <a href="#"><span class="btn btn-orange pull-right fs-s">Book Now</span></a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 </div>

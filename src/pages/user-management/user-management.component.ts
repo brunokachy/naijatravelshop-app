@@ -12,7 +12,7 @@ import { LocalAPIService } from '../../provider/local.api.service';
 export class UserManagementComponent {
 
     constructor(private localAPIService: LocalAPIService) {
-        this.isSuperAdmin = JSON.parse(sessionStorage.getItem('isSuperAdmin'));
+        this.isSuperAdmin = JSON.parse(localStorage.getItem('isSuperAdmin'));
         this.getPortalUsers();
     }
 

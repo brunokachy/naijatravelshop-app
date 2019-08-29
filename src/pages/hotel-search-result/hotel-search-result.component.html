@@ -1,19 +1,16 @@
+<div class="breadcrumb-wrap">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Home</a>
+            </li>
+            <li class="active">
+                Hotel Search Result
+            </li>
+        </ul>
+    </div>
+</div>
 <div class="container">
-    <ul class="breadcrumb">
-        <li>
-            <a href="index.html">Home</a>
-        </li>
-        <li>
-            <a href="#">United States</a>
-        </li>
-        <li>
-            <a href="#">New York (NY)</a>
-        </li>
-        <li>
-            <a href="#">New York City</a>
-        </li>
-        <li class="active">New York City Hotels</li>
-    </ul>
     <div class="mfp-with-anim mfp-hide mfp-dialog mfp-search-dialog" id="search-dialog">
         <h3>Search for Hotel</h3>
         <form>
@@ -106,14 +103,18 @@
             <button class="btn btn-primary btn-lg" type="submit">Search for Hotels</button>
         </form>
     </div>
-    <h3 class="booking-title">521 hotels in New York on Mar 22 - Apr 17 for 1 adult
-        <small>
+
+    <h3 class="booking-title">
+        {{hotels.totalResult}} hotels in {{hotelSearch.location.city}} on {{formateDate3(hotelSearch.checkInDate)}} -
+        {{formateDate3(hotelSearch.checkOutDate)}}
+        521 hotels in New York on Mar 22 - Apr 17 for 1 adult
+        <small class="btn btn-primary">
             <a class="popup-text" href="#search-dialog" data-effect="mfp-zoom-out">Change search</a>
         </small>
     </h3>
     <div class="row">
-        <div class="col-md-3">
-            <aside class="booking-filters text-white">
+        <div class="col-lg-3 col-md-4 col-sm-5">
+            <aside id="scrollto" class="booking-filters text-white">
                 <h3>Filter By:</h3>
                 <ul class="list booking-filters-list">
                     <li>
@@ -287,7 +288,10 @@
                 </ul>
             </aside>
         </div>
-        <div class="col-md-9">
+
+        <div class="col-lg-9 col-md-8 col-sm-7">
+            <div id="show" class="btn btn-primary shwfilter btn-rotate">Show Filter</div><br>
+
             <div class="nav-drop booking-sort">
                 <h5 class="booking-sort-title">
                     <a href="#">Sort: Availability
@@ -313,14 +317,14 @@
                     </li>
                 </ul>
             </div>
-            <div class="row row-wrap">
+            <div class="row row-wrap hotelsbx">
                 <div class="col-md-4">
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
-                            <a class="hover-img" (click) = "selectHotel()">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                            <a class="hover-img" href="#">
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -348,7 +352,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -359,9 +363,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -389,7 +393,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -400,9 +404,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -430,7 +434,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -441,9 +445,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -471,7 +475,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -482,9 +486,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -512,7 +516,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -523,9 +527,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -553,7 +557,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -564,9 +568,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -594,7 +598,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -605,9 +609,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -635,7 +639,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -646,9 +650,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -676,7 +680,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -687,9 +691,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -717,7 +721,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -728,9 +732,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -758,7 +762,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -769,9 +773,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -799,7 +803,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -810,9 +814,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -840,7 +844,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -851,9 +855,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -881,7 +885,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -892,9 +896,9 @@
                     <div class="thumb last-minute-card">
                         <header class="thumb-header">
                             <a class="hover-img" href="#">
-                                <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York"
+                                <img src="img/waldorf-astoria.png" alt="Waldorf Astoria New York"
                                     title="Waldorf Astoria New York" />
-                                <h5 class="hover-title-center">Book Now</h5>
+                                <h5 class="hover-title-center">See Details</h5>
                             </a>
                         </header>
                         <div class="last-minute-caption">
@@ -922,7 +926,7 @@
                                 <small>
                                     <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
                             </p>
-                            <p class="mb0 text-darken">
+                            <p class="mb0 mt15 text-darken">
                                 <span class="text-lg lh1em text-color">NGN 30,000</span>
                                 <small> per night</small>
                             </p>
@@ -967,8 +971,8 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-6 text-right">
-                    <p>Not what you're looking for?
+                <div class="col-md-6 text-right filterscrollerstop">
+                    <p class="btm-search">Not what you're looking for?
                         <a class="popup-text" href="#search-dialog" data-effect="mfp-zoom-out">Try your search again</a>
                     </p>
                 </div>
@@ -977,4 +981,3 @@
     </div>
     <div class="gap"></div>
 </div>
-

@@ -10,8 +10,8 @@ import { TokenObject } from '../model/TokenObject';
 export class LocalAPIService {
     constructor(private httpClient: HttpClient) { }
 
-      private naijaTravelShopAPIBaseURL = window.location.origin + '/naijatravelshop/api/';
-   // private naijaTravelShopAPIBaseURL = 'http://localhost:8080/naijatravelshop/api/';
+    // private naijaTravelShopAPIBaseURL = window.location.origin + '/naijatravelshop/api/';
+     private naijaTravelShopAPIBaseURL = 'http://localhost:8080/naijatravelshop/api/';
 
     public CONFIRM_REGISTRATION = this.naijaTravelShopAPIBaseURL + 'confirm_registration';
     public CREATE_ACCOUNT = this.naijaTravelShopAPIBaseURL + 'admin/create_account';
@@ -33,6 +33,7 @@ export class LocalAPIService {
     public CHANGE_VISA_REQUEST_STATUS = this.naijaTravelShopAPIBaseURL + 'admin/change_visa_request_status';
     public GET_FLIGHT_RESERVATION_DETAILS = this.naijaTravelShopAPIBaseURL + 'admin/get_flight_reservation_details';
     public BANK_PAYMENT = this.naijaTravelShopAPIBaseURL + 'payment/bank_payment';
+    public SEARCH_HOTELS = this.naijaTravelShopAPIBaseURL + 'hotel/search_hotels';
 
     // postRequest(requestData: any, url: string): Observable<any> {
     //     let token = this.getSavedToken();

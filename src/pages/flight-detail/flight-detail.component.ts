@@ -25,9 +25,9 @@ import { LocalAPIService } from '../../provider/local.api.service';
 export class FlightDetailComponent {
     constructor(private modalService: BsModalService, private router: Router, private travelbetaAPIService: TravelbetaAPIService,
         private spinnerService: NgxSpinnerService, private localAPIService: LocalAPIService) {
-        this.pricedItinerary = JSON.parse(localStorage.getItem('pricedItineraries'));
-        this.flightSearch = JSON.parse(localStorage.getItem('flightSearch'));
-        this.flightHeader = JSON.parse(localStorage.getItem('flightHeader'));
+        this.pricedItinerary = JSON.parse(sessionStorage.getItem('pricedItineraries'));
+        this.flightSearch = JSON.parse(sessionStorage.getItem('flightSearch'));
+        this.flightHeader = JSON.parse(sessionStorage.getItem('flightHeader'));
 
         this.getCountries();
         this.populateFlightDetails();
@@ -75,8 +75,7 @@ export class FlightDetailComponent {
     isModalShown = false;
 
     getCountries() {
-        const initModel: InitModel = JSON.parse(sessionStorage.getItem('initModel'));
-        this.countries = initModel.countries;
+        this.countries = JSON.parse(localStorage.getItem('countries'));
         // this.checkProfile();
     }
 
@@ -306,14 +305,14 @@ export class FlightDetailComponent {
             booking => {
                 if (booking.status === 0) {
                     const bookingResponse: BookingResponse = booking.data;
-                    localStorage.setItem('bookingResponse', JSON.stringify(bookingResponse));
-                    localStorage.setItem('contactDetail', JSON.stringify(this.contactDetail));
+                    sessionStorage.setItem('bookingResponse', JSON.stringify(bookingResponse));
+                    sessionStorage.setItem('contactDetail', JSON.stringify(this.contactDetail));
                     if (booking.data.successful === false) {
                         this.spinnerService.hide();
                         this.add('danger', booking.data.message);
                     } else {
                         this.secondBooking(bookingResponse);
-                        localStorage.setItem('viewFlightPayment', 'true');
+                        sessionStorage.setItem('viewFlightPayment', 'true');
                         this.router.navigate(['/flight_payment']);
                     }
                 }
@@ -387,15 +386,15 @@ export class FlightDetailComponent {
             + '; ' + this.flightHeader.ticketClass + '; ' + this.flightHeader.tripType;
 
 
-        if (JSON.parse(sessionStorage.getItem('user')) != null) {
-            const contactDetail: User = JSON.parse(sessionStorage.getItem('user'));
+        if (JSON.parse(localStorage.getItem('user')) != null) {
+            const contactDetail: User = JSON.parse(localStorage.getItem('user'));
             booking.portalUsername = contactDetail.email;
         }
 
         this.spinnerService.show();
         this.localAPIService.postRequest(booking, this.localAPIService.BOOK).subscribe(
             data => {
-                localStorage.setItem('secondbookingResponse', JSON.stringify(data.data));
+                sessionStorage.setItem('secondbookingResponse', JSON.stringify(data.data));
                 this.spinnerService.hide();
             },
             error => {
@@ -423,13 +422,12 @@ export class FlightDetailComponent {
     signin() {
         this.localAPIService.postRequest({ email: this.email, password: this.password }, this.localAPIService.LOGIN).subscribe(
             data => {
-                console.log(data.data);
                 if (data.status === 'failure') {
                     this.alertMessage = data.message;
                     this.showModal();
                 }
                 if (data.status === 'success') {
-                    sessionStorage.setItem('user', JSON.stringify(data.data));
+                    localStorage.setItem('user', JSON.stringify(data.data));
                     //   this.checkProfile();
                     this.modalRef.hide();
                 }

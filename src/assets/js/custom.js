@@ -14,11 +14,13 @@ $(document).ready(function(){
     $('.responsive-slick').slick({
         centerMode: true,
         centerPadding: '60px',
-        arrows: true,
-        
+        arrows: true,        
         speed: 300,
         slidesToShow: 4,
-        slidesToScroll: 4,
+        slidesToScroll: 4, 
+        autoplay: true,       
+        prevArrow: $('.prev3'),
+        nextArrow: $('.next3'),
         responsive: [
           {
             breakpoint: 1024,
@@ -682,3 +684,68 @@ jQuery(function($) {
         $("#copyright-year").text((new Date).getFullYear());
     });
 });
+
+
+
+/* Filter Toggle
+
+ ========================================================*/
+function clickHandler() {
+    //$('#hide').toggle();
+    $('#show').toggle();
+    $('.booking-filters').toggle('slow');
+}
+    
+$(function(){
+    //$('.booking-filters').hide();
+    
+    $('#show').on('click', clickHandler);
+    $('#show').click(function(){
+        $("html, body").animate({ scrollTop: $(scrollto).offset().top
+        }, 2000);
+        return false;
+     });
+});
+
+
+/* Stick and Unstick Filter toggle button
+
+ ========================================================*/
+var elWrap = $(".global-wrap");
+var elMenu = $(".shwfilter");
+var osMenu = elMenu.offset().top;
+var osFoot = $(".filterscrollerstop").offset().top - elMenu.height();
+
+$(window).scroll(10, function() {
+
+    elMenu.css("top", 0);
+    var edge = $(window).scrollTop();
+
+    if (osMenu <= edge && osFoot > edge) {
+        elWrap.addClass("dock").removeClass("stop");
+    }
+    else {
+        elWrap.removeClass("dock stop");
+    }
+    //if (osFoot <= edge) {
+     //   elMenu.css("top", osFoot);
+     //   elWrap.removeClass("dock").addClass("stop");
+    //}
+
+});
+
+
+
+/* Filter Toggle
+
+ ========================================================
+function clickHandler2() {
+    $(".booking-filters").css("top", 0);
+}
+    
+$(document).ready(function(){   
+    $('.btn-rotate').on('click', clickHandler2);
+});
+*/
+
+

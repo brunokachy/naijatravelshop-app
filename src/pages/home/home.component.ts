@@ -1,17 +1,20 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import * as moment from 'moment';
 import { TypeaheadMatch, ModalDirective } from 'ngx-bootstrap';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FlightDataSearch } from '../../model/FlightDataSearch';
-import { mergeMap, map } from 'rxjs/operators';
 import { InitModel } from '../../model/InitModel';
 import { Country } from '../../model/Country';
 import { VisaRequest } from '../../model/VisaRequest';
-import { Observable, of } from 'rxjs';
 import { TravelbetaAPIService } from '../../provider/travelbeta.api.service';
 import { LocalAPIService } from '../../provider/local.api.service';
 import { User } from '../../model/user';
+import { Airport } from '../../model/Airport';
+import { TopDeal } from '../../model/TopDeals';
+import { HotelCity } from '../../model/HotelCity';
+import { RoomDetailList } from '../../model/RoomDetailList';
+import { HotelSearch } from '../../model/HotelSearch';
 
 
 @Component({
@@ -22,43 +25,21 @@ import { User } from '../../model/user';
 })
 export class HomeComponent {
     initModel: InitModel = new InitModel();
+    @ViewChild('departureCity1') departureCityElement1: ElementRef;
+    @ViewChild('destinationCity1') destinationCityElement1: ElementRef;
+    @ViewChild('departureCity2') departureCityElement2: ElementRef;
+    @ViewChild('destinationCity2') destinationCityElement2: ElementRef;
+    @ViewChild('hotelCityElement') hotelCityElement: ElementRef;
 
     constructor(private TBservice: TravelbetaAPIService, private router: Router,
         private spinner: NgxSpinnerService, private localService: LocalAPIService) {
-        localStorage.clear();
-
-        const interval = setInterval(() => {
-            if (JSON.parse(sessionStorage.getItem('initModel')) != null) {
-                this.initModel = JSON.parse(sessionStorage.getItem('initModel'));
-                this.countries = this.initModel.countries;
-                clearInterval(interval);
-            }
-        }, 1000);
-
-        setInterval(() => {
-            if (this.searchTerm === '') {
-                this.airports = [];
-            } else {
-                this.getAirports(this.searchTerm);
-            }
-        }, 1000);
-
+        this.sessionConfig();
+        this.countries = JSON.parse(localStorage.getItem('countries'));
+        this.getTopDeals();
         this.formatDepartureDate();
         this.populateMultipleDest();
-        this.datasource = Observable.create((observer: any) => {
-            // Runs on every search
-            observer.next(this.airports);
-        }).pipe(
-            mergeMap((token: string) => of(this.airports))
-        );
-
-        localStorage.setItem('viewFlightSearchResult', 'false');
-        localStorage.setItem('viewFlightDetail', 'false');
-        localStorage.setItem('viewFlightPayment', 'false');
-        localStorage.setItem('viewHotelPayment', 'false');
-        localStorage.setItem('viewHotelSearchResult', 'false');
-        localStorage.setItem('viewHotelRoom', 'false');
-        localStorage.setItem('viewHotelDetails', 'false');
+        this.formatCheckinDate();
+        this.setRooms();
     }
 
     minDepartureDate: Date;
@@ -68,12 +49,11 @@ export class HomeComponent {
     departureDate = '';
     returnDate = '';
 
-    departureCity: string;
-    destinationCity: string;
-    airports: any[] = [];
-    departureAirport: any;
-    destinationAirport: any;
-    datasource: Observable<any> = of([]);
+    airports: Airport[] = [];
+    departureAirport: Airport;
+    destinationAirport: Airport;
+    departure: string;
+    destination: string;
 
     adultTraveller = 1;
     childTraveller = 0;
@@ -82,9 +62,10 @@ export class HomeComponent {
     travellerAlert = '';
     tripType = '2';
     seatclass = '1';
-    multipleDest: { 'departureAirport': any, 'arrivalAirport': any, 'departureDate': string }[] = [];
+    multipleDest: { 'departureAirport': Airport, 'arrivalAirport': Airport, 'departureDate': string }[] = [];
 
     countries: Country[] = [];
+    topDeals: TopDeal[] = [];
 
     minVisaReturnDate: Date;
     maxVisaReturnDate: Date;
@@ -92,9 +73,17 @@ export class HomeComponent {
     visaReturnDate = '';
     visaRequest: VisaRequest = new VisaRequest();
 
-    selected = '';
-    cities: string[] = [];
-    searchTerm = '';
+    city: string;
+    hotelCities: HotelCity[] = [];
+    hotelCity: HotelCity;
+    noOfRooms = 1;
+    roomDetailLists: RoomDetailList[] = [];
+    checkinDate = '';
+    checkoutDate = '';
+    minCheckinDate: Date;
+    maxCheckinDate: Date;
+    minCheckoutDate: Date;
+    maxCheckoutDate: Date;
 
     @ViewChild('autoShownModal') autoShownModal: ModalDirective;
     isModalShown = false;
@@ -107,43 +96,205 @@ export class HomeComponent {
     typeaheadOnSelectM(e: TypeaheadMatch, type: string, index: number): void {
         if (type === 'Departure') {
             this.multipleDest[index].departureAirport = e.item;
-            this.getAirportCountry(this.multipleDest[index].departureAirport);
         }
         if (type === 'Destination') {
             this.multipleDest[index].arrivalAirport = e.item;
-            this.getAirportCountry(this.multipleDest[index].arrivalAirport);
         }
     }
 
-    getAirportCountry(airport: any) {
-        this.TBservice.postRequest(JSON.stringify({ cityCode: airport.cityCode }), this.TBservice.GET_CITY).subscribe(
-            city => {
-                if (city.status === 0) {
-                    const countries = this.initModel.countries;
-                    for (const c of countries) {
-                        if (c.code === city.data.countryCode) {
-                            airport.country = c.name;
-                        }
-                    }
+    checkForHotelCityList() {
+        const currentValue = this.hotelCityElement.nativeElement.value;
+        if (localStorage.getItem('hotelCities') == null) {
+            const intervalHotelCity = setInterval(() => {
+                this.hotelCityElement.nativeElement.value = 'Loading...';
+                this.hotelCityElement.nativeElement.disabled = true;
+                if (localStorage.getItem('hotelCities') != null) {
+                    this.hotelCities = JSON.parse(localStorage.getItem('hotelCities'));
+                    this.hotelCityElement.nativeElement.value = currentValue;
+                    this.hotelCityElement.nativeElement.disabled = false;
+                    clearInterval(intervalHotelCity);
                 }
-            });
+            }, 1000);
+        } else {
+            this.hotelCities = JSON.parse(localStorage.getItem('hotelCities'));
+        }
+    }
+
+    checkForAirportList(element) {
+        if (element === 'Departure1') {
+            const currentValue = this.departureCityElement1.nativeElement.value;
+            if (JSON.parse(localStorage.getItem('airports')) == null) {
+                const intervalAirport = setInterval(() => {
+                    this.departureCityElement1.nativeElement.value = 'Loading...';
+                    this.departureCityElement1.nativeElement.disabled = true;
+                    if (JSON.parse(localStorage.getItem('airports')) != null) {
+                        this.airports = JSON.parse(localStorage.getItem('airports'));
+                        this.departureCityElement1.nativeElement.value = currentValue;
+                        this.departureCityElement1.nativeElement.disabled = false;
+                        clearInterval(intervalAirport);
+                    }
+                }, 1000);
+            }
+        } else {
+            this.airports = JSON.parse(localStorage.getItem('airports'));
+        }
+
+        if (element === 'Destination1') {
+            const currentValue = this.destinationCityElement1.nativeElement.value;
+            if (JSON.parse(localStorage.getItem('airports')) == null) {
+                const intervalAirport = setInterval(() => {
+                    this.destinationCityElement1.nativeElement.value = 'Loading...';
+                    this.destinationCityElement1.nativeElement.disabled = true;
+                    if (JSON.parse(localStorage.getItem('airports')) != null) {
+                        this.airports = JSON.parse(localStorage.getItem('airports'));
+                        this.destinationCityElement1.nativeElement.value = currentValue;
+                        this.destinationCityElement1.nativeElement.disabled = false;
+                        clearInterval(intervalAirport);
+                    }
+                }, 1000);
+            }
+        } else {
+            this.airports = JSON.parse(localStorage.getItem('airports'));
+        }
+
+        if (element === 'Departure2') {
+            const currentValue = this.departureCityElement2.nativeElement.value;
+            if (JSON.parse(localStorage.getItem('airports')) == null) {
+                const intervalAirport = setInterval(() => {
+                    this.departureCityElement2.nativeElement.value = 'Loading...';
+                    this.departureCityElement2.nativeElement.disabled = true;
+                    if (JSON.parse(localStorage.getItem('airports')) != null) {
+                        this.airports = JSON.parse(localStorage.getItem('airports'));
+                        this.departureCityElement2.nativeElement.value = currentValue;
+                        this.departureCityElement2.nativeElement.disabled = false;
+                        clearInterval(intervalAirport);
+                    }
+                }, 1000);
+            }
+        } else {
+            this.airports = JSON.parse(localStorage.getItem('airports'));
+        }
+
+        if (element === 'Destination2') {
+            const currentValue = this.destinationCityElement2.nativeElement.value;
+            if (JSON.parse(localStorage.getItem('airports')) == null) {
+                const intervalAirport = setInterval(() => {
+                    this.destinationCityElement2.nativeElement.value = 'Loading...';
+                    this.destinationCityElement2.nativeElement.disabled = true;
+                    if (JSON.parse(localStorage.getItem('airports')) != null) {
+                        this.airports = JSON.parse(localStorage.getItem('airports'));
+                        this.destinationCityElement2.nativeElement.value = currentValue;
+                        this.destinationCityElement2.nativeElement.disabled = false;
+                        clearInterval(intervalAirport);
+                    }
+                }, 1000);
+            }
+        } else {
+            this.airports = JSON.parse(localStorage.getItem('airports'));
+        }
+
     }
 
     typeaheadOnSelect(e: TypeaheadMatch, type: string): void {
         if (type === 'Departure') {
             this.departureAirport = e.item;
-            this.getAirportCountry(this.departureAirport);
-
         }
         if (type === 'Destination') {
             this.destinationAirport = e.item;
-            this.getAirportCountry(this.destinationAirport);
         }
     }
 
+    typeaheadOnSelectH(e: TypeaheadMatch): void {
+        this.hotelCity = e.item;
+    }
+
     searchHotel() {
-        localStorage.setItem('viewHotelSearchResult', 'true');
-        this.router.navigate(['/hotel_search_result']);
+        const hotelSearch = new HotelSearch();
+        hotelSearch.checkInDate = this.formatDate(this.checkinDate);
+        hotelSearch.checkOutDate = this.formatDate(this.checkoutDate);
+        hotelSearch.city = this.hotelCity;
+        hotelSearch.cityCode = this.hotelCity.code;
+        hotelSearch.numberOfRooms = this.noOfRooms;
+        hotelSearch.roomDetailList = this.roomDetailLists;
+console.log(JSON.stringify(hotelSearch));
+        //sessionStorage.setItem('viewHotelSearchResult', 'true');
+        // this.router.navigate(['/hotel_search_result']);
+        // localStorage.setItem('hotelSearch', JSON.stringify(hotelSearch));
+        this.spinner.show();
+        this.TBservice.postRequest(hotelSearch, this.localService.SEARCH_HOTELS).subscribe(
+            hotel => {
+                sessionStorage.setItem('hotels', JSON.stringify(hotel.data));
+                sessionStorage.setItem('hotelSearch', JSON.stringify(hotelSearch));
+                this.spinner.hide();
+                sessionStorage.setItem('viewHotelSearchResult', 'true');
+                this.router.navigate(['/hotel_search_result']);
+            },
+            error => {
+                console.log(error);
+                this.spinner.hide();
+                this.showModal();
+            });
+
+
+    }
+
+    bookTopDeal(deal: TopDeal) {
+        let tripTypeString = '';
+        const flightSearch = new FlightDataSearch();
+        const flightItineraryDetails = flightSearch.flightItineraryDetail;
+        flightSearch.ticketClass = this.getReverseTicketClass(deal.cabinClassType);
+        flightSearch.tripType = deal.tripType;
+        flightSearch.travellerDetail = {
+            adults: deal.numberOfAdult, children: deal.numberOfChildren,
+            infants: deal.numberOfInfant
+        };
+        if (deal.tripType === 1) {
+            tripTypeString = 'One-way Trip';
+            flightSearch.flightItineraryDetail.push({
+                originAirportCode: deal.originAirportCode,
+                destinationAirportCode: deal.destinationAirportCode, departureDate: this.formatDate(deal.departureDate)
+            });
+            const flightHeader = {
+                departureAirport: deal.originAirportName, destinationAirport: deal.destinationAirportName,
+                totalTravelers: deal.numberOfAdult + deal.numberOfChildren + deal.numberOfInfant, ticketClass: deal.cabinClassType,
+                depatureDate: deal.departureDate, arrivalDate: deal.returnDate, tripType: tripTypeString
+            };
+            sessionStorage.setItem('flightHeader', JSON.stringify(flightHeader));
+        }
+        if (deal.tripType === 2) {
+            tripTypeString = 'Round Trip';
+            flightSearch.flightItineraryDetail.push({
+                originAirportCode: deal.originAirportCode,
+                destinationAirportCode: deal.destinationAirportCode, departureDate: this.formatDate(deal.departureDate)
+            });
+            flightSearch.flightItineraryDetail.push({
+                originAirportCode: deal.destinationAirportCode,
+                destinationAirportCode: deal.originAirportCode, departureDate: this.formatDate(deal.returnDate)
+            });
+            const flightHeader = {
+                departureAirport: deal.originAirportName, destinationAirport: deal.destinationAirportName,
+                totalTravelers: deal.numberOfAdult + deal.numberOfChildren + deal.numberOfInfant, ticketClass: deal.cabinClassType,
+                depatureDate: deal.departureDate, arrivalDate: deal.returnDate, tripType: tripTypeString
+            };
+            sessionStorage.setItem('flightHeader', JSON.stringify(flightHeader));
+        }
+        this.spinner.show();
+        this.TBservice.postRequest(flightSearch, this.TBservice.PROCESS_FLIGHT_SEARCH).subscribe(
+            flight => {
+                if (flight.status === 0) {
+                    sessionStorage.setItem('flight', JSON.stringify(flight.data));
+                    flightSearch.flightItineraryDetail = flightItineraryDetails;
+                    sessionStorage.setItem('flightSearch', JSON.stringify(flightSearch));
+                    this.spinner.hide();
+                    sessionStorage.setItem('viewFlightSearchResult', 'true');
+                    this.router.navigate(['/flight_search_result']);
+                }
+            },
+            error => {
+                console.log(error);
+                this.spinner.hide();
+                this.showModal();
+            });
     }
 
     searchFlight(tripType: string) {
@@ -167,7 +318,7 @@ export class HomeComponent {
                 totalTravelers: this.getTotalTraveller(), ticketClass: this.getTicketClass(flightSearch.ticketClass),
                 depatureDate: this.departureDate, arrivalDate: this.returnDate, tripType: tripTypeString
             };
-            localStorage.setItem('flightHeader', JSON.stringify(flightHeader));
+            sessionStorage.setItem('flightHeader', JSON.stringify(flightHeader));
         }
         if (tripType === '2') {
             tripTypeString = 'Round Trip';
@@ -184,7 +335,7 @@ export class HomeComponent {
                 totalTravelers: this.getTotalTraveller(), ticketClass: this.getTicketClass(flightSearch.ticketClass),
                 depatureDate: this.departureDate, arrivalDate: this.returnDate, tripType: tripTypeString
             };
-            localStorage.setItem('flightHeader', JSON.stringify(flightHeader));
+            sessionStorage.setItem('flightHeader', JSON.stringify(flightHeader));
         }
         if (tripType === '3') {
             const index = this.multipleDest.length - 1;
@@ -201,18 +352,18 @@ export class HomeComponent {
                 totalTravelers: this.getTotalTraveller(), ticketClass: this.getTicketClass(flightSearch.ticketClass),
                 depatureDate: this.departureDate, arrivalDate: this.returnDate, tripType: tripTypeString
             };
-            localStorage.setItem('flightHeader', JSON.stringify(flightHeader));
-            localStorage.setItem('multipleDest', JSON.stringify(this.multipleDest));
+            sessionStorage.setItem('flightHeader', JSON.stringify(flightHeader));
+            sessionStorage.setItem('multipleDest', JSON.stringify(this.multipleDest));
         }
         this.spinner.show();
         this.TBservice.postRequest(flightSearch, this.TBservice.PROCESS_FLIGHT_SEARCH).subscribe(
             flight => {
                 if (flight.status === 0) {
-                    localStorage.setItem('flight', JSON.stringify(flight.data));
+                    sessionStorage.setItem('flight', JSON.stringify(flight.data));
                     flightSearch.flightItineraryDetail = flightItineraryDetails;
-                    localStorage.setItem('flightSearch', JSON.stringify(flightSearch));
+                    sessionStorage.setItem('flightSearch', JSON.stringify(flightSearch));
                     this.spinner.hide();
-                    localStorage.setItem('viewFlightSearchResult', 'true');
+                    sessionStorage.setItem('viewFlightSearchResult', 'true');
                     this.router.navigate(['/flight_search_result']);
                 }
             },
@@ -223,12 +374,23 @@ export class HomeComponent {
             });
     }
 
+    getTopDeals() {
+        if (localStorage.getItem('topDeals') == null) {
+            const interval = setInterval(() => {
+                if (localStorage.getItem('topDeals') != null) {
+                    this.topDeals = JSON.parse(localStorage.getItem('topDeals'));
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+    }
+
     visaRequestSubmit() {
         this.visaRequest.departureDate = new Date(this.formatDate2(this.visaDepartureDate));
         this.visaRequest.returnDate = new Date(this.formatDate2(this.visaReturnDate));
 
-        if (JSON.parse(sessionStorage.getItem('user')) != null) {
-            const user: User = JSON.parse(sessionStorage.getItem('user'));
+        if (JSON.parse(localStorage.getItem('user')) != null) {
+            const user: User = JSON.parse(localStorage.getItem('user'));
             this.visaRequest.requestById = user.id.toString();
         } else {
             this.visaRequest.requestById = '';
@@ -303,6 +465,18 @@ export class HomeComponent {
         }
     }
 
+    getReverseTicketClass(ticketClass: string): number {
+        if (ticketClass === 'Economy') {
+            return 1;
+        } else if (ticketClass === 'Premium') {
+            return 2;
+        } else if (ticketClass === 'Business') {
+            return 3;
+        } else {
+            return 4;
+        }
+    }
+
     getTotalTraveller(): string {
         let totalTraveller = this.adultTraveller + ' adult';
         if (this.childTraveller > 0) {
@@ -316,50 +490,127 @@ export class HomeComponent {
         return totalTraveller;
     }
 
-    searchMethod(term: string) {
-        if (term === '') {
-            return of([]);
-        }
-        const requestData = JSON.stringify({ searchTerm: term, limit: 10 });
-        return this.TBservice.postRequest(requestData, this.TBservice.GET_AIRPORT_BY_SEARCH_TERM).pipe(
-            map(response => response[1])
-        );
-    }
-
-    checkInput(e: string) {
-        if (e.length > 1) {
-            this.searchTerm = e;
-        }
-    }
-
-    getAirports(token: string) {
-        const requestData = JSON.stringify({ searchTerm: token, limit: 10 });
-        const airports = [];
-        this.TBservice.postRequest(requestData, this.TBservice.GET_AIRPORT_BY_SEARCH_TERM).subscribe(
-            data => {
-                if (data.status === 0) {
-                    for (const u of data.data) {
-                        const airport = u;
-                        airport.displayName = airport.name + ' (' + airport.cityCode + '), ' + airport.cityName;
-                        airports.push(airport);
-                        if (airports.length === data.data.length) {
-                            this.airports = [];
-                            this.airports = airports;
-                        }
-                    }
-                }
-            },
-            error => {
-                console.log(error);
-            });
-    }
-
     addDestination() {
         this.multipleDest.push({ departureAirport: null, arrivalAirport: null, departureDate: null });
     }
 
     removeDestination() {
         this.multipleDest.pop();
+    }
+
+    showModal(): void {
+        this.isModalShown = true;
+    }
+
+    hideModal(): void {
+        this.autoShownModal.hide();
+    }
+
+    onHidden(): void {
+        this.isModalShown = false;
+    }
+
+    sessionConfig() {
+        sessionStorage.clear();
+        sessionStorage.setItem('viewFlightSearchResult', 'false');
+        sessionStorage.setItem('viewFlightDetail', 'false');
+        sessionStorage.setItem('viewFlightPayment', 'false');
+        sessionStorage.setItem('viewHotelPayment', 'false');
+        sessionStorage.setItem('viewHotelSearchResult', 'false');
+        sessionStorage.setItem('viewHotelRoom', 'false');
+        sessionStorage.setItem('viewHotelDetails', 'false');
+    }
+
+    formatCurrency(amount: number) {
+        const str = amount.toString();
+        const result = str.slice(0, -2);
+        return parseInt(result, 10);
+    }
+
+    formatTopDealDate(date: string) {
+        const d = moment(date, 'DD/MM/YYYY').format('MMM DD');
+        return d;
+    }
+
+    formatCheckinDate() {
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = d.getMonth();
+        const day = d.getDate();
+        this.minCheckinDate = d;
+        this.minCheckoutDate = d;
+        this.maxCheckinDate = new Date(year + 2, month, day);
+        this.maxCheckoutDate = new Date(year + 2, month, day);
+    }
+
+    formateCheckoutDate(checkinDate) {
+        const msec = Date.parse(checkinDate);
+        const dd = new Date(msec);
+        const year = dd.getFullYear();
+        const month = dd.getMonth();
+        const day = dd.getDate();
+        this.minCheckoutDate = new Date(year, month, day + 1);
+        this.maxCheckoutDate = new Date(year + 2, month, day);
+    }
+
+    checkRooms(e) {
+        if (e > this.roomDetailLists.length) {
+            for (let i = this.roomDetailLists.length; i < e; i++) {
+                const roomDetail = new RoomDetailList();
+                roomDetail.adultsAgeList = [20];
+                roomDetail.childrenAgeList = [];
+                roomDetail.numberOfAdults = 1;
+                roomDetail.numberOfChildren = 0;
+                this.roomDetailLists.push(roomDetail);
+            }
+        }
+
+        if (e < this.roomDetailLists.length) {
+            const newValue = this.roomDetailLists.length - e;
+            for (let i = 0; i < newValue; i++) {
+                this.roomDetailLists.pop();
+            }
+        }
+    }
+
+    setRooms() {
+        const roomDetail = new RoomDetailList();
+        roomDetail.adultsAgeList = [20];
+        roomDetail.childrenAgeList = [];
+        roomDetail.numberOfAdults = 1;
+        roomDetail.numberOfChildren = 0;
+        this.roomDetailLists.push(roomDetail);
+    }
+
+    setChildrenAge(e, o) {
+        if (e > this.roomDetailLists[o].childrenAgeList.length) {
+            for (let i = 0; i < e; i++) {
+                this.roomDetailLists[o].childrenAgeList[i] = 0;
+            }
+        }
+
+        if (e < this.roomDetailLists[o].childrenAgeList.length) {
+            const newValue = this.roomDetailLists[o].childrenAgeList.length - e;
+            for (let i = 0; i < newValue; i++) {
+                this.roomDetailLists[o].childrenAgeList.pop();
+            }
+        }
+
+    }
+
+    setAdultAge(e, o) {
+        if (e > this.roomDetailLists[o].adultsAgeList.length) {
+            for (let i = 0; i < e; i++) {
+                this.roomDetailLists[o].adultsAgeList[i] = 20;
+            }
+        }
+
+        if (e < this.roomDetailLists[o].adultsAgeList.length) {
+            const newValue = this.roomDetailLists[o].adultsAgeList.length - e;
+            for (let i = 0; i < newValue; i++) {
+                this.roomDetailLists[o].adultsAgeList.pop();
+            }
+        }
     }
 
     add(name: string) {
@@ -432,7 +683,7 @@ export class HomeComponent {
         }
     }
 
-    checkInfantAdultRatio(name: string) {
+    checkInfantAdultRatio(name) {
         if (this.adultTraveller === this.infantTraveller) {
             this.travellerAlert = 'The number of Infants cannot exceed the number of adults. Ratio is 1:1.';
             console.log('The number of Infants cannot exceed the number of adults. Ratio is 1:1.');
@@ -448,15 +699,5 @@ export class HomeComponent {
         }
     }
 
-    showModal(): void {
-        this.isModalShown = true;
-    }
 
-    hideModal(): void {
-        this.autoShownModal.hide();
-    }
-
-    onHidden(): void {
-        this.isModalShown = false;
-    }
 }

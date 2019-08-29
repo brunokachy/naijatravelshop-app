@@ -15,7 +15,7 @@ export class ReservationComponent {
         this.searchFlight();
         this.searchHotel();
         this.searchVisa();
-        this.isSuperAdmin = JSON.parse(sessionStorage.getItem('isSuperAdmin'));
+        this.isSuperAdmin = JSON.parse(localStorage.getItem('isSuperAdmin'));
     }
     isSuperAdmin = false;
 

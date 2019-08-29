@@ -14,7 +14,12 @@ import { InitModel } from '../model/InitModel';
 export class TravelbetaAPIService {
     initModel: InitModel = new InitModel();
     constructor(private httpClient: HttpClient) {
-        this.initModel = JSON.parse(sessionStorage.getItem('initModel'));
+        const interval = setInterval(() => {
+            if (JSON.parse(localStorage.getItem('initModel')) != null) {
+                this.initModel = JSON.parse(localStorage.getItem('initModel'));
+                clearInterval(interval);
+            }
+        }, 1000);
     }
     public GET_AIRPORT_BY_SEARCH_TERM = 'flight/get-airports-by-search-term';
     public GET_CITY = 'flight/get-city';
@@ -23,7 +28,6 @@ export class TravelbetaAPIService {
     public GET_COUNTRIES = 'get-countries';
     public PROCESS_FLIGHT_SEARCH = 'flight/process-flight-search';
     public CREATE_AFILLIATE_FLIGHT_BOOKING = 'flight/create-affiliate-booking';
-    public CREATE_FLIGHT_TOP_DEALS = 'flight/get-top-deals';
     public CANCEL_RESERVATION = 'flight/cancel-reservation';
     public ISSUE_TICKET = 'affiliate/flight-ticket-issue-request';
     public FLIGHT_RESERVATION_STATUS = 'affiliate/booking/get-flight-reservation-status';

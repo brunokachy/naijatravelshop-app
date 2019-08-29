@@ -21,12 +21,12 @@ export class PaymentResponseComponent {
     initModel: InitModel;
 
     constructor(private router: Router, private localAPIService: LocalAPIService, private spinner: NgxSpinnerService) {
-        this.bookingResponse = JSON.parse(localStorage.getItem('bookingResponse'));
-        this.paymentRef = localStorage.getItem('paymentRef');
-        this.totalAmount = JSON.parse(localStorage.getItem('totalAmount'));
-        this.txFee = JSON.parse(localStorage.getItem('txFee'));
+        this.bookingResponse = JSON.parse(sessionStorage.getItem('bookingResponse'));
+        this.paymentRef = sessionStorage.getItem('paymentRef');
+        this.totalAmount = JSON.parse(sessionStorage.getItem('totalAmount'));
+        this.txFee = JSON.parse(sessionStorage.getItem('txFee'));
         this.fare = this.totalAmount - this.txFee;
-        this.initModel = JSON.parse(sessionStorage.getItem('initModel'));
+        this.initModel = JSON.parse(localStorage.getItem('initModel'));
         this.paymentVerification();
     }
 
@@ -66,11 +66,7 @@ export class PaymentResponseComponent {
     }
 
     goHome() {
-        const token = JSON.parse(localStorage.getItem('token'));
-        const countries = JSON.parse(localStorage.getItem('countries'));
-        localStorage.clear();
-        localStorage.setItem('token', JSON.stringify(token));
-        localStorage.setItem('countries', JSON.stringify(countries));
+        sessionStorage.clear();
         this.router.navigate(['/home']);
         window.location.reload();
     }

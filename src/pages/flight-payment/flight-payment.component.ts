@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { PricedItineraries } from '../../model/pricedItineraries';
 import { User } from '../../model/User';
 import { BookingResponse } from '../../model/BookingResponse';
-import { Service } from '../../provider/api.service';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -21,10 +20,10 @@ export class FlightPaymentComponent {
     bookingResponse: BookingResponse;
     initModel: InitModel;
     constructor(private router: Router, private spinner: NgxSpinnerService, private localAPIService: LocalAPIService) {
-        this.pricedItinerary = JSON.parse(localStorage.getItem('pricedItineraries'));
-        this.contactDetail = JSON.parse(localStorage.getItem('contactDetail'));
-        this.bookingResponse = JSON.parse(localStorage.getItem('bookingResponse'));
-        this.initModel = JSON.parse(sessionStorage.getItem('initModel'));
+        this.pricedItinerary = JSON.parse(sessionStorage.getItem('pricedItineraries'));
+        this.contactDetail = JSON.parse(sessionStorage.getItem('contactDetail'));
+        this.bookingResponse = JSON.parse(sessionStorage.getItem('bookingResponse'));
+        this.initModel = JSON.parse(localStorage.getItem('initModel'));
     }
 
     formatFlightLocation(name) {
@@ -87,7 +86,7 @@ export class FlightPaymentComponent {
             integrity_hash: '',
             onclose() {
                 if (payResponse != null) {
-                    localStorage.setItem('viewPaymentResponse', 'true');
+                    sessionStorage.setItem('viewPaymentResponse', 'true');
                     ref.router.navigate(['/payment_response']);
                 }
             },
@@ -96,9 +95,9 @@ export class FlightPaymentComponent {
 
                 } else {
                     payResponse = response.tx.flwRef;
-                    localStorage.setItem('paymentRef', response.tx.flwRef);
-                    localStorage.setItem('txFee', response.tx.appfee);
-                    localStorage.setItem('totalAmount', response.tx.amount + response.tx.appfee);
+                    sessionStorage.setItem('paymentRef', response.tx.flwRef);
+                    sessionStorage.setItem('txFee', response.tx.appfee);
+                    sessionStorage.setItem('totalAmount', response.tx.amount + response.tx.appfee);
                     if (response.tx.chargeResponseCode === '00' || response.tx.chargeResponseCode === '0') {
 
                     } else {
@@ -114,11 +113,7 @@ export class FlightPaymentComponent {
         const requestData = { bookingNumber: this.bookingResponse.bookingNumber, amount: this.bookingResponse.paidAmount };
         this.localAPIService.postRequest(requestData, this.localAPIService.BANK_PAYMENT).subscribe(
             data => {
-                const token = JSON.parse(localStorage.getItem('token'));
-                const localToken = JSON.parse(localStorage.getItem('localToken'));
-                localStorage.clear();
-                localStorage.setItem('token', JSON.stringify(token));
-                localStorage.setItem('localToken', JSON.stringify(localToken));
+                sessionStorage.clear();
                 this.router.navigate(['/home']);
                 window.location.reload();
             },

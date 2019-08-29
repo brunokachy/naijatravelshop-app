@@ -171,6 +171,21 @@
 .reset-line-height {line-height: 1}
 
 
+/* Borders */
+.bdr-right {
+	border-right: 1px solid #e6e6e6;
+}
+.bdr-left {
+	border-left: 1px solid #e6e6e6;
+}
+.bdr-top {
+	border-top: 1px solid #e6e6e6;
+}
+.bdr-bottom {
+	border-bottom: 1px solid #e6e6e6;
+}
+
+
 
 /* to uppercase */
 .uppercase {text-transform: uppercase;}
@@ -179,8 +194,8 @@
 .flipY-icon:before {-webkit-transform: scaleY(-1); -ms-transform: scaleY(-1); transform: scaleY(-1); display: inline-block;}
 
 
-/* Custom columns grid */
-.col-xs-4 {width: 33.333%;}
+/* Custom columns grid 
+.col-xs-4 {width: 33.333%;} */
 
 
 /* Responsive base sizing */
@@ -366,6 +381,22 @@
 	* Float None
 	*/
 	.pull-none-sm {float:none !important;}
+
+	/*
+	* Borders
+	*/
+	.bdr-right, .bdr-left, .bdr-top, .bdr-bottom {
+		border-right: none;
+	}
+	.bdr-right-sm {
+		border-right: 1px solid #e6e6e6;
+	}
+	.bdr-top-sm {
+		border-top: 1px solid #e6e6e6;
+	}
+	.bdr-bottom-sm {
+		border-bottom: 1px solid #e6e6e6;
+	}
 
 	/*
 	* Button Padding Presets

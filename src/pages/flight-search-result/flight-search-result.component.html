@@ -1,23 +1,27 @@
-<div class="gap"></div>
+<div class="breadcrumb-wrap">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Home</a>
+            </li>
+            <li class="active">
+                Flight Search Result
+            </li>
+        </ul>
+    </div>
+</div>
 <div class="container">
-    <ul class="breadcrumb">
-        <li>
-            <a href="#">Home</a>
-        </li>
-        <li class="active">
-            Flight Search Result
-        </li>
-    </ul>
-    <h3 class="booking-title">{{flight.totalSearchResult}} Flights from {{flightHeader.departureAirport.cityName}} to
-        {{flightHeader.destinationAirport.cityName}}
-        on {{formateDate3(flightHeader.depatureDate)}} for {{flightHeader.totalTravelers}}
+    <h3 class="booking-title">{{flight.totalSearchResult}} Flights from {{flightHeader.departureAirport.city}} to
+        {{flightHeader.destinationAirport.city}}
+        on {{formateDate3(flightHeader.depatureDate)}} <small>|{{flightHeader.totalTravelers}} |
+            {{flightHeader.ticketClass}} | {{flightHeader.tripType}}|</small>
         <small>
             <a class="popup-text" href="#" data-toggle="modal" (click)="openSearchModal(template)">Change search</a>
         </small>
     </h3>
     <div class="row">
-        <div class="col-lg-3 col-md-3 col-xs-12">
-            <aside class="booking-filters text-white">
+        <div class="col-lg-3 col-md-4 col-sm-5">
+            <aside id="scrollto" class="booking-filters text-white">
                 <h4>Filter By:</h4>
                 <ul class="list booking-filters-list">
                     <li>
@@ -65,8 +69,9 @@
                 </ul>
             </aside>
         </div>
-        <div class="col-lg-9 col-md-9">
-            <div class="nav-drop booking-sort">
+        <div class="col-lg-9 col-md-8 col-sm-7 col-xs-12">
+            <div id="show" class="btn btn-primary shwfilter btn-rotate">Show Filter</div><br>
+            <div class="nav-drop booking-sort mb-md-15 mt-md-20">
                 <h5 class="booking-sort-title">
                     Sort flights by:
                     <select class="nav-drop-menu" (change)="sort()" class="form-control" name="sortValue" id="sortValue"
@@ -81,7 +86,7 @@
             <ul class="booking-list">
                 <li *ngFor="let i of pricedItineraries">
                     <div class="booking-item-container">
-                        <div class="booking-item">
+                        <div class="booking-item" (click)="i.sequencyNumber = !i.sequencyNumber">
                             <div class="row" *ngFor="let o of i.originDestinationOptions; let l = index">
                                 <div class="col-md-1">
                                     <div class="booking-item-airline-logo">
@@ -151,7 +156,9 @@
                                     <a class="btn btn-primary" (click)="selectFlight(i)">Select</a>
                                 </div>
                                 <div class="col-md-1" *ngIf="l == 0">
-                                    <i class="fa fa-chevron-down" (click)="i.sequencyNumber = !i.sequencyNumber"></i>
+                                    <!-- <span (click)="i.sequencyNumber = !i.sequencyNumber"><small>show flight itinerary</small></span> -->
+                                    <i class="fa fa-chevron-down"
+                                        (click)="i.sequencyNumber = !i.sequencyNumber"><small>details</small></i>
                                 </div>
                                 <p>&nbsp;</p>
                                 <div class="col-md-12" *ngFor="let f of o.flightSegments; let m = index"
@@ -184,7 +191,7 @@
                     </div>
                 </li>
             </ul>
-            <p class="text-right">Not what you're looking for?
+            <p class="text-right filterscrollerstop">Not what you're looking for?
                 <a class="popup-text" href="#" data-toggle="modal" (click)="openSearchModal(template)">Try your search
                     again</a>
             </p>
@@ -221,26 +228,23 @@
                                         <div class="form-group form-group-lg form-group-icon-left">
                                             <i class="fa fa-plane input-icon"></i>
                                             <label>Flying from</label>
-                                            <input [(ngModel)]="departureCity" name="departureCity"
-                                                [typeahead]="datasource"
+                                            <input [(ngModel)]="departure" name="departureCity" [typeahead]="airports"
+                                                typeaheadOptionField="displayName" [typeaheadOptionsLimit]="7"
                                                 (typeaheadOnSelect)="typeaheadOnSelect($event, 'Departure')"
-                                                [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName"
-                                                placeholder="Enter name of city or airport"
-                                                class="typeahead form-control" [typeaheadMinLength]="2"
-                                                (ngModelChange)="checkInput($event)" typeaheadWaitMs="2000" required />
+                                                placeholder="Enter name of city or airport" required autocomplete="off"
+                                                class="typeahead form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group form-group-lg form-group-icon-left">
                                             <i class="fa fa-plane fa-flip-vertical input-icon"></i>
                                             <label>Flying to</label>
-                                            <input type="text" class="typeahead form-control"
-                                                [(ngModel)]="destinationCity" name="destinationCity"
-                                                placeholder="Enter name of city or airport" [typeaheadMinLength]="2"
-                                                [typeahead]="datasource"
+                                            <input type="text" class="typeahead form-control" [(ngModel)]="destination"
+                                                name="destinationCity" placeholder="Enter name of city or airport"
+                                                [typeahead]="airports"
                                                 (typeaheadOnSelect)="typeaheadOnSelect($event, 'Destination')"
-                                                [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName"
-                                                (ngModelChange)="checkInput($event)" typeaheadWaitMs="2000" required>
+                                                [typeaheadOptionsLimit]="7" autocomplete="off"
+                                                typeaheadOptionField="displayName" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -288,26 +292,23 @@
                                         <div class="form-group form-group-lg form-group-icon-left">
                                             <i class="fa fa-plane input-icon"></i>
                                             <label>Flying from</label>
-                                            <input [(ngModel)]="departureCity" name="departureCity"
-                                                [typeahead]="datasource"
+                                            <input [(ngModel)]="departure" name="departureCity" [typeahead]="airports"
+                                                typeaheadOptionField="displayName" [typeaheadOptionsLimit]="7"
                                                 (typeaheadOnSelect)="typeaheadOnSelect($event, 'Departure')"
-                                                [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName"
-                                                placeholder="Enter name of city or airport"
-                                                class="typeahead form-control" [typeaheadMinLength]="2"
-                                                (ngModelChange)="checkInput($event)" typeaheadWaitMs="2000" required />
+                                                placeholder="Enter name of city or airport" required autocomplete="off"
+                                                class="typeahead form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group form-group-lg form-group-icon-left">
                                             <i class="fa fa-plane fa-flip-vertical input-icon"></i>
                                             <label>Flying to</label>
-                                            <input type="text" class="typeahead form-control"
-                                                [(ngModel)]="destinationCity" name="destinationCity"
-                                                placeholder="Enter name of city or airport" [typeaheadMinLength]="2"
-                                                [typeahead]="datasource"
+                                            <input type="text" class="typeahead form-control" [(ngModel)]="destination"
+                                                name="destinationCity" placeholder="Enter name of city or airport"
+                                                [typeahead]="airports"
                                                 (typeaheadOnSelect)="typeaheadOnSelect($event, 'Destination')"
-                                                [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName"
-                                                (ngModelChange)="checkInput($event)" typeaheadWaitMs="2000" required>
+                                                [typeaheadOptionsLimit]="7" autocomplete="off"
+                                                typeaheadOptionField="displayName" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -367,12 +368,11 @@
                                         <div class="form-group form-group-lg form-group-icon-left">
                                             <i class="fa fa-plane input-icon"></i>
                                             <label>Flying from</label>
-                                            <input ngModel name="departureCity{{i}}" [typeahead]="datasource"
+                                            <input ngModel name="departureCity{{i}}" [typeahead]="airports"
                                                 (typeaheadOnSelect)="typeaheadOnSelectM($event, 'Departure', i)"
-                                                [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName"
+                                                [typeaheadOptionsLimit]="7" typeaheadOptionField="displayName"
                                                 placeholder="Enter name of city or airport"
-                                                class="typeahead form-control" [typeaheadMinLength]="2"
-                                                (ngModelChange)="checkInput($event)" typeaheadWaitMs="2000" required />
+                                                class="typeahead form-control" autocomplete="off" required />
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -381,10 +381,10 @@
                                             <label>Flying to</label>
                                             <input type="text" class="typeahead form-control" ngModel
                                                 name="destinationCity{{i}}" placeholder="Enter name of city or airport"
-                                                [typeaheadMinLength]="2" [typeahead]="datasource"
+                                                [typeahead]="airports"
                                                 (typeaheadOnSelect)="typeaheadOnSelectM($event, 'Destination', i)"
-                                                [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName"
-                                                (ngModelChange)="checkInput($event)" typeaheadWaitMs="2000" required>
+                                                [typeaheadOptionsLimit]="7" autocomplete="off"
+                                                typeaheadOptionField="displayName" required>
                                         </div>
                                     </div>
                                     <div class="col-md-3">

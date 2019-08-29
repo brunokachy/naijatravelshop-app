@@ -63,14 +63,14 @@ export class AuthGuard implements CanActivate {
     }
 
     canViewFlightSearchResultPage(url: string): boolean {
-        const canView = localStorage.getItem('viewFlightSearchResult');
+        const canView = sessionStorage.getItem('viewFlightSearchResult');
         if (canView === 'true') { return true; }
         this.router.navigate(['/home']);
         return false;
     }
 
     canViewFlightDetailPage(url: string): boolean {
-        const canView = localStorage.getItem('viewFlightDetail');
+        const canView = sessionStorage.getItem('viewFlightDetail');
         if (canView === 'true') { return true; }
         // Navigate to the home page with extras
         this.router.navigate(['/home']);
@@ -78,49 +78,49 @@ export class AuthGuard implements CanActivate {
     }
 
     canViewFlightPaymentPage(url: string): boolean {
-        const canView = localStorage.getItem('viewFlightPayment');
+        const canView = sessionStorage.getItem('viewFlightPayment');
         if (canView === 'true') { return true; }
         this.router.navigate(['/home']);
         return false;
     }
 
     canViewHotelPaymentPage(url: string): boolean {
-        const canView = localStorage.getItem('viewHotelPayment');
+        const canView = sessionStorage.getItem('viewHotelPayment');
         if (canView === 'true') { return true; }
         this.router.navigate(['/home']);
         return false;
     }
 
     canViewHotelSearchResultPage(url: string): boolean {
-        const canView = localStorage.getItem('viewHotelSearchResult');
+        const canView = sessionStorage.getItem('viewHotelSearchResult');
         if (canView === 'true') { return true; }
         this.router.navigate(['/home']);
         return false;
     }
 
     canViewHotelRoomPage(url: string): boolean {
-        const canView = localStorage.getItem('viewHotelRoom');
+        const canView = sessionStorage.getItem('viewHotelRoom');
         if (canView === 'true') { return true; }
         this.router.navigate(['/home']);
         return false;
     }
 
     canViewHotelDetailsPage(url: string): boolean {
-        const canView = localStorage.getItem('viewHotelDetails');
+        const canView = sessionStorage.getItem('viewHotelDetails');
         if (canView === 'true') { return true; }
         this.router.navigate(['/home']);
         return false;
     }
 
     canViewPaymentResponsePage(url: string): boolean {
-        const canView = localStorage.getItem('viewPaymentResponse');
+        const canView = sessionStorage.getItem('viewPaymentResponse');
         if (canView === 'true') { return true; }
         this.router.navigate(['/home']);
         return false;
     }
 
     IsUserLoggedIn(): boolean {
-        const user = sessionStorage.getItem('user');
+        const user = localStorage.getItem('user');
         if (user != null) { return true; }
         this.router.navigate(['/home']);
         return false;
@@ -128,7 +128,7 @@ export class AuthGuard implements CanActivate {
 
     IsUserSuperAdmin(): boolean {
         if (this.IsUserLoggedIn) {
-            const user: User = JSON.parse(sessionStorage.getItem('user'));
+            const user: User = JSON.parse(localStorage.getItem('user'));
             if (user.roles.includes('SUPER ADMIN')) {
                 return true;
             }

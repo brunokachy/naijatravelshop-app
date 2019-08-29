@@ -85,6 +85,16 @@
 	.search-tabs-bg > .tabbable > .nav-tabs > li > a {
 	    background-color: #1CBA17;
 	}
+	.btm-search {
+	    padding: 10px 0;
+	    background-color: #e6e6e6;
+	    margin-top: 10px;
+	    text-align: center;
+
+	}
+	.carousel-nav2 {
+	  margin-top: -10px;
+	}
     
 
 }
@@ -102,7 +112,9 @@
 }
 
 @media (min-width:768px) {
-
+	.sort-toggler, .btn-rotate {
+		display: none;
+	}
 }
 
 @media (max-width:767px) {
@@ -126,7 +138,53 @@
 	.ft-wrap {
 	  border-right: none;
 	}
+
+	.toggle-filter {
+	  /*top: -2000px;*/
+	}
+	.booking-filters {display: none;}
+
+	.btn-rotate {
+		transform: rotate(0deg);
+		-ms-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		margin-left: 0;
+	}
+	/* change the width of the toggle filter button to 100% */
+	.dock .shwfilter { 
+		width: 100% !important;
+		border-radius: 0 !important;
+		left: 0 !important; 
+	}
+	/* change the width of the toggle filter button back to normal */
+	.stop .shwfilter{
+		width: auto !important;
+	}
 	
+	/* when "Head" is out of view... */
+	.dock .shwfilter { z-index:40; position:fixed; }
+	/* when "Main" is out of view... */
+	.stop .shwfilter { z-index:40; position:absolute; }
+	
+}
+
+@media (min-width:561px) and (max-width:767px) {
+
+	.hotelsbx .last-minute-card {
+		width: 535px;
+	}
+	.hotelsbx .thumb-header {
+	    margin-bottom: 0;
+	    width: 250px;
+	    float: left;
+	}
+	.hotelsbx .last-minute-caption {
+	    float: left;
+	    padding: 20px 10px;
+	}
+	.hotelsbx .icon-group {
+	    margin: 0 0 15px;
+	}
 }
 
 @media (max-width:600px) {
@@ -147,6 +205,7 @@
 	.newsletter input[type="email"]{
 	  width: 50%;
 	}
+	
 }
 
 @media (max-width:480px) {

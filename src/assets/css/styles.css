@@ -2187,14 +2187,25 @@ ul.slimmenu.slimmenu-collapsed li .slimmenu-sub-collapser>i {
   font-size: 16px;
   cursor: pointer;
 }
-.carousel-nav .prev2, .carousel-nav .next2 {
+.carousel-nav2 {
+  position: absolute;
+  right: 0;
+  width: 50px;
+  height: auto;
+  margin-top: 0;
+  font-size: 16px;
+  cursor: pointer;
+}
+.carousel-nav .prev2, .carousel-nav .next2,
+.carousel-nav2 .prev3, .carousel-nav2 .next3 {
     -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
   -ms-transition: all 0.3s;
   transition: all 0.3s;
 }
-.carousel-nav .prev2:hover, .carousel-nav .next2:hover {
+.carousel-nav .prev2:hover, .carousel-nav .next2:hover,
+.carousel-nav2 .prev3:hover, .carousel-nav2 .next3:hover {
   font-size: 18px;
 }
 
@@ -2452,7 +2463,7 @@ body {
 
 .global-wrap {
   height: 100%;
-  background: #f5f5f5;
+  background: #fff;
 }
 
 .dis-table {
@@ -2488,6 +2499,9 @@ body {
   height: 540px;
   position: relative;
   overflow: hidden;
+}
+.top-area {
+  background-color: #f1f1f1;
 }
 
 .auto-height {
@@ -2847,6 +2861,9 @@ img.pp-img {
   margin-bottom: 2px;
   vertical-align: middle;
 }
+.topbar a:hover {
+  color: #FAB62D;
+}
 
 .header-top {
   padding: 0;
@@ -2892,7 +2909,7 @@ img.pp-img {
   position: relative;
   padding: 35px 15px;
   margin: 0 5px;
-  font-weight: bold;
+  font-weight: normal;
   text-transform: uppercase;
 }
 .header-menu li:hover {
@@ -3232,6 +3249,11 @@ div.nav-drop {
   visibility: hidden;
 }
 
+.breadcrumb-wrap {
+  width: 100%;
+  background: #f5f5f5;
+  padding: 10px 0;
+}
 .breadcrumb {
   background: none;
   padding: 0;
@@ -3361,6 +3383,9 @@ footer#main-footer h4,
 footer#main-footer h5 {
   color: #1A3375;
 }
+footer#main-footer a:hover {
+  color: #FAB62D;
+}
 
 footer#main-footer .form-control {
   color: #545e7e;
@@ -3380,8 +3405,8 @@ footer#main-footer .form-control:focus {
 
 .icon-footer li a:hover {
   color: #fff !important;
-  background: #1A3375;
-  border: 1px solid #1A3375;
+  background: #FAB62D;
+  border: 1px solid #FAB62D;
 }
 .ft-wrap {
   padding-right: 25px;
@@ -8407,12 +8432,14 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
 
 .booking-title {
   margin-bottom: 25px;
-  margin-top: 15px;
+  margin-top: 25px;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  padding: 10px;
 }
 
 .booking-title>small {
-  font-size: 1.2rem;
-  margin-left: 5px;
+  margin-left: 15px;
 }
 
 .booking-filters {
@@ -9117,10 +9144,11 @@ p.booking-item-payment-price-seperator {
 }
 
 .booking-item-details .booking-item-header {
-  margin-bottom: 20px;
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #f2f2f2;
+    margin-bottom: 25px;
+    margin-top: 25px;
+    padding: 20px;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
 }
 
 .booking-item-details .booking-item-header-price {
@@ -9140,10 +9168,11 @@ p.booking-item-payment-price-seperator {
 
 .aside-stick {
   height: 100%;
-  /* position: fixed; */
+  /* position: fixed; 
+  padding-top: 20px; */
   z-index: 1;
   overflow-x: hidden;
-  padding-top: 20px;
+  
 }
 
 .booking-details-tabbable .nav>li>a>.fa {
