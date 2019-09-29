@@ -20,8 +20,8 @@ import { TopDeal } from '../model/TopDeals';
 export class InitAPIService {
     initModel: InitModel = new InitModel();
     constructor(private httpClient: HttpClient) { }
-    // private naijaTravelShopAPIBaseURL = window.location.origin + '/naijatravelshop/api/';
-    private naijaTravelShopAPIBaseURL = 'http://localhost:8080/naijatravelshop/api/';
+    private naijaTravelShopAPIBaseURL = window.location.origin + '/naijatravelshop/api/';
+    // private naijaTravelShopAPIBaseURL = 'http://localhost:8080/naijatravelshop/api/';
     private GET_BASE_URL = this.naijaTravelShopAPIBaseURL + 'admin/get_base_url';
     private GET_AFFILIATE_ACCOUNT = this.naijaTravelShopAPIBaseURL + 'admin/get_affiliate_account_details';
     private GET_FLUTTERWAVE_ACCOUNT_DETAILS = this.naijaTravelShopAPIBaseURL + 'payment/get_flw_account_details';
@@ -76,6 +76,9 @@ export class InitAPIService {
             this.postRequest('', this.CREATE_FLIGHT_TOP_DEALS).subscribe(data => {
                 const topDealResponseString: string = JSON.stringify(data);
                 const topDeals: ApiResponse<TopDeal[]> = JSON.parse(topDealResponseString);
+                if (localStorage.getItem('topDeals') != null) {
+                    localStorage.removeItem('topDeals');
+                }
                 localStorage.setItem('topDeals', JSON.stringify(topDeals.data));
             }, error => {
                 console.log(error);
@@ -83,102 +86,49 @@ export class InitAPIService {
         };
 
         const fetchOtherEntities = () => {
-            if (localStorage.getItem('countries') == null) {
-                this.postRequest('', this.GET_COUNTRIES).subscribe(data => {
-                    const countryResponseString: string = JSON.stringify(data);
-                    const countries: ApiResponse<Country[]> = JSON.parse(countryResponseString);
-                    const country = new Country();
-                    country.capital = 'Abuja';
-                    country.code = 'NG';
-                    country.currencyCode = 'NGN';
-                    country.currencyName = 'NAIRA';
-                    country.dialingCode = '+234';
-                    country.isoCode = 'NG';
-                    country.name = 'NIGERIA';
+            this.postRequest('', this.GET_COUNTRIES).subscribe(data => {
+                const countryResponseString: string = JSON.stringify(data);
+                const countries: ApiResponse<Country[]> = JSON.parse(countryResponseString);
+                const country = new Country();
+                country.capital = 'Abuja';
+                country.code = 'NG';
+                country.currencyCode = 'NGN';
+                country.currencyName = 'NAIRA';
+                country.dialingCode = '+234';
+                country.isoCode = 'NG';
+                country.name = 'NIGERIA';
+                countries.data.unshift(country);
+                if (localStorage.getItem('countries') != null) {
+                    localStorage.removeItem('countries');
+                }
+                localStorage.setItem('countries', JSON.stringify(countries.data));
+            }, error => {
+                console.log(error);
+            });
 
-                    countries.data.unshift(country);
-                    localStorage.setItem('countries', JSON.stringify(countries.data));
-                }, error => {
-                    console.log(error);
-                });
-            }
+            this.httpClient.get(this.GET_ALL_AIRPORTS).subscribe(data => {
+                const airportResponse: string = JSON.stringify(data);
+                const airport: ApiResponse<Airport[]> = JSON.parse(airportResponse);
+                if (localStorage.getItem('airports') != null) {
+                    localStorage.removeItem('airports');
+                }
+                localStorage.setItem('airports', JSON.stringify(airport.data));
+            }, error => {
+                console.log('Return from fetching airport with error');
+                console.log(error);
+            });
 
-            if (localStorage.getItem('airports') == null) {
-                this.httpClient.get(this.GET_ALL_AIRPORTS).subscribe(data => {
-                    const airportResponse: string = JSON.stringify(data);
-                    const airport: ApiResponse<Airport[]> = JSON.parse(airportResponse);
-                    localStorage.setItem('airports', JSON.stringify(airport.data));
-                }, error => {
-                    console.log(error);
-                });
-            }
-
-            if (localStorage.getItem('hotelCities') == null) {
-                this.httpClient.post(this.GET_ALL_HOTEL_CITIES, {}).subscribe(data => {
-                    const hotelCityResponse: string = JSON.stringify(data);
-                    const city: ApiResponse<HotelCity[]> = JSON.parse(hotelCityResponse);
-                    localStorage.setItem('hotelCities', JSON.stringify(city.data));
-                }, error => {
-                    console.log(error);
-                });
-            }
+            this.httpClient.post(this.GET_ALL_HOTEL_CITIES, {}).subscribe(data => {
+                const hotelCityResponse: string = JSON.stringify(data);
+                const city: ApiResponse<HotelCity[]> = JSON.parse(hotelCityResponse);
+                if (localStorage.getItem('hotelCities') != null) {
+                    localStorage.removeItem('hotelCities');
+                }
+                localStorage.setItem('hotelCities', JSON.stringify(city.data));
+            }, error => {
+                console.log(error);
+            });
         };
-
-        // const getCountries = () => {
-        //     return new Promise((resolve) => {
-        //         this.postRequest('', this.GET_COUNTRIES).subscribe(data => {
-        //             const countryResponseString: string = JSON.stringify(data);
-        //             const countries: ApiResponse<Country[]> = JSON.parse(countryResponseString);
-        //             this.initModel.countries = countries.data;
-
-        //             const country = new Country();
-        //             country.capital = 'Abuja';
-        //             country.code = 'NG';
-        //             country.currencyCode = 'NGN';
-        //             country.currencyName = 'NAIRA';
-        //             country.dialingCode = '+234';
-        //             country.isoCode = 'NG';
-        //             country.name = 'NIGERIA';
-
-        //             this.initModel.countries.unshift(country);
-        //             this.initModel.countryCode = 'NG';
-        //             localStorage.setItem('initModel', JSON.stringify(this.initModel));
-        //             resolve();
-        //         }, error => {
-        //             console.log(error);
-        //         });
-
-        //     });
-        // };
-
-        // const getAirports = () => {
-        //     return new Promise((resolve) => {
-        //         this.httpClient.get(this.GET_ALL_AIRPORTS).subscribe(data => {
-        //             const airportResponse: string = JSON.stringify(data);
-        //             const airport: ApiResponse<Airport[]> = JSON.parse(airportResponse);
-        //             this.initModel.airports = airport.data;
-        //             resolve();
-        //         }, error => {
-        //             console.log(error);
-        //         });
-
-        //     });
-        // };
-
-        // const getHotelCities = () => {
-        //     return new Promise((resolve) => {
-        //         this.httpClient.get(this.GET_ALL_HOTEL_CITIES).subscribe(data => {
-        //             const hotelCityResponse: string = JSON.stringify(data);
-        //             const city: ApiResponse<HotelCity[]> = JSON.parse(hotelCityResponse);
-        //             this.initModel.hotelCities = city.data;
-        //             resolve();
-        //         }, error => {
-        //             console.log(error);
-        //         });
-
-        //     });
-        // };
-
 
         getBaseURL().then(getAffiliateAccount).then(getTopDeals).then(getFlutterwaveAccountDetails).then(fetchOtherEntities).catch();
     }

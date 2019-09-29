@@ -7,19 +7,19 @@
                     <div class="search-tabs search-tabs-bg search-tabs-bottom mb50">
                         <div class="tabbable">
                             <ul class="nav nav-tabs" id="myTab">
-                                <li class="active">
+                                <li class="{{flight}}">
                                     <a href="#tab2" data-toggle="tab">
                                         <i class="fa fa-plane"></i>
                                         <span>Flights</span>
                                     </a>
                                 </li>
-                                <li>
+                                <li class="{{hotel}}">
                                     <a href="#tab1" data-toggle="tab">
                                         <i class="fa fa-building-o"></i>
                                         <span>Hotels</span>
                                     </a>
                                 </li>
-                                <li>
+                                <li class="{{visa}}">
                                     <a href="#tab3" data-toggle="tab">
                                         <i class="fa fa-map-marker"></i>
                                         <span>Visa</span>
@@ -27,7 +27,7 @@
                                 </li>
                             </ul>
                             <div class="tab-content">
-                                <div class="tab-pane active" id="tab2">
+                                <div class="tab-pane {{flight}}" id="tab2">
                                     <div class="tabbable">
                                         <ul class="nav nav-pills nav-sm nav-no-br mb10" id="flightChooseTab">
                                             <li>
@@ -53,6 +53,7 @@
                                                                     [typeahead]="airports" #departureCity1
                                                                     typeaheadOptionField="displayName"
                                                                     [typeaheadOptionsLimit]="7"
+                                                                    (focus)="check('Departure1')" [typeaheadMinLength]="0"
                                                                     (keypress)="checkForAirportList('Departure1')"
                                                                     (typeaheadOnSelect)="typeaheadOnSelect($event, 'Departure')"
                                                                     placeholder="Enter name of city or airport" required
@@ -67,6 +68,7 @@
                                                                     [(ngModel)]="destination" name="destinationCity"
                                                                     placeholder="Enter name of city or airport"
                                                                     [typeahead]="airports" #destinationCity1
+                                                                    (focus)="check('Destination1')" [typeaheadMinLength]="0"
                                                                     (keypress)="checkForAirportList('Destination1')"
                                                                     (typeaheadOnSelect)="typeaheadOnSelect($event, 'Destination')"
                                                                     [typeaheadOptionsLimit]="7" autocomplete="off"
@@ -106,7 +108,7 @@
                                                                     name="departureDate" placeholder="Departure date"
                                                                     [maxDate]="maxDepartureDate"
                                                                     [minDate]="minDepartureDate" autocomplete="off"
-                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange', showWeekNumbers:false }"
                                                                     required [(ngModel)]="departureDate" bsDatepicker>
                                                             </div>
                                                         </div>
@@ -128,6 +130,7 @@
                                                                     typeaheadOptionField="displayName"
                                                                     [typeaheadOptionsLimit]="7"
                                                                     (keypress)="checkForAirportList('Departure2')"
+                                                                    (focus)="check('Departure2')" [typeaheadMinLength]="0"
                                                                     (typeaheadOnSelect)="typeaheadOnSelect($event, 'Departure')"
                                                                     placeholder="Enter name of city or airport" required
                                                                     autocomplete="off" class="typeahead form-control">
@@ -142,6 +145,7 @@
                                                                     placeholder="Enter name of city or airport"
                                                                     [typeahead]="airports" #destinationCity2
                                                                     (keypress)="checkForAirportList('Destination2')"
+                                                                    (focus)="check('Destination2')" [typeaheadMinLength]="0"
                                                                     (typeaheadOnSelect)="typeaheadOnSelect($event, 'Destination')"
                                                                     [typeaheadOptionsLimit]="7" autocomplete="off"
                                                                     typeaheadOptionField="displayName" required>
@@ -180,7 +184,7 @@
                                                                     [maxDate]="maxDepartureDate"
                                                                     [minDate]="minDepartureDate" autocomplete="off"
                                                                     (bsValueChange)="formatReturnDate($event)"
-                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange', showWeekNumbers:false }"
                                                                     required [(ngModel)]="departureDate" bsDatepicker>
                                                             </div>
                                                         </div>
@@ -194,7 +198,7 @@
                                                                     placeholder="Return date" required
                                                                     autocomplete="off" [maxDate]="maxReturnDate"
                                                                     [minDate]="minReturnDate"
-                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange', showWeekNumbers:false }"
                                                                     [(ngModel)]="returnDate" bsDatepicker>
                                                             </div>
                                                         </div>
@@ -245,7 +249,7 @@
                                                                     name="u.departureDate" placeholder="Departure date"
                                                                     [maxDate]="maxDepartureDate"
                                                                     [minDate]="minDepartureDate" autocomplete="off"
-                                                                    [bsConfig]="{dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange'}"
+                                                                    [bsConfig]="{dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange', showWeekNumbers:false}"
                                                                     required [(ngModel)]="u.departureDate" bsDatepicker>
                                                             </div>
                                                         </div>
@@ -295,7 +299,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div #tab1 class="tab-pane" id="tab1">
+                                <div #tab1 class="tab-pane {{hotel}}" id="tab1">
                                     <form autocomplete="off" (ngSubmit)="searchHotel()" ngNativeValidate>
                                         <div class="row">
                                             <div class="col-md-4">
@@ -322,7 +326,7 @@
                                                                     name="checkinDate" placeholder="Check-in Date"
                                                                     [maxDate]="maxCheckinDate"
                                                                     [minDate]="minCheckinDate"
-                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange'}"
+                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange', showWeekNumbers:false}"
                                                                     (bsValueChange)="formateCheckoutDate($event)"
                                                                     required [(ngModel)]="checkinDate" bsDatepicker>
                                                             </div>
@@ -336,7 +340,7 @@
                                                                     name="checkoutDate" placeholder="Check-out Date"
                                                                     [maxDate]="maxCheckoutDate"
                                                                     [minDate]="minCheckoutDate"
-                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange', showWeekNumbers:false }"
                                                                     required [(ngModel)]="checkoutDate" bsDatepicker>
                                                             </div>
                                                         </div>
@@ -349,8 +353,8 @@
                                                                     name="noOfRooms" [(ngModel)]="noOfRooms" required>
                                                                     <option value="1">1</option>
                                                                     <option value="2">2</option>
-                                                                    <!-- <option value="3">3</option>
-                                                                    <option value="4">4</option> -->
+                                                                    <option value="3">3</option>
+                                                                    <option value="4">4</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -358,70 +362,69 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row" *ngFor="let u of roomDetailLists; let i = index">
-                                            <div class="col-md-2">
-                                                <div class="form-group form-group-lg form-group-select-plus">
-                                                    <label for="noOfRooms">Adults (18yrs+)</label>
-                                                    <select class="form-control" name="adult{{i}}"
-                                                        (ngModelChange)="setAdultAge($event, i)"
-                                                        [(ngModel)]="u.numberOfAdults" required>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                    </select>
+                                        <div class="row">
+                                            <div class="col-md-3" *ngFor="let u of roomDetailLists; let i = index">
+                                                <label>Room {{i + 1}} Guests</label>
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-group form-group-select-plus">
+                                                        <label for="noOfRooms">Adults (12yrs+)</label>
+                                                        <select class="form-control" name="adult{{i}}"
+                                                            (ngModelChange)="setAdultAge($event, i)"
+                                                            [(ngModel)]="u.numberOfAdults" required>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="8">8</option>
+                                                            <option value="9">9</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group form-group-lg form-group-select-plus">
-                                                    <label for="child{{i}}">Child(0 - 17yrs)</label>
-                                                    <select class="form-control" name="child{{i}}"
-                                                        (ngModelChange)="setChildrenAge($event, i)"
-                                                        [(ngModel)]="u.numberOfChildren" required>
-                                                        <option value="0">--</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                    </select>
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-group form-group-select-plus">
+                                                        <label for="child{{i}}">Child(0 - 11yrs)</label>
+                                                        <select class="form-control" name="child{{i}}"
+                                                            (ngModelChange)="setChildrenAge($event, i)"
+                                                            [(ngModel)]="u.numberOfChildren" required>
+                                                            <option value="0">0</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <!-- <option value="4">4</option> -->
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-2" *ngFor="let v of u.childrenAgeList; let j = index">
-                                                <div class="form-group form-group-lg form-group-select-plus">
-                                                    <label for="childAge{{j}}">Age of Child {{j + 1}}</label>
-                                                    <select class="form-control" name="childAge{{j}}"
-                                                        [(ngModel)]="roomDetailLists[i].childrenAgeList[j]" required>
-                                                        <option value="0">Under 1</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                        <option value="10">10</option>
-                                                        <option value="11">11</option>
-                                                        <option value="12">12</option>
-                                                        <option value="13">13</option>
-                                                        <option value="14">14</option>
-                                                        <option value="15">15</option>
-                                                        <option value="16">16</option>
-                                                        <option value="17">17</option>
-                                                    </select>
+                                                <div class="col-md-4"
+                                                    *ngFor="let v of u.childrenAgeList; let j = index">
+                                                    <div class="form-group form-group-sm form-group-select-plus">
+                                                        <label for="childAge{{j}}">Age {{j + 1}}</label>
+                                                        <select class="form-control" name="childAge{{i}}{{j}}"
+                                                            [(ngModel)]="roomDetailLists[i].childrenAgeList[j]"
+                                                            required>
+                                                            <option value="0">0</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="8">8</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                            <option value="11">11</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <button class="btn btn-primary btn-lg" type="submit">Search for Hotels</button>
                                     </form>
                                 </div>
-                                <div #tab3 class="tab-pane" id="tab3">
+                                <div #tab3 class="tab-pane {{visa}}" id="tab3">
                                     <form autocomplete="off" (ngSubmit)="visaRequestSubmit()" ngNativeValidate>
                                         <div class="row">
                                             <div class="col-md-3">
@@ -467,7 +470,7 @@
                                                         [maxDate]="maxDepartureDate" [minDate]="minDepartureDate"
                                                         autocomplete="off"
                                                         (bsValueChange)="formatVisaReturnDate($event)"
-                                                        [bsConfig]="{dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange'}"
+                                                        [bsConfig]="{dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange', showWeekNumbers:false}"
                                                         required [(ngModel)]="visaDepartureDate" bsDatepicker>
                                                 </div>
                                             </div>
@@ -479,7 +482,7 @@
                                                         name="visaReturnDate" placeholder="Return date"
                                                         [maxDate]="maxVisaReturnDate" [minDate]="minVisaReturnDate"
                                                         autocomplete="off"
-                                                        [bsConfig]="{dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange'}"
+                                                        [bsConfig]="{dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange', showWeekNumbers:false}"
                                                         required [(ngModel)]="visaReturnDate" bsDatepicker>
                                                 </div>
                                             </div>
@@ -517,11 +520,8 @@
                                                     <button class="btn btn-primary btn-lg" type="submit">Submit
                                                         Request</button>
                                                 </div>
-
-
                                             </div>
                                         </div>
-
                                     </form>
                                 </div>
                             </div>
@@ -538,7 +538,6 @@
                 <div class="bg-img" style="background-image:url(assets/images/slide02.jpg);"></div>
             </div>
         </div>
-
     </div>
 </div>
 <!-- END TOP AREA  -->
@@ -582,7 +581,7 @@
         </div>
     </div>
 </div>
-<div class="container-fluid bg-light-grey2 pt-50 pb-50">
+<!-- <div class="container-fluid bg-light-grey2 pt-50 pb-50">
     <div class="container">
         <div class="carousel-nav">
             <span class="fa fa-chevron-left prev"></span> <span class="fa fa-chevron-right next"></span>
@@ -795,7 +794,7 @@
         </div>
         <div class="gap gap-small"></div>
     </div>
-</div>
+</div> -->
 <div class="container-fluid bg-white pt-50 pb-50">
     <div class="container">
         <h3 class="text-left fw-bold dark-blue mb20">Top Destinations</h3>
@@ -953,23 +952,20 @@
     <div class="container text-white">
         <div class="row">
             <div class="col-sm-6 col-md-5">
-
                 <h5 class="fw-bold">
                     <span class="newsicon"></span>
                     SUBSCRIBE TO OUR NEWSLETTERS, PROMOS AND BROADCASTS
                 </h5>
             </div>
-
             <div class="col-sm-6 col-md-7">
-                <form class="newsletter">
-                    <input type="email" placeholder="YOUR EMAIL" class="form-control">
+                <form class="newsletter" (ngSubmit)="subscribe()" ngNativeValidate>
+                    <input type="email" name="subscribeEmail" placeholder="YOUR EMAIL" class="form-control" [(ngModel)]="subscribeEmail" required>
                     <input type="submit" value="Subscribe">
                     <p class="mt5">
                         <small>*We Never Send Spam</small>
                     </p>
                 </form>
             </div>
-
         </div>
     </div>
 </div>
@@ -1064,8 +1060,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </p>
-
-                <p class="mb30" style="color: red">Error retrieving search results, Please try again</p>
+                <p class="mb30" style="color: red">No results retrieved, Please try again</p>
             </div>
         </div>
     </div>

@@ -2,7 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import {DataTableModule} from 'angular-6-datatable';
+import { DataTableModule } from 'angular-6-datatable';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -34,6 +35,9 @@ import { UserManagementComponent } from '../pages/user-management/user-managemen
 import { ReservationComponent } from '../pages/reservation/reservation.component';
 import { HotelSearchResultComponent } from '../pages/hotel-search-result/hotel-search-result.component';
 import { HotelDetailsComponent } from '../pages/hotel-details/hotel-details.component';
+import { HotelRoomsComponent } from '../pages/hotel-rooms/hotel-rooms.component';
+import { AgmCoreModule } from '@agm/core';
+import { SettingsComponent } from '../pages/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +56,9 @@ import { HotelDetailsComponent } from '../pages/hotel-details/hotel-details.comp
     UserManagementComponent,
     ReservationComponent,
     HotelSearchResultComponent,
-    HotelDetailsComponent
+    HotelDetailsComponent,
+    HotelRoomsComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +75,11 @@ import { HotelDetailsComponent } from '../pages/hotel-details/hotel-details.comp
     CollapseModule.forRoot(),
     CarouselModule.forRoot(),
     AlertModule.forRoot(),
-    DataTableModule
+    DataTableModule,
+    BrowserAnimationsModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDQUHkQkHQOd0MDdr_F0C5IFWPeB2CexpA'
+    })
   ],
   providers: [Service, AuthGuard, TravelbetaAPIService, LocalAPIService, InitAPIService],
   bootstrap: [AppComponent]

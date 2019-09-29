@@ -127,7 +127,7 @@
                                 <label>Date of birth</label>
                                 <input type="text" class="form-control" [(ngModel)]="contactDetail.dateOfBirth"
                                     name="birthday" [maxDate]="maxAdultBday" autocomplete="off"
-                                    [bsConfig]="{dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange'}"
+                                    [bsConfig]="{dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' , showWeekNumbers:false}"
                                     required bsDatepicker>
                             </div>
                         </div>
@@ -175,8 +175,13 @@
                         <label *ngIf="!login">
                             <input class="i-check" name="shouldRegister" type="checkbox" [(ngModel)]="shouldRegister"
                                 checked />Create NaijaTravelShop account?
-                            <small>(default password will be sent to your e-mail)</small>
                         </label>
+                    </div>
+                    <div *ngIf="shouldRegister" class="form-group form-group-icon-left">
+                        <i class="fa fa-lock input-icon"></i>
+                        <label>Password</label>
+                        <input class="form-control" type="password" placeholder="your password" name="password"
+                            [(ngModel)]="contactDetail.password" required />
                     </div>
                 </div>
                 <div class="gap gap-small"></div>
@@ -225,19 +230,19 @@
                                             (bsValueChange)="onPassengerBirthdayChange($event, i)"
                                             name="adultBirthday{{i}}" [maxDate]="maxAdultBday"
                                             [value]="passengers[i].dateOfBirth"
-                                            [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' }"
+                                            [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange', showWeekNumbers:false }"
                                             required bsDatepicker>
                                         <input *ngIf="p.ageGroup==2" type="text" class="form-control"
                                             name="childBirthday{{i}}" [maxDate]="maxChildBday" [minDate]="minChildBday"
                                             [value]="passengers[i].dateOfBirth"
                                             (bsValueChange)="onPassengerBirthdayChange($event, i)"
-                                            [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' }"
+                                            [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange', showWeekNumbers:false }"
                                             required bsDatepicker>
                                         <input type="text" *ngIf="p.ageGroup==1" class="form-control"
                                             name="infantBirthday{{i}}" [maxDate]="maxInfantBday"
                                             [minDate]="minInfantBday" [value]="passengers[i].dateOfBirth"
                                             (bsValueChange)="onPassengerBirthdayChange($event, i)"
-                                            [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' }"
+                                            [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange', showWeekNumbers:false }"
                                             required bsDatepicker>
                                     </div>
                                 </div>

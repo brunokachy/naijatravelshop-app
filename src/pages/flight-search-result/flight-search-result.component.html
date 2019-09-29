@@ -202,7 +202,7 @@
 
 <ng-template #template>
     <div class="modal-lg">
-        <div class="modal-content">
+        <div class="modal-content" style="width: 140%;">
             <div class="modal-body">
                 <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
                     <span aria-hidden="true">&times;</span>
@@ -215,9 +215,9 @@
                         <li [class.active]="flightHeader.tripType == 'Round Trip'">
                             <a href="#flight-search-2" data-toggle="tab">Round Trip</a>
                         </li>
-                        <li [class.active]="flightHeader.tripType == 'Multi Trip'">
+                        <!-- <li [class.active]="flightHeader.tripType == 'Multi Trip'">
                             <a href="#flight-search-3" data-toggle="tab">Multiple Trip</a>
-                        </li>
+                        </li> -->
                     </ul>
                     <div class="tab-content">
                         <div [class.active]="flightHeader.tripType == 'One-way Trip'"

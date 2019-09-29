@@ -12,7 +12,6 @@ import { BookingResponse } from '../../model/bookingResponse';
 import { ReservationOwner } from '../../model/reservationowner';
 import { Booking } from '../../model/booking';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { InitModel } from '../../model/InitModel';
 import { TravelbetaAPIService } from '../../provider/travelbeta.api.service';
 import { LocalAPIService } from '../../provider/local.api.service';
 
@@ -312,8 +311,6 @@ export class FlightDetailComponent {
                         this.add('danger', booking.data.message);
                     } else {
                         this.secondBooking(bookingResponse);
-                        sessionStorage.setItem('viewFlightPayment', 'true');
-                        this.router.navigate(['/flight_payment']);
                     }
                 }
             },
@@ -324,15 +321,11 @@ export class FlightDetailComponent {
                 this.showModal();
             });
         if (this.shouldRegister) {
+            const roles: string[] = [];
+            roles.push('GUEST');
+            this.contactDetail.roles = roles;
             this.localAPIService.postRequest(this.contactDetail, this.localAPIService.CREATE_ACCOUNT).subscribe(
-                () => {
-                    this.localAPIService.postRequest(this.user, this.localAPIService.RESET_PASSWORD).subscribe(
-                        () => {
-                        },
-                        error => {
-                            console.log(error);
-                        });
-                },
+                () => { },
                 error => {
                     console.log(error);
                 });
@@ -395,6 +388,9 @@ export class FlightDetailComponent {
         this.localAPIService.postRequest(booking, this.localAPIService.BOOK).subscribe(
             data => {
                 sessionStorage.setItem('secondbookingResponse', JSON.stringify(data.data));
+                sessionStorage.setItem('bookingType', 'FLIGHT');
+                sessionStorage.setItem('viewFlightPayment', 'true');
+                this.router.navigate(['/flight_payment']);
                 this.spinnerService.hide();
             },
             error => {

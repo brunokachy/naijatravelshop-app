@@ -561,6 +561,8 @@ export class FlightSearchResultComponent {
         this.travelbetaAPIService.postRequest(flightSearch, this.travelbetaAPIService.PROCESS_FLIGHT_SEARCH).subscribe(
             flight => {
                 if (flight.status === 0) {
+                    this.spinnerService.hide();
+                    this.modalRef.hide();
                     this.flightHeader = JSON.parse(sessionStorage.getItem('flightHeader'));
                     sessionStorage.setItem('flight', JSON.stringify(flight.data));
                     this.flight = flight.data;
@@ -569,8 +571,6 @@ export class FlightSearchResultComponent {
                     flightSearch.flightItineraryDetail = flightItineraryDetails;
                     sessionStorage.setItem('flightSearch', JSON.stringify(flightSearch));
                     this.flightSearch = flightSearch;
-                    this.spinnerService.hide();
-                    this.modalRef.hide();
                 }
             },
             error => {

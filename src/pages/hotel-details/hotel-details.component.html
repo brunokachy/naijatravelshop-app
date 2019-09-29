@@ -1,566 +1,279 @@
+<div class="breadcrumb-wrap">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Home</a>
+            </li>
+            <li>
+                <a routerLink='/hotel_search_result'>Hotel Search Result</a>
+            </li>
+            <li>
+                <a routerLink='/app-hotel-rooms'>Hotel Detail</a>
+            </li>
+            <li class="active">
+                Hotel Booking
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="gap"></div>
+
 <div class="container">
-    <ul class="breadcrumb">
-        <li>
-            <a href="index.html">Home</a>
-        </li>
-        <li>
-            <a href="#">United States</a>
-        </li>
-        <li>
-            <a href="#">New York (NY)</a>
-        </li>
-        <li>
-            <a href="#">New York City</a>
-        </li>
-        <li>
-            <a href="#">New York City Hotels</a>
-        </li>
-        <li class="active">InterContinental New York Barclay</li>
-    </ul>
-    <div class="booking-item-details">
-        <header class="booking-item-header">
-            <div class="row">
-                <div class="col-md-9">
-                    <h2 class="lh1em">InterContinental New York Barclay</h2>
-                    <p class="lh1em text-small">
-                        <i class="fa fa-map-marker"></i> 6782 Sarasea Circle, Siesta Key, FL 34242</p>
-                    <ul class="list list-inline text-small">
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-envelope"></i> Hotel E-mail</a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-home"></i> Hotel Website</a>
-                        </li>
-                        <li>
-                            <i class="fa fa-phone"></i> +1 (163) 493-1463</li>
-                    </ul>
+    <div class="row">
+        <div class="col-sm-7 col-md-8">
+            <h3>Hotel Booking</h3>
+            <form class="boxed-form" (ngSubmit)="proceed()" ngNativeValidate>
+                <header>Customer Account</header>
+                <div class="boxed-form-contents">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Title</label>
+                                <select class="form-control" name="title" [(ngModel)]="contactDetail.title" required>
+                                    <option value="Mr">Mr</option>
+                                    <option value="Mrs">Mrs</option>
+                                    <option value="Miss">Miss</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>First name</label>
+                                <input [(ngModel)]="contactDetail.firstName" type="text" name="firstName"
+                                    class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Last name</label>
+                                <input [(ngModel)]="contactDetail.lastName" type="text" name="lastName"
+                                    class="form-control" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input [(ngModel)]="contactDetail.email" type="email" name="email" class="form-control"
+                                    required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Phone number</label>
+                                <input [(ngModel)]="contactDetail.phoneNumber" type="tel" name="phoneNumber"
+                                    class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Nationality</label>
+                                <select class="form-control" name="country" [(ngModel)]="contactDetail.countryName"
+                                    required>
+                                    <option *ngFor="let c of countries">{{c.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="!login" class="checkbox">
+                        <label>
+                            <input class="i-check" name="shouldRegister" type="checkbox" [(ngModel)]="shouldRegister"
+                                checked />Create user account
+                        </label>
+                    </div>
+                    <div *ngIf="shouldRegister" class="form-group form-group-icon-left">
+                        <i class="fa fa-lock input-icon"></i>
+                        <label>Password</label>
+                        <input class="form-control" type="password" placeholder="your password" name="password"
+                            [(ngModel)]="contactDetail.password" required />
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <p class="booking-item-header-price">
-                        <small>price from</small>
-                        <span class="text-lg">$350</span>/night</p>
+
+                <div class="gap gap-small"></div>
+                <div class="boxed-form">
+                    <header>Guest Information</header>
+                    <div class="boxed-form-contents">
+                        <ul class="list">
+                            <li *ngFor="let u of roomDetailLists; let i = index">
+                                <h5 style="text-align: center">Room {{i + 1}}</h5>
+                                <div class="row" *ngFor="let v of u.adultList; let j = index">
+                                    <h6 style="text-align: center">
+                                        <strong>Adult {{j + 1}}</strong>
+                                        <small *ngIf="j == 0 && i == 0" (click)="setAdultContact()"
+                                            style="cursor:pointer; color: orange">
+                                            Same as customer account?
+                                        </small>
+                                    </h6>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Title</label>
+                                            <select class="form-control" name="title{{j}}"
+                                                [(ngModel)]="roomDetailLists[i].adultList[j].title" required>
+                                                <option value="Mr">Mr</option>
+                                                <option value="Mrs">Mrs</option>
+                                                <option value="Miss">Miss</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>First name</label>
+                                            <input [(ngModel)]="roomDetailLists[i].adultList[j].firstName" type="text"
+                                                name="firstName{{j}}" class="form-control" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Last name</label>
+                                            <input [(ngModel)]="roomDetailLists[i].adultList[j].lastName" type="text"
+                                                name="lastName{{j}}" class="form-control" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Nationality</label>
+                                            <select class="form-control" name="country"
+                                                [(ngModel)]="roomDetailLists[i].adultList[j].countryName" required>
+                                                <option *ngFor="let c of countries">{{c.name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" *ngFor="let v of u.childrenList; let l = index">
+                                    <h6 style="text-align: center">
+                                        <strong>Child {{l + 1}}</strong>
+                                    </h6>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Title</label>
+                                            <select class="form-control" name="title{{l}}"
+                                                [(ngModel)]="roomDetailLists[i].childrenList[l].title" required>
+                                                <option value="2">Master</option>
+                                                <option value="1">Miss</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>First name</label>
+                                            <input [(ngModel)]="roomDetailLists[i].childrenList[l].firstName"
+                                                type="text" name="firstName{{l}}" class="form-control" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Last name</label>
+                                            <input [(ngModel)]="roomDetailLists[i].childrenList[l].lastName" type="text"
+                                                name="lastName{{l}}" class="form-control" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Nationality</label>
+                                            <select class="form-control" name="country"
+                                                [(ngModel)]="roomDetailLists[i].childrenList[l].countryName" required>
+                                                <option *ngFor="let c of countries">{{c.name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </header>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="responsive-slick">
-                    <div><img src="images/hotels/hotel1.jpg"></div>
-                    <div><img src="images/hotels/hotel2.jpg"></div>
-                    <div><img src="images/hotels/hotel3.jpg"></div>
-                    <div><img src="images/hotels/hotel4.jpg"></div>
-                    <div><img src="images/hotels/hotel5.jpg"></div>
-                    <div><img src="images/hotels/hotel6.jpg"></div>
-                    <div><img src="images/hotels/hotel7.jpg"></div>
-                    <div><img src="images/hotels/hotel8.jpg"></div>
+                <div class="boxed-form">
+                    <div class="boxed-form-contents">
+                        <small>
+                            <p>After Clicking on 'Proceed to Checkout', you will be shown a payment page where you can
+                                complete
+                                the
+                                payment
+                            </p>
+                        </small>
+                        <button type="submit" class="btn btn-primary btn-lg">Proceed to Checkout</button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
-        <div class="gap gap-small"></div>
 
-        <div class="row">
-            <div class="col-md-7">
-                <div class="tabbable booking-details-tabbable">
-                    <ul class="nav nav-tabs" id="myTab">
-                        <li class="active">
-                            <a href="#tab-1" data-toggle="tab">
-                                <i class="fa fa-camera"></i>Hotel Overview</a>
-                        </li>
-                        <li>
-                            <a href="#facilities" data-toggle="tab">
-                                <i class="fa fa-map-marker"></i>Facilities</a>
-                        </li>
-
-                        <li>
-                            <a href="#reviews-ratings" data-toggle="tab">
-                                <i class="fa fa-camera"></i>Reviews/Ratings</a>
-                        </li>
-                        <li>
-                            <a href="#google-map-tab" data-toggle="tab">
-                                <i class="fa fa-map-marker"></i>Map</a>
-                        </li>
-
+        <div class="col-md-4 col-sm-5">
+            <div class="booking-item-payment">
+                <header class="clearfix">
+                    <span class="booking-item-payment-img">
+                        <img src="{{hotel.thumbImageURL}}" alt="Image Alternative text" title="hotel 1">
+                    </span>
+                    <h5 class="booking-item-payment-title">{{hotel.hotelName}}</h5>
+                    <ul class="icon-group booking-item-rating-stars">
+                        <rating [(ngModel)]="hotel.rating" [max]="5" [readonly]="true"></rating>
                     </ul>
-                    <div class="tab-content">
-                        <div class="gap gap-small"></div>
-                        <div class="tab-pane fade in active" id="tab-1">
-                            <h4>InterContinental New York Barclay</h4>
-                            <p class="mb30">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                Lorem Ipsum
-                                has been the industry's standard dummy text ever since the 1500s, when an unknown
-                                printer took a galley of type and scrambled it to make a type specimen book. It has
-                                survived not only five centuries, but also the </p>
+                </header>
+                <ul class="booking-item-payment-details">
+                    <li>
+                        <h5>Booking for {{nights}} nights</h5>
+                        <div class="booking-item-payment-date">
+                            <p class="booking-item-payment-date-day">{{formatDate3(hotelSearch.checkInDate)}}</p>
+                            <p class="booking-item-payment-date-weekday">{{formatDate2(hotelSearch.checkInDate)}}</p>
                         </div>
-                        <div class="tab-pane fade" id="facilities">
-                            <div class="row mt20">
-                                <div class="col-md-4">
-                                    <ul class="booking-item-features booking-item-features-expand mb30 clearfix">
-                                        <li><i class="im im-wi-fi"></i><span class="booking-item-feature-title">Wi-Fi
-                                                Internet</span>
-                                        </li>
-                                        <li><i class="im im-parking"></i><span
-                                                class="booking-item-feature-title">Parking</span>
-                                        </li>
-                                        <li><i class="im im-plane"></i><span class="booking-item-feature-title">Airport
-                                                Transport</span>
-                                        </li>
-                                        <li><i class="im im-bus"></i><span class="booking-item-feature-title">Shuttle
-                                                Bus Service</span>
-                                        </li>
-                                        <li><i class="im im-fitness"></i><span
-                                                class="booking-item-feature-title">Fitness Center</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-4">
-                                    <ul class="booking-item-features booking-item-features-expand mb30 clearfix">
-                                        <li><i class="im im-pool"></i><span
-                                                class="booking-item-feature-title">Pool</span>
-                                        </li>
-                                        <li><i class="im im-spa"></i><span class="booking-item-feature-title">SPA</span>
-                                        </li>
-                                        <li><i class="im im-restaurant"></i><span
-                                                class="booking-item-feature-title">Restaurant</span>
-                                        </li>
-                                        <li><i class="im im-wheel-chair"></i><span
-                                                class="booking-item-feature-title">Wheelchair Access</span>
-                                        </li>
-                                        <li><i class="im im-business-person"></i><span
-                                                class="booking-item-feature-title">Business Center</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-4">
-                                    <ul class="booking-item-features booking-item-features-expand mb30 clearfix">
-                                        <li><i class="im im-children"></i><span
-                                                class="booking-item-feature-title">Children Activites</span>
-                                        </li>
-                                        <li><i class="im im-casino"></i><span class="booking-item-feature-title">Casino
-                                                &amp; Gambling</span>
-                                        </li>
-                                        <li><i class="im im-bar"></i><span
-                                                class="booking-item-feature-title">Bar/Lounge</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+                        <i class="fa fa-arrow-right booking-item-payment-date-separator"></i>
+                        <div class="booking-item-payment-date">
+                            <p class="booking-item-payment-date-day">{{formatDate3(hotelSearch.checkOutDate)}}</p>
+                            <p class="booking-item-payment-date-weekday">{{formatDate2(hotelSearch.checkOutDate)}}</p>
                         </div>
-                        <div class="tab-pane fade" id="reviews-ratings">
-
-                            <div class="booking-item-meta">
-                                <h2 class="lh1em mt40">Exeptional!</h2>
-                                <h3>97%
-                                    <small>of guests recommend</small>
-                                </h3>
-                                <div class="booking-item-rating">
-                                    <ul class="icon-list icon-group booking-item-rating-stars">
-                                        <li>
-                                            <i class="fa fa-star"></i>
-                                        </li>
-                                        <li>
-                                            <i class="fa fa-star"></i>
-                                        </li>
-                                        <li>
-                                            <i class="fa fa-star"></i>
-                                        </li>
-                                        <li>
-                                            <i class="fa fa-star"></i>
-                                        </li>
-                                        <li>
-                                            <i class="fa fa-star"></i>
-                                        </li>
-                                    </ul>
-                                    <span class="booking-item-rating-number">
-                                        <b>4.7</b> of 5
-                                        <small class="text-smaller">guest rating</small>
-                                    </span>
-                                    <p>
-                                        <a class="text-default" href="#">based on 1535 reviews</a>
-                                    </p>
-                                </div>
-                            </div>
-
+                    </li>
+                    <div class="row details-divider-hotels">
+                        <div class="col-md-12">
+                            <h5>{{room.name}}</h5>
+                        </div>
+                    </div>
+                    <li>
+                        <ul class="booking-item-payment-price">
                             <div class="row">
-                                <div class="col-md-8">
-                                    <h4 class="lh1em">Traveler raiting</h4>
-                                    <ul class="list booking-item-raiting-list">
-                                        <li>
-                                            <div class="booking-item-raiting-list-title">Exellent</div>
-                                            <div class="booking-item-raiting-list-bar">
-                                                <div style="width:91%;"></div>
-                                            </div>
-                                            <div class="booking-item-raiting-list-number">1223</div>
-                                        </li>
-                                        <li>
-                                            <div class="booking-item-raiting-list-title">Very Good</div>
-                                            <div class="booking-item-raiting-list-bar">
-                                                <div style="width:6%;"></div>
-                                            </div>
-                                            <div class="booking-item-raiting-list-number">61</div>
-                                        </li>
-                                        <li>
-                                            <div class="booking-item-raiting-list-title">Average</div>
-                                            <div class="booking-item-raiting-list-bar">
-                                                <div style="width:5%;"></div>
-                                            </div>
-                                            <div class="booking-item-raiting-list-number">40</div>
-                                        </li>
-                                        <li>
-                                            <div class="booking-item-raiting-list-title">Poor</div>
-                                            <div class="booking-item-raiting-list-bar">
-                                                <div style="width:3%;"></div>
-                                            </div>
-                                            <div class="booking-item-raiting-list-number">15</div>
-                                        </li>
-                                        <li>
-                                            <div class="booking-item-raiting-list-title">Terrible</div>
-                                            <div class="booking-item-raiting-list-bar">
-                                                <div style="width:1%;"></div>
-                                            </div>
-                                            <div class="booking-item-raiting-list-number">9</div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-4">
-                                    <h4 class="lh1em">Summary</h4>
-                                    <ul class="list booking-item-raiting-summary-list">
-                                        <li>
-                                            <div class="booking-item-raiting-list-title">Sleep</div>
-                                            <ul class="icon-group booking-item-rating-stars">
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <div class="booking-item-raiting-list-title">Location</div>
-                                            <ul class="icon-group booking-item-rating-stars">
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o text-gray"></i>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <div class="booking-item-raiting-list-title">Service</div>
-                                            <ul class="icon-group booking-item-rating-stars">
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <div class="booking-item-raiting-list-title">Clearness</div>
-                                            <ul class="icon-group booking-item-rating-stars">
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <div class="booking-item-raiting-list-title">Rooms</div>
-                                            <ul class="icon-group booking-item-rating-stars">
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-smile-o"></i>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">{{nights}} Nights</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-------------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">
+                                            &#8358;{{formatCurrency(room.roomPrice / nights) | number}}
+                                            <small>* {{nights}}</small>
+                                        </p>
+                                    </div>
+                                </li>
                             </div>
-                            <a href="#" class="btn btn-primary">Write a Review</a>
-
-                        </div>
-
-                        <div class="tab-pane fade" id="google-map-tab">
-                            <div id="map-canvas" style="width:100%; height:500px;"></div>
-                        </div>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="col-md-6 booking-item-payment-total">Total Amount:</span>
+                        <span
+                            class="col-md-6 total-payable-amount">&#8358;{{formatCurrency(room.roomPrice) | number}}</span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-5">
-                <div class="booking-item-dates-change">
-                    <form>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="input-daterange" data-date-format="MM d, D">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group form-group-icon-left">
-                                                <i class="fa fa-calendar input-icon input-icon-hightlight"></i>
-                                                <label>Check in</label>
-                                                <input class="form-control" name="start" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group form-group-icon-left">
-                                                <i class="fa fa-calendar input-icon input-icon-hightlight"></i>
-                                                <label>Check out</label>
-                                                <input class="form-control" name="end" type="text">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group form-group-select-plus">
-                                    <label>Adults</label>
-                                    <div class="btn-group btn-group-select-num" data-toggle="buttons">
-                                        <label class="btn btn-primary active">
-                                            <input type="radio" name="options">1</label>
-                                        <label class="btn btn-primary">
-                                            <input type="radio" name="options">2</label>
-                                        <label class="btn btn-primary">
-                                            <input type="radio" name="options">3</label>
-                                        <label class="btn btn-primary">
-                                            <input type="radio" name="options">3+</label>
-                                    </div>
-                                    <select class="form-control hidden">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option selected="selected">4</option>
-                                        <option>5</option>
-                                        <option>6</option>
-                                        <option>7</option>
-                                        <option>8</option>
-                                        <option>9</option>
-                                        <option>10</option>
-                                        <option>11</option>
-                                        <option>12</option>
-                                        <option>13</option>
-                                        <option>14</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group form-group-select-plus">
-                                    <label>Children</label>
-                                    <div class="btn-group btn-group-select-num" data-toggle="buttons">
-                                        <label class="btn btn-primary active">
-                                            <input type="radio" name="options">0</label>
-                                        <label class="btn btn-primary">
-                                            <input type="radio" name="options">1</label>
-                                        <label class="btn btn-primary">
-                                            <input type="radio" name="options">2</label>
-                                        <label class="btn btn-primary">
-                                            <input type="radio" name="options">2+</label>
-                                    </div>
-                                    <select class="form-control hidden">
-                                        <option>0</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option selected="selected">3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                        <option>6</option>
-                                        <option>7</option>
-                                        <option>8</option>
-                                        <option>9</option>
-                                        <option>10</option>
-                                        <option>11</option>
-                                        <option>12</option>
-                                        <option>13</option>
-                                        <option>14</option>
-                                    </select>
-                                </div>
-                            </div>
+        </div>
 
-                        </div>
-                    </form>
-                </div>
-                <ul class="booking-list">
-                    <li>
-                        <a class="booking-item">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <h5 class="booking-item-title">Standard Double room</h5>
-                                    <p class="text-small">Pellentesque mattis iaculis felis tempus tristique metus
-                                        accumsan nullam volutpat elementum mattis tempor</p>
-                                    <ul class="booking-item-features booking-item-features-sign clearfix">
-                                        <li rel="tooltip" data-placement="top" title=""
-                                            data-original-title="Adults Occupancy"><i class="fa fa-male"></i><span
-                                                class="booking-item-feature-sign">x 2</span>
-                                        </li>
-                                        <li rel="tooltip" data-placement="top" title="" data-original-title="Beds"><i
-                                                class="im im-bed"></i><span class="booking-item-feature-sign">x 1</span>
-                                        </li>
-                                        <li rel="tooltip" data-placement="top" title=""
-                                            data-original-title="Room footage (square feet)"><i
-                                                class="im im-width"></i><span
-                                                class="booking-item-feature-sign">470</span>
-                                        </li>
-                                    </ul>
+    </div>
+    <div class="gap"></div>
+</div>
+<div *ngIf="isModalShown" [config]="{ show: true}" (onHidden)="onHidden()" bsModal #autoShownModal="bs-modal"
+    class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </p>
 
-                                </div>
-                                <div class="col-md-4"><span
-                                        class="booking-item-price">NGN300,000</span><br><span>/night</span><br><span
-                                        class="btn btn-primary">Book</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="booking-item">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <h5 class="booking-item-title">Standard Double room</h5>
-                                    <p class="text-small">Pellentesque mattis iaculis felis tempus tristique metus
-                                        accumsan nullam volutpat elementum mattis tempor</p>
-                                    <ul class="booking-item-features booking-item-features-sign clearfix">
-                                        <li rel="tooltip" data-placement="top" title=""
-                                            data-original-title="Adults Occupancy"><i class="fa fa-male"></i><span
-                                                class="booking-item-feature-sign">x 2</span>
-                                        </li>
-                                        <li rel="tooltip" data-placement="top" title="" data-original-title="Beds"><i
-                                                class="im im-bed"></i><span class="booking-item-feature-sign">x 1</span>
-                                        </li>
-                                        <li rel="tooltip" data-placement="top" title=""
-                                            data-original-title="Room footage (square feet)"><i
-                                                class="im im-width"></i><span
-                                                class="booking-item-feature-sign">470</span>
-                                        </li>
-                                    </ul>
-
-                                </div>
-                                <div class="col-md-4"><span
-                                        class="booking-item-price">NGN300,000</span><br><span>/night</span><br><span
-                                        class="btn btn-primary">Book</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="booking-item">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <h5 class="booking-item-title">Standard Double room</h5>
-                                    <p class="text-small">Pellentesque mattis iaculis felis tempus tristique metus
-                                        accumsan nullam volutpat elementum mattis tempor</p>
-                                    <ul class="booking-item-features booking-item-features-sign clearfix">
-                                        <li rel="tooltip" data-placement="top" title=""
-                                            data-original-title="Adults Occupancy"><i class="fa fa-male"></i><span
-                                                class="booking-item-feature-sign">x 2</span>
-                                        </li>
-                                        <li rel="tooltip" data-placement="top" title="" data-original-title="Beds"><i
-                                                class="im im-bed"></i><span class="booking-item-feature-sign">x 1</span>
-                                        </li>
-                                        <li rel="tooltip" data-placement="top" title=""
-                                            data-original-title="Room footage (square feet)"><i
-                                                class="im im-width"></i><span
-                                                class="booking-item-feature-sign">470</span>
-                                        </li>
-                                    </ul>
-
-                                </div>
-                                <div class="col-md-4"><span
-                                        class="booking-item-price">NGN300,000</span><br><span>/night</span><br><span
-                                        class="btn btn-primary">Book</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="booking-item">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <h5 class="booking-item-title">Standard Double room</h5>
-                                    <p class="text-small">Pellentesque mattis iaculis felis tempus tristique metus
-                                        accumsan nullam volutpat elementum mattis tempor</p>
-                                    <ul class="booking-item-features booking-item-features-sign clearfix">
-                                        <li rel="tooltip" data-placement="top" title=""
-                                            data-original-title="Adults Occupancy"><i class="fa fa-male"></i><span
-                                                class="booking-item-feature-sign">x 2</span>
-                                        </li>
-                                        <li rel="tooltip" data-placement="top" title="" data-original-title="Beds"><i
-                                                class="im im-bed"></i><span class="booking-item-feature-sign">x 1</span>
-                                        </li>
-                                        <li rel="tooltip" data-placement="top" title=""
-                                            data-original-title="Room footage (square feet)"><i
-                                                class="im im-width"></i><span
-                                                class="booking-item-feature-sign">470</span>
-                                        </li>
-                                    </ul>
-
-                                </div>
-                                <div class="col-md-4"><span
-                                        class="booking-item-price">NGN300,000</span><br><span>/night</span><br><span
-                                        class="btn btn-primary">Book</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-
-
-
-                </ul>
+                <p class="mb30" style="color: red; text-align: center" text-center>{{alertMessage}}</p>
             </div>
         </div>
     </div>
-
-    <div class="gap"></div>
-
 </div>
-<div class="gap gap-small"></div>

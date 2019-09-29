@@ -2,6 +2,7 @@ import { Component, ViewChild, TemplateRef } from '@angular/core';
 import * as moment from 'moment';
 import { AlertComponent, ModalDirective, BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { LocalAPIService } from '../../provider/local.api.service';
+import { User } from '../../model/user';
 
 @Component({
     moduleId: module.id,
@@ -15,9 +16,16 @@ export class ReservationComponent {
         this.searchFlight();
         this.searchHotel();
         this.searchVisa();
+        this.getSubscribedEmails();
         this.isSuperAdmin = JSON.parse(localStorage.getItem('isSuperAdmin'));
+        this.isPortalUser = JSON.parse(localStorage.getItem('isPortalUser'));
+        this.isGuest = JSON.parse(localStorage.getItem('isGuest'));
+        this.user = JSON.parse(localStorage.getItem('user'));
     }
     isSuperAdmin = false;
+    isPortalUser = false;
+    isGuest = false;
+    user = new User();
 
     startDateFlight: string;
     endDateFlight: string;
@@ -36,19 +44,23 @@ export class ReservationComponent {
     @ViewChild('autoShownModal') autoShownModal: ModalDirective;
     isModalShown = false;
 
-    flightData: any[];
+    flightData: any[] = [];
     flightBookingDetails: any;
+    hotelBookingDetails: any;
     changeStatusField: string;
-    visaData: any[];
+    visaData: any[] = [];
     selectedVisaData: any;
+    hotelData: any[] = [];
+    subscribedEmails: any[] = [];
 
     alerts: any[] = [];
 
     modalFlight: BsModalRef;
     modalVisa: BsModalRef;
-    config = {
-        animated: false,
-    };
+    modalHotel: BsModalRef;
+    // config = {
+    //     animated: false,
+    // };
 
     add(type, message): void {
         this.alerts.push({
@@ -63,11 +75,15 @@ export class ReservationComponent {
     }
 
     openFlightModal(template: TemplateRef<any>) {
-        this.modalFlight = this.modalService.show(template, this.config);
+        this.modalFlight = this.modalService.show(template);
+    }
+
+    openHotelModal(template: TemplateRef<any>) {
+        this.modalHotel = this.modalService.show(template);
     }
 
     openVisaModal(template: TemplateRef<any>) {
-        this.modalVisa = this.modalService.show(template, this.config);
+        this.modalVisa = this.modalService.show(template);
     }
 
     showModal(): void {
@@ -82,8 +98,61 @@ export class ReservationComponent {
         this.isModalShown = false;
     }
 
-    searchHotel() {
+    getSubscribedEmails() {
+        this.subscribedEmails = [];
+        this.localAPIService.postRequest({}, this.localAPIService.GET_SUBSCRIBED_EMAIL).subscribe(
+            data => {
+                this.subscribedEmails = data.data;
+            },
+            error => {
+                console.log(error);
+            });
+    }
 
+    searchHotel() {
+        let startD = '';
+        let endD = '';
+
+        if (this.startDateHotel !== undefined && this.endDateHotel === undefined) {
+            alert('Please fill in the end date');
+            return;
+        }
+
+        if (this.startDateHotel === undefined || this.startDateHotel === '') {
+
+        } else {
+            startD = this.formatDate(this.startDateHotel);
+            endD = this.formatDate(this.endDateHotel);
+        }
+
+        if (this.bookingStatusHotel === 'ALL') {
+            this.bookingStatusHotel = '';
+        }
+
+        const searchData = {
+            startDate: startD, endDate: endD, bookingStatus: this.bookingStatusHotel,
+            bookingNo: this.bookingNumberHotel
+        };
+        this.hotelData = [];
+        this.localAPIService.postRequest(searchData, this.localAPIService.GET_HOTEL_BOOKINGS_BY_SEARCH_TERM).subscribe(
+            data => {
+                if (this.isGuest) {
+                    for (const hotel of data.data) {
+                        if (hotel.ownerEmail === this.user.email) {
+                            this.hotelData.push(hotel);
+                        }
+                    }
+                } else {
+                    this.hotelData = data.data;
+                }
+                this.startDateHotel = '';
+                this.endDateHotel = '';
+                this.bookingStatusHotel = '';
+                this.bookingNumberHotel = '';
+            },
+            error => {
+                console.log(error);
+            });
     }
 
     searchVisa() {
@@ -109,10 +178,18 @@ export class ReservationComponent {
         const searchData = {
             startDate: startD, endDate: endD, bookingStatus: this.bookingStatusVisa
         };
-
+        this.visaData = [];
         this.localAPIService.postRequest(searchData, this.localAPIService.GET_VISA_REQUEST_BY_SEARCH_TERM).subscribe(
             data => {
-                this.visaData = data.data;
+                if (this.isGuest) {
+                    for (const visa of data.data) {
+                        if (visa.email === this.user.email) {
+                            this.visaData.push(visa);
+                        }
+                    }
+                } else {
+                    this.visaData = data.data;
+                }
                 this.startDateVisa = '';
                 this.endDateVisa = '';
                 this.bookingStatusVisa = '';
@@ -143,12 +220,22 @@ export class ReservationComponent {
         }
 
         const searchData = {
-            startDate: startD, endDate: endD, bookingStatus: this.bookingStatusFlight, bookingNo: this.bookingNumberFlight
+            startDate: startD, endDate: endD, bookingStatus: this.bookingStatusFlight,
+            bookingNo: this.bookingNumberFlight
         };
 
+        this.flightData = [];
         this.localAPIService.postRequest(searchData, this.localAPIService.GET_FLIGHT_BOOKINGS_BY_SEARCH_TERM).subscribe(
             data => {
-                this.flightData = data.data;
+                if (this.isGuest) {
+                    for (const flight of data.data) {
+                        if (flight.ownerEmail === this.user.email) {
+                            this.flightData.push(flight);
+                        }
+                    }
+                } else {
+                    this.flightData = data.data;
+                }
                 this.startDateFlight = '';
                 this.endDateFlight = '';
                 this.bookingStatusFlight = '';
@@ -157,7 +244,6 @@ export class ReservationComponent {
             error => {
                 console.log(error);
             });
-
     }
 
     getFlightReservationDetail(bookingNo, template: TemplateRef<any>) {
@@ -166,6 +252,19 @@ export class ReservationComponent {
             data => {
                 this.flightBookingDetails = data.data;
                 this.openFlightModal(template);
+            },
+            error => {
+                this.add('danger', error.error.message);
+                console.log(error);
+            });
+    }
+
+    getHotelReservationDetail(bookingNo, template: TemplateRef<any>) {
+        const searchData = { bookingNo };
+        this.localAPIService.postRequest(searchData, this.localAPIService.GET_HOTEL_RESERVATION_DETAILS).subscribe(
+            data => {
+                this.hotelBookingDetails = data.data;
+                this.openHotelModal(template);
             },
             error => {
                 this.add('danger', error.error.message);
@@ -193,6 +292,14 @@ export class ReservationComponent {
                 for (let i = 0; i < flightDataLength; i++) {
                     if (this.flightData[i].bookingNumber === bookingNo) {
                         this.flightData[i].bookingStatus = bookingStatus;
+                        break;
+                    }
+                }
+
+                const hotelDataLength = this.hotelData.length;
+                for (let i = 0; i < hotelDataLength; i++) {
+                    if (this.hotelData[i].bookingNumber === bookingNo) {
+                        this.hotelData[i].bookingStatus = bookingStatus;
                         break;
                     }
                 }
@@ -228,6 +335,12 @@ export class ReservationComponent {
         const msec = Date.parse(date);
         const d = moment(msec).format('DD/MM/YYYY');
         return d;
+    }
+
+    formatCurrency(amount: number) {
+        const str = amount.toString();
+        const result = str.slice(0, -2) + '.' + str.slice(-2);
+        return parseInt(result, 10);
     }
 
 }

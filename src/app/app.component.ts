@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { User } from '../model/User';
 import { InitAPIService } from '../provider/init.api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -15,8 +16,9 @@ export class AppComponent {
   firstname: string;
   phoneNumber: string;
 
-  constructor(private initService: InitAPIService) {
+  constructor(private initService: InitAPIService, private router: Router) {
     this.initService.makeInitCall();
+    console.log(window.location.origin);
 
     setInterval(() => {
       this.checkUserLogin();

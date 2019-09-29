@@ -3,13 +3,22 @@ export class HotelList {
     ) { }
     public hotelId: string;
     public hotelName: string;
-    public fullAddress: string;
-    public addressDetail: { 'streetAddress': string, 'city': string, 'country': string, 'postalCode': string };
-    public description: string;
-    public starRating: string;
+    public address: string;
+    public rooms: { 'roomPrice': number, 'name': string };
+
+    public rating: string;
     public minimumPrice: number;
-    public imageList: { 'imageUrl': string, 'imageThumbnailUrl': string }[] = [];
-    public extraInformationList: { 'name': string, 'detail': string }[] = [];
-    public facilityList: { 'type': string, 'detail': string }[] = [];
-    public hotelCoordinate: { 'latitude': string, 'longitude': string };
+    public maximumPrice: number;
+    public images: [] = [];
+    public facilities: [] = [];
+
+    public fullDescription: string;
+    public smallDescription: string;
+    public cityName: string;
+    public cityCode: string;
+    public countryName: string;
+    public countryCode: string;
+    public lat: string;
+    public lng: string;
+    public thumbImageURL: string;
 }

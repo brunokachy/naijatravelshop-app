@@ -10,32 +10,39 @@
         </ul>
     </div>
 </div>
+<div class="gap"></div>
 <div class="container">
     <div class="row">
         <div class="col-md-3">
             <aside class="booking-filters text-white">
                 <ul class="list booking-filters-list">
                     <!-- <li>
-                            <a href='/dashboard'>
+                            <a routerLink='/dashboard'>
                                 <h5 class="booking-filters-title">Dashboard
                                 </h5>
                             </a>
                         </li> -->
                     <li>
-                        <a href='/reservation'>
+                        <a routerLink='/reservation'>
                             <h5 class="booking-filters-title">Reservation
                             </h5>
                         </a>
                     </li>
                     <li *ngIf='isSuperAdmin'>
-                        <a href='/user_management'>
+                        <a routerLink='/user_management'>
                             <h5 class="booking-filters-title">User Management
                             </h5>
                         </a>
                     </li>
                     <li>
-                        <a href='/profile'>
+                        <a routerLink='/profile'>
                             <h5 class="booking-filters-title" style="color: orange">Profile
+                            </h5>
+                        </a>
+                    </li>
+                    <li *ngIf='isSuperAdmin'>
+                        <a routerLink='/settings'>
+                            <h5 class="booking-filters-title">Settings
                             </h5>
                         </a>
                     </li>
@@ -82,7 +89,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-primary btn-lg" type="submit">Update Profile</button>
+                            <button *ngIf="!isSuperAdmin" class="btn btn-primary btn-lg" type="submit">Update Profile</button>
                         </fieldset>
                     </form>
                     <div class="gap"></div>
@@ -115,3 +122,4 @@
         </div>
     </div>
 </div>
+<div class="gap"></div>

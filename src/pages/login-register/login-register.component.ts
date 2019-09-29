@@ -64,10 +64,23 @@ export class LoginRegisterComponent {
                     localStorage.setItem('user', JSON.stringify(data.data));
 
                     const user: User = JSON.parse(localStorage.getItem('user'));
+
                     if (user.roles.includes('SUPER ADMIN')) {
                         localStorage.setItem('isSuperAdmin', 'true');
                     } else {
                         localStorage.setItem('isSuperAdmin', 'false');
+                    }
+
+                    if (user.roles.includes('PORTAL USER')) {
+                        localStorage.setItem('isPortalUser', 'true');
+                    } else {
+                        localStorage.setItem('isPortalUser', 'false');
+                    }
+
+                    if (user.roles.includes('GUEST')) {
+                        localStorage.setItem('isGuest', 'true');
+                    } else {
+                        localStorage.setItem('isGuest', 'false');
                     }
                     this.router.navigate(['/reservation']);
 

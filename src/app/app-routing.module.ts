@@ -16,9 +16,13 @@ import { UserManagementComponent } from '../pages/user-management/user-managemen
 import { ReservationComponent } from '../pages/reservation/reservation.component';
 import { HotelSearchResultComponent } from '../pages/hotel-search-result/hotel-search-result.component';
 import { HotelDetailsComponent } from '../pages/hotel-details/hotel-details.component';
+import { HotelRoomsComponent } from '../pages/hotel-rooms/hotel-rooms.component';
+import { SettingsComponent } from '../pages/settings/settings.component';
+
 
 const routes: Routes = [
   { path: '', component: HomeComponent, },
+  { path: 'home/:tab', component: HomeComponent, },
   { path: 'flight_search_result', component: FlightSearchResultComponent, canActivate: [AuthGuard] },
   { path: 'flight_detail', component: FlightDetailComponent, canActivate: [AuthGuard] },
   { path: 'flight_payment', component: FlightPaymentComponent, canActivate: [AuthGuard] },
@@ -26,13 +30,15 @@ const routes: Routes = [
   { path: 'user_management', component: UserManagementComponent, canActivate: [AuthGuard] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
   { path: 'reservation', component: ReservationComponent, canActivate: [AuthGuard] },
   { path: 'about', component: AboutComponent },
   { path: 'contactus', component: ContactusComponent },
   { path: 'login_register', component: LoginRegisterComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'hotel_search_result', component: HotelSearchResultComponent, canActivate: [AuthGuard] },
-  { path: 'hotel_detail', component: HotelDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'hotel_details', component: HotelDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'app-hotel-rooms', component: HotelRoomsComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 

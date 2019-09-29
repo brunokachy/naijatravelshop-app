@@ -45,10 +45,10 @@
                             <div class="col-md-6">
                                 <img class="pp-img" src="assets/img/flutter_wave.png" alt="Ravepay Logo" title="" />
                                 <p>Ravepay
-                                    <br> Booking Amount: &#8358;{{formatCurrency(pricedItinerary.totalFare) | number}}
+                                    <br> Booking Amount: &#8358;{{formatCurrency(amount) | number}}
                                     <br> Transaction Charge: &#8358;0.00
                                     <br> Booking Total:
-                                    <strong>&#8358;{{formatCurrency(pricedItinerary.totalFare) | number}}</strong>
+                                    <strong>&#8358;{{formatCurrency(amount) | number}}</strong>
                                 </p>
                                 <button (click)="ravePay()" class="btn btn-primary btn-lg">Pay via Ravepay</button>
                             </div>
@@ -60,7 +60,82 @@
             <div class="gap gap-small"></div>
         </div>
 
-        <div class="col-md-4 aside-stick">
+        <div class="col-md-4 aside-stick" *ngIf="bookingType == 'HOTEL'">
+            <div class="booking-item-payment">
+                <header class="clearfix">
+                    <a class="booking-item-payment-img" href="#">
+                        <img src="{{hotel.thumbImageURL}}" alt="Image Alternative text" title="hotel 1">
+                    </a>
+                    <h5 class="booking-item-payment-title">
+                        <a href="#">{{hotel.hotelName}}</a>
+                    </h5>
+                    <ul class="icon-group booking-item-rating-stars">
+                        <rating [(ngModel)]="hotel.rating" [max]="5" [readonly]="true"></rating>
+                    </ul>
+                </header>
+                <ul class="booking-item-payment-details">
+                    <li>
+                        <h5>Booking for {{nights}} nights</h5>
+                        <div class="booking-item-payment-date">
+                            <p class="booking-item-payment-date-day">{{formateDate3(hotelSearch.checkInDate)}}</p>
+                            <p class="booking-item-payment-date-weekday">{{formateDate2(hotelSearch.checkInDate)}}</p>
+                        </div>
+                        <i class="fa fa-arrow-right booking-item-payment-date-separator"></i>
+                        <div class="booking-item-payment-date">
+                            <p class="booking-item-payment-date-day">{{formateDate3(hotelSearch.checkOutDate)}}</p>
+                            <p class="booking-item-payment-date-weekday">{{formateDate2(hotelSearch.checkOutDate)}}</p>
+                        </div>
+                    </li>
+                    <div class="row details-divider-hotels">
+                        <div class="col-md-12">
+                            <h5>{{hotel.smallDescription}}</h5>
+                        </div>
+                    </div>
+                    <li>
+                        <ul class="booking-item-payment-price">
+                            <div class="row">
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">{{nights}} Nights</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-----------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">
+                                            &#8358;{{formatCurrency(amount) | number}}
+                                        </p>
+                                    </div>
+                                </li>
+                            </div>
+                            <div class="row">
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">Booking Ref</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-----------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">{{bookingNumber}}
+                                        </p>
+                                    </div>
+                                </li>
+                            </div>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="col-md-6 booking-item-payment-total">Total Amount:</span>
+                        <span
+                            class="col-md-6 total-payable-amount">&#8358;{{formatCurrency(amount) | number}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 aside-stick" *ngIf="bookingType == 'FLIGHT'">
             <div class="booking-item-payment">
                 <header class="clearfix">
                     <a class="booking-item-payment-img" href="#">

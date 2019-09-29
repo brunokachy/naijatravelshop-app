@@ -17,11 +17,29 @@ export class PaymentResponseComponent {
     txFee = 0.00;
     fare = 0.00;
     bookingResponse: BookingResponse;
+    response: { bookingNumber: string, reservationId: number };
+    bookingType: string;
+    bookingNumber: string;
+    referenceNumber: string;
     alerts: any[] = [];
     initModel: InitModel;
 
     constructor(private router: Router, private localAPIService: LocalAPIService, private spinner: NgxSpinnerService) {
-        this.bookingResponse = JSON.parse(sessionStorage.getItem('bookingResponse'));
+
+
+        this.bookingType = sessionStorage.getItem('bookingType');
+        if (this.bookingType === 'HOTEL') {
+            this.response = JSON.parse(sessionStorage.getItem('bookingResponse'));
+            this.bookingNumber = this.response.bookingNumber;
+            this.referenceNumber = this.response.bookingNumber;
+        }
+
+        if (this.bookingType === 'FLIGHT') {
+            this.bookingResponse = JSON.parse(sessionStorage.getItem('bookingResponse'));
+            this.bookingNumber = this.bookingResponse.referenceNumber;
+            this.referenceNumber = this.bookingResponse.referenceNumber;
+        }
+
         this.paymentRef = sessionStorage.getItem('paymentRef');
         this.totalAmount = JSON.parse(sessionStorage.getItem('totalAmount'));
         this.txFee = JSON.parse(sessionStorage.getItem('txFee'));
@@ -41,13 +59,13 @@ export class PaymentResponseComponent {
     paymentVerification() {
         const SECKKey = this.initModel.flwAccountDetails.secretKey;
         const requestData = JSON.stringify({
-            flwRef: this.bookingResponse.referenceNumber,
+            flwRef: this.referenceNumber,
             secret: SECKKey,
             amount: this.fare,
             paymentEntity: 1,
             paymentRef: this.paymentRef,
             paymentCode: 'F03',
-            bookingNumber: this.bookingResponse.bookingNumber
+            bookingNumber: this.bookingNumber
         });
 
         this.localAPIService.postRequest(requestData, this.localAPIService.PAYMENT_VERIFICATION).subscribe(

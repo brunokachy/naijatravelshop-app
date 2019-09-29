@@ -13,4 +13,6 @@ export class HotelSearch {
     public checkoutDateDisplay: string;
     public numberOfRooms: number;
     public roomDetailList: RoomDetailList[] = [];
+    public adultCount: number;
+    public childCount: number;
 }

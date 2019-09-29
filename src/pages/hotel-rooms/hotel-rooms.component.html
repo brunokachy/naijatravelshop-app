@@ -1,0 +1,195 @@
+<div class="breadcrumb-wrap">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Home</a>
+            </li>
+            <li>
+                <a routerLink='/hotel_search_result'>Hotel Search Result</a>
+            </li>
+            <li class="active">
+                Hotel Detail
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="container">
+    <div class="booking-item-details">
+        <header class="booking-item-header">
+            <div class="row">
+                <div class="col-sm-9 brd-right bdr-bottom-sm mnb-sm-20 pb-sm-20">
+                    <h2 class="lh1em">{{hotel.hotelName}}</h2>
+                    <p class="lh1em text-small">
+                        <i class="fa fa-map-marker"></i> {{hotel.address}}</p>
+                    <ul class="list list-inline text-small">
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-home"></i>{{hotel.smallDescription}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-3">
+                    <p class="booking-item-header-price mt-sm-30">
+                        <small>price from</small>
+                        <span class="text-lg">&#8358;{{formatCurrency(hotel.minimumPrice)| number}}</span>/night</p>
+                </div>
+            </div>
+        </header>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="carousel-nav2">
+                    <span class="fa fa-chevron-left prev3"></span> <span class="fa fa-chevron-right next3"></span>
+                </div>
+                <div class="gap gap-small"></div>
+                <!-- <div class="responsive-slick"> -->
+                <!-- <div *ngFor='let image of hotel.images'><img src="{{image}}"
+                            style="max-height: 300px; max-width: 100%;"></div> -->
+                <div style="height: 300px; width: 500px">
+                    <carousel>
+                        <slide *ngFor="let image of hotel.images">
+                            <img src="{{image}}" style="height: 300px; width: 500px" />
+                        </slide>
+                    </carousel>
+                </div>
+
+                <!-- </div> -->
+            </div>
+        </div>
+        <div class="gap gap-small"></div>
+
+        <div class="row">
+            <div class="col-md-7">
+                <div class="tabbable booking-details-tabbable">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="active">
+                            <a href="#tab-1" data-toggle="tab">
+                                <i class="fa fa-camera"></i>Hotel Overview</a>
+                        </li>
+                        <li>
+                            <a href="#facilities" data-toggle="tab">
+                                <i class="fa fa-map-marker"></i>Facilities</a>
+                        </li>
+                        <!-- <li>
+                            <a href="#reviews-ratings" data-toggle="tab">
+                                <i class="fa fa-camera"></i>Reviews/Ratings</a>
+                        </li> -->
+                        <li>
+                            <a href="#google-map-tab" data-toggle="tab">
+                                <i class="fa fa-map-marker"></i>Map</a>
+                        </li>
+
+                    </ul>
+                    <div class="tab-content">
+                        <div class="gap gap-small"></div>
+                        <div class="tab-pane fade in active" id="tab-1">
+                            <h4>{{hotel.hotelName}}</h4>
+                            <p align="justify" class="mb30">{{hotel.fullDescription}} </p>
+                        </div>
+                        <div class="tab-pane fade" id="facilities">
+                            <div class="row mt20">
+                                <div class="row mt20">
+                                    <div class="col-md-6">
+                                        <ul class="booking-item-features booking-item-features-expand mb30 clearfix">
+                                            <li *ngFor="let f of hotel.facilities | slice:0:10">
+                                                <i class="im {{f.type}}"></i>
+                                                <span class="booking-item-feature-title">{{f}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul class="booking-item-features booking-item-features-expand mb30 clearfix">
+                                            <li *ngFor="let f of hotel.facilities | slice:11:17">
+                                                <i class="im {{f}}"></i>
+                                                <span class="booking-item-feature-title">{{f}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="google-map-tab">
+                            <agm-map [latitude]="map.lat" [longitude]="map.lng" [zoom]="zoom" style="height: 500px">
+                                <agm-marker [latitude]="map.lat" [longitude]="map.lng">
+                                    <!-- <agm-info-window>
+                                        <strong>{{title}}</strong>
+                                    </agm-info-window> -->
+                                </agm-marker>
+                            </agm-map>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="booking-item-dates-change">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-daterange" data-date-format="MM d, D">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group form-group-icon-left">
+                                                <label>Check in</label>
+                                                <span>
+                                                    <strong>{{hotelSearch.checkInDate}}</strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group form-group-icon-left">
+                                                <label>Check out</label>
+                                                <span>
+                                                    <strong>{{hotelSearch.checkOutDate}}</strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group form-group-icon-left">
+                                    <label>Rooms</label>
+                                    <span>
+                                        <strong>{{hotelSearch.numberOfRooms}}</strong>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group form-group-select-plus">
+                                    <label>Adults</label>
+                                    <span>
+                                        <strong>{{adultCount}}</strong>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group form-group-select-plus">
+                                    <label>Children</label>
+                                    <span>
+                                        <strong>{{childCount}}</strong>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <ul class="booking-list">
+                    <li>
+                        <a class="booking-item" *ngFor="let room of hotel.rooms">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5 class="booking-item-title">{{room.name}}</h5>
+                                </div>
+                                <div class="col-md-4"><span
+                                        class="booking-item-price">&#8358;{{formatCurrency(room.roomPrice)| number}}<small>/night</small></span><span
+                                        class="btn btn-primary" (click)="selectRoom(room)">Book</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="gap"></div>
+</div>
+<div class="gap gap-small"></div>

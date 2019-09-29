@@ -33,7 +33,7 @@ export class AuthGuard implements CanActivate {
             return this.canViewHotelSearchResultPage(url);
         }
 
-        if (url === '/hotel_room') {
+        if (url === '/app-hotel-rooms') {
             return this.canViewHotelRoomPage(url);
         }
 
@@ -58,6 +58,10 @@ export class AuthGuard implements CanActivate {
         }
 
         if (url === '/user_management') {
+            return this.IsUserSuperAdmin();
+        }
+
+        if (url === '/settings') {
             return this.IsUserSuperAdmin();
         }
     }
@@ -99,7 +103,7 @@ export class AuthGuard implements CanActivate {
     }
 
     canViewHotelRoomPage(url: string): boolean {
-        const canView = sessionStorage.getItem('viewHotelRoom');
+        const canView = sessionStorage.getItem('viewHotelRooms');
         if (canView === 'true') { return true; }
         this.router.navigate(['/home']);
         return false;

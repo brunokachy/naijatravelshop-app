@@ -35,6 +35,9 @@ export class RegisterComponent {
 
     signup() {
         this.spinnerService.show();
+        const roles: string[] = [];
+        roles.push('GUEST');
+        this.user.roles = roles;
         this.localAPIService.postRequest(this.user, this.localAPIService.CREATE_ACCOUNT).subscribe(
             data => {
                 this.add('success', 'User accounted created successfully.');

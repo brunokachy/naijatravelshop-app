@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import * as moment from 'moment';
 import { TypeaheadMatch, ModalDirective } from 'ngx-bootstrap';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FlightDataSearch } from '../../model/FlightDataSearch';
 import { InitModel } from '../../model/InitModel';
@@ -31,16 +31,48 @@ export class HomeComponent {
     @ViewChild('destinationCity2') destinationCityElement2: ElementRef;
     @ViewChild('hotelCityElement') hotelCityElement: ElementRef;
 
-    constructor(private TBservice: TravelbetaAPIService, private router: Router,
+    constructor(private TBservice: TravelbetaAPIService, private router: Router, private activatedRoute: ActivatedRoute,
         private spinner: NgxSpinnerService, private localService: LocalAPIService) {
         this.sessionConfig();
         this.countries = JSON.parse(localStorage.getItem('countries'));
-        this.getTopDeals();
+        this.topDeals = JSON.parse(localStorage.getItem('topDeals'));
         this.formatDepartureDate();
         this.populateMultipleDest();
         this.formatCheckinDate();
         this.setRooms();
+        this.populatePopularAirports();
+
+        this.flight = localStorage.getItem('flight');
+        this.hotel = localStorage.getItem('hotel');
+        this.visa = localStorage.getItem('visa');
+
+        this.activatedRoute.params.subscribe(params => {
+            const tab = params.tab;
+            if (tab === undefined || tab === 'flight') {
+                this.flight = 'active';
+                this.visa = '';
+                this.hotel = '';
+            }
+
+            if (tab === 'hotel') {
+                this.flight = '';
+                this.visa = '';
+                this.hotel = 'active';
+            }
+
+            if (tab === 'visa') {
+                this.flight = '';
+                this.visa = 'active';
+                this.hotel = '';
+            }
+        });
     }
+
+    subscribeEmail: string;
+
+    visa: string;
+    hotel: string;
+    flight: string;
 
     minDepartureDate: Date;
     maxDepartureDate: Date;
@@ -50,6 +82,7 @@ export class HomeComponent {
     returnDate = '';
 
     airports: Airport[] = [];
+    popularAirports: Airport[] = [];
     departureAirport: Airport;
     destinationAirport: Airport;
     departure: string;
@@ -63,6 +96,8 @@ export class HomeComponent {
     tripType = '2';
     seatclass = '1';
     multipleDest: { 'departureAirport': Airport, 'arrivalAirport': Airport, 'departureDate': string }[] = [];
+
+
 
     countries: Country[] = [];
     topDeals: TopDeal[] = [];
@@ -117,6 +152,44 @@ export class HomeComponent {
             }, 1000);
         } else {
             this.hotelCities = JSON.parse(localStorage.getItem('hotelCities'));
+        }
+    }
+
+    check(element) {
+        if (element === 'Departure1') {
+            const currentValue = this.departureCityElement1.nativeElement.value;
+            if (currentValue === '') {
+                this.airports = this.popularAirports;
+            } else {
+                this.checkForAirportList(element);
+            }
+        }
+
+        if (element === 'Destination1') {
+            const currentValue = this.destinationCityElement1.nativeElement.value;
+            if (currentValue === '') {
+                this.airports = this.popularAirports;
+            } else {
+                this.checkForAirportList(element);
+            }
+        }
+
+        if (element === 'Departure2') {
+            const currentValue = this.departureCityElement2.nativeElement.value;
+            if (currentValue === '') {
+                this.airports = this.popularAirports;
+            } else {
+                this.checkForAirportList(element);
+            }
+        }
+
+        if (element === 'Destination2') {
+            const currentValue = this.destinationCityElement2.nativeElement.value;
+            if (currentValue === '') {
+                this.airports = this.popularAirports;
+            } else {
+                this.checkForAirportList(element);
+            }
         }
     }
 
@@ -210,18 +283,16 @@ export class HomeComponent {
 
     searchHotel() {
         const hotelSearch = new HotelSearch();
-        hotelSearch.checkInDate = this.formatDate(this.checkinDate);
-        hotelSearch.checkOutDate = this.formatDate(this.checkoutDate);
+        hotelSearch.checkInDate = this.formatHotelDate(this.checkinDate);
+        hotelSearch.checkOutDate = this.formatHotelDate(this.checkoutDate);
         hotelSearch.city = this.hotelCity;
         hotelSearch.cityCode = this.hotelCity.code;
         hotelSearch.numberOfRooms = this.noOfRooms;
         hotelSearch.roomDetailList = this.roomDetailLists;
-console.log(JSON.stringify(hotelSearch));
-        //sessionStorage.setItem('viewHotelSearchResult', 'true');
-        // this.router.navigate(['/hotel_search_result']);
-        // localStorage.setItem('hotelSearch', JSON.stringify(hotelSearch));
+        hotelSearch.checkinDateDisplay = this.formatDate3(hotelSearch.checkInDate);
+        hotelSearch.checkoutDateDisplay = this.formatDate3(hotelSearch.checkOutDate);
         this.spinner.show();
-        this.TBservice.postRequest(hotelSearch, this.localService.SEARCH_HOTELS).subscribe(
+        this.localService.postRequest(hotelSearch, this.localService.SEARCH_HOTELS).subscribe(
             hotel => {
                 sessionStorage.setItem('hotels', JSON.stringify(hotel.data));
                 sessionStorage.setItem('hotelSearch', JSON.stringify(hotelSearch));
@@ -234,8 +305,6 @@ console.log(JSON.stringify(hotelSearch));
                 this.spinner.hide();
                 this.showModal();
             });
-
-
     }
 
     bookTopDeal(deal: TopDeal) {
@@ -252,7 +321,7 @@ console.log(JSON.stringify(hotelSearch));
             tripTypeString = 'One-way Trip';
             flightSearch.flightItineraryDetail.push({
                 originAirportCode: deal.originAirportCode,
-                destinationAirportCode: deal.destinationAirportCode, departureDate: this.formatDate(deal.departureDate)
+                destinationAirportCode: deal.destinationAirportCode, departureDate: this.formatFlightDate(deal.departureDate)
             });
             const flightHeader = {
                 departureAirport: deal.originAirportName, destinationAirport: deal.destinationAirportName,
@@ -265,11 +334,11 @@ console.log(JSON.stringify(hotelSearch));
             tripTypeString = 'Round Trip';
             flightSearch.flightItineraryDetail.push({
                 originAirportCode: deal.originAirportCode,
-                destinationAirportCode: deal.destinationAirportCode, departureDate: this.formatDate(deal.departureDate)
+                destinationAirportCode: deal.destinationAirportCode, departureDate: this.formatFlightDate(deal.departureDate)
             });
             flightSearch.flightItineraryDetail.push({
                 originAirportCode: deal.destinationAirportCode,
-                destinationAirportCode: deal.originAirportCode, departureDate: this.formatDate(deal.returnDate)
+                destinationAirportCode: deal.originAirportCode, departureDate: this.formatFlightDate(deal.returnDate)
             });
             const flightHeader = {
                 departureAirport: deal.originAirportName, destinationAirport: deal.destinationAirportName,
@@ -311,7 +380,7 @@ console.log(JSON.stringify(hotelSearch));
             tripTypeString = 'One-way Trip';
             flightSearch.flightItineraryDetail.push({
                 originAirportCode: this.departureAirport.iataCode,
-                destinationAirportCode: this.destinationAirport.iataCode, departureDate: this.formatDate(this.departureDate)
+                destinationAirportCode: this.destinationAirport.iataCode, departureDate: this.formatFlightDate(this.departureDate)
             });
             const flightHeader = {
                 departureAirport: this.departureAirport, destinationAirport: this.destinationAirport,
@@ -324,11 +393,11 @@ console.log(JSON.stringify(hotelSearch));
             tripTypeString = 'Round Trip';
             flightSearch.flightItineraryDetail.push({
                 originAirportCode: this.departureAirport.iataCode,
-                destinationAirportCode: this.destinationAirport.iataCode, departureDate: this.formatDate(this.departureDate)
+                destinationAirportCode: this.destinationAirport.iataCode, departureDate: this.formatFlightDate(this.departureDate)
             });
             flightSearch.flightItineraryDetail.push({
                 originAirportCode: this.destinationAirport.iataCode,
-                destinationAirportCode: this.departureAirport.iataCode, departureDate: this.formatDate(this.returnDate)
+                destinationAirportCode: this.departureAirport.iataCode, departureDate: this.formatFlightDate(this.returnDate)
             });
             const flightHeader = {
                 departureAirport: this.departureAirport, destinationAirport: this.destinationAirport,
@@ -343,7 +412,7 @@ console.log(JSON.stringify(hotelSearch));
             for (const m of this.multipleDest) {
                 flightSearch.flightItineraryDetail.push({
                     originAirportCode: m.departureAirport.iataCode,
-                    destinationAirportCode: m.arrivalAirport.iataCode, departureDate: this.formatDate(m.departureDate)
+                    destinationAirportCode: m.arrivalAirport.iataCode, departureDate: this.formatFlightDate(m.departureDate)
                 });
             }
             const flightHeader = {
@@ -359,10 +428,10 @@ console.log(JSON.stringify(hotelSearch));
         this.TBservice.postRequest(flightSearch, this.TBservice.PROCESS_FLIGHT_SEARCH).subscribe(
             flight => {
                 if (flight.status === 0) {
+                    this.spinner.hide();
                     sessionStorage.setItem('flight', JSON.stringify(flight.data));
                     flightSearch.flightItineraryDetail = flightItineraryDetails;
                     sessionStorage.setItem('flightSearch', JSON.stringify(flightSearch));
-                    this.spinner.hide();
                     sessionStorage.setItem('viewFlightSearchResult', 'true');
                     this.router.navigate(['/flight_search_result']);
                 }
@@ -372,17 +441,6 @@ console.log(JSON.stringify(hotelSearch));
                 this.spinner.hide();
                 this.showModal();
             });
-    }
-
-    getTopDeals() {
-        if (localStorage.getItem('topDeals') == null) {
-            const interval = setInterval(() => {
-                if (localStorage.getItem('topDeals') != null) {
-                    this.topDeals = JSON.parse(localStorage.getItem('topDeals'));
-                    clearInterval(interval);
-                }
-            }, 1000);
-        }
     }
 
     visaRequestSubmit() {
@@ -395,15 +453,15 @@ console.log(JSON.stringify(hotelSearch));
         } else {
             this.visaRequest.requestById = '';
         }
-
+        console.log(JSON.stringify(this.visaRequest));
         this.spinner.show();
         this.localService.postRequest(this.visaRequest, this.localService.VISA_REQUEST).subscribe(
             data => {
+                this.spinner.hide();
                 alert('Visa request was successful');
                 this.visaRequest = new VisaRequest();
                 this.visaDepartureDate = '';
                 this.visaReturnDate = '';
-                this.spinner.hide();
             },
             error => {
                 console.log(error);
@@ -441,7 +499,13 @@ console.log(JSON.stringify(hotelSearch));
         this.maxVisaReturnDate = new Date(year + 2, month, day);
     }
 
-    formatDate(date: string): string {
+    formatHotelDate(date: string): string {
+        const msec = Date.parse(date);
+        const d = moment(msec).format('YYYY-MM-DD');
+        return d;
+    }
+
+    formatFlightDate(date: string): string {
         const msec = Date.parse(date);
         const d = moment(msec).format('DD/MM/YYYY');
         return d;
@@ -451,6 +515,12 @@ console.log(JSON.stringify(hotelSearch));
         const msec = Date.parse(date);
         const d = moment(msec).format('MM/DD/YYYY');
         return d;
+    }
+
+    formatDate3(date) {
+        const a = moment(date, 'YYYY-MM-DD').valueOf();
+        const d = moment(a).format('MMM DD, YYYY');
+        return d.toString();
     }
 
     getTicketClass(ticketClass: number): string {
@@ -517,7 +587,7 @@ console.log(JSON.stringify(hotelSearch));
         sessionStorage.setItem('viewFlightPayment', 'false');
         sessionStorage.setItem('viewHotelPayment', 'false');
         sessionStorage.setItem('viewHotelSearchResult', 'false');
-        sessionStorage.setItem('viewHotelRoom', 'false');
+        sessionStorage.setItem('viewHotelRooms', 'false');
         sessionStorage.setItem('viewHotelDetails', 'false');
     }
 
@@ -595,7 +665,6 @@ console.log(JSON.stringify(hotelSearch));
                 this.roomDetailLists[o].childrenAgeList.pop();
             }
         }
-
     }
 
     setAdultAge(e, o) {
@@ -697,6 +766,61 @@ console.log(JSON.stringify(hotelSearch));
                 this.addTotalTraveller();
             }
         }
+    }
+
+    populatePopularAirports() {
+        const airport1 = new Airport();
+        airport1.city = 'Lagos';
+        airport1.country = 'Nigeria';
+        airport1.iataCode = 'LOS';
+        airport1.name = 'Murtala Muhammed';
+        airport1.displayName = 'Murtala Muhammed(L0S), Lagos';
+        this.popularAirports.push(airport1);
+
+        const airport2 = new Airport();
+        airport2.city = 'Johannesburg';
+        airport2.country = 'South Africa';
+        airport2.iataCode = 'JNB';
+        airport2.name = 'O. R. Tambo International Airport';
+        airport2.displayName = 'O. R. Tambo International Airport(JNB), Johannesburg';
+        this.popularAirports.push(airport2);
+
+        const airport3 = new Airport();
+        airport3.city = 'London';
+        airport3.country = 'United Kingdom';
+        airport3.iataCode = 'LHR';
+        airport3.name = 'Heathrow';
+        airport3.displayName = 'Heathrow(LHR), London';
+        this.popularAirports.push(airport3);
+
+        const airport4 = new Airport();
+        airport4.city = 'Abuja';
+        airport4.country = 'Nigeria';
+        airport4.iataCode = 'ABV';
+        airport4.name = 'Nnamdi Azikiwe International Airport';
+        airport4.displayName = 'Nnamdi Azikiwe International Airport(ABV), Abuja';
+        this.popularAirports.push(airport4);
+
+        const airport5 = new Airport();
+        airport5.city = 'Dubai';
+        airport5.country = 'United Arab Emirates';
+        airport5.iataCode = 'DXB';
+        airport5.name = 'Dubai';
+        airport5.displayName = 'Dubai(DXB), Dubai';
+        this.popularAirports.push(airport5);
+    }
+
+    subscribe() {
+        const user: User = new User();
+        user.email = this.subscribeEmail;
+        this.localService.postRequest(user, this.localService.SUBSCRIBE_EMAIL).subscribe(
+            data => {
+                this.subscribeEmail = '';
+            },
+            error => {
+                console.log(error);
+                this.subscribeEmail = '';
+            });
     }
 
 

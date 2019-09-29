@@ -10,32 +10,39 @@
         </ul>
     </div>
 </div>
+<div class="gap"></div>
 <div class="container">
     <div class="row">
         <div class="col-md-3">
             <aside class="booking-filters text-white">
                 <ul class="list booking-filters-list">
                     <!-- <li>
-                                <a href='/dashboard'>
+                                <a routerLink='/dashboard'>
                                     <h5 class="booking-filters-title">Dashboard
                                     </h5>
                                 </a>
                             </li> -->
                     <li>
-                        <a href='/reservation'>
+                        <a routerLink='/reservation'>
                             <h5 class="booking-filters-title">Reservation
                             </h5>
                         </a>
                     </li>
                     <li *ngIf='isSuperAdmin'>
-                        <a href='/user_management'>
+                        <a routerLink='/user_management'>
                             <h5 class="booking-filters-title" style="color: orange">User Management
                             </h5>
                         </a>
                     </li>
                     <li>
-                        <a href='/profile'>
+                        <a routerLink='/profile'>
                             <h5 class="booking-filters-title">Profile
+                            </h5>
+                        </a>
+                    </li>
+                    <li *ngIf='isSuperAdmin'>
+                        <a routerLink='/settings'>
+                            <h5 class="booking-filters-title">Settings
                             </h5>
                         </a>
                     </li>
@@ -48,6 +55,38 @@
                     {{ alert.msg }}</alert>
             </div>
             <div class="row">
+                <div class="col-md-12">
+                    <form autocomplete="off" (ngSubmit)="createUser()" ngNativeValidate>
+                        <fieldset>
+                            <legend style="font-size: 16px">Create Portal User</legend>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group form-group">
+                                        <label>First name</label>
+                                        <input class="form-control" name="firstName" type="text"
+                                            [(ngModel)]="portalUser.firstName" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group">
+                                        <label>Last name</label>
+                                        <input class="form-control" name="lastName" type="text"
+                                            [(ngModel)]="portalUser.lastName" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group">
+                                        <label>Email</label>
+                                        <input class="form-control" required name="email" type="text"
+                                            [(ngModel)]="portalUser.email" />
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn" type="submit">Create User</button>
+                        </fieldset>
+                    </form>
+                    <div class="gap"></div>
+                </div>
                 <fieldset>
                     <legend style="font-size: 16px">Portal Users</legend>
                     <table class="table table-striped" [mfData]="portalUsers" #user="mfDataTable" [mfRowsOnPage]="10">
@@ -65,15 +104,14 @@
                                     <mfDefaultSorter style="font-size: 14px" by="email">Email
                                     </mfDefaultSorter>
                                 </th>
-                                <th style="width: 20%;">
-                                    <mfDefaultSorter style="font-size: 14px" by="phoneNumber">Phone number
-                                    </mfDefaultSorter>
-                                </th>
                                 <th style="width: 10%">
                                     <mfDefaultSorter style="font-size: 14px" by="active">Status
                                     </mfDefaultSorter>
                                 </th>
                                 <th style="width: 20%">
+                                    <mfDefaultSorter style="font-size: 14px"></mfDefaultSorter>
+                                </th>
+                                <th style="width: 20%;">
                                     <mfDefaultSorter style="font-size: 14px"></mfDefaultSorter>
                                 </th>
                             </tr>
@@ -83,13 +121,14 @@
                                 <td style="font-size: 12px">{{item.firstName}}</td>
                                 <td style="font-size: 12px">{{item.lastName}}</td>
                                 <td style="font-size: 12px">{{item.email}}</td>
-                                <td style="font-size: 12px">{{item.phoneNumber}}</td>
                                 <td style="font-size: 12px" *ngIf="item.active">ACTIVE</td>
                                 <td style="font-size: 12px" *ngIf="!item.active">INACTIVE</td>
                                 <td style="font-size: 12px" *ngIf="item.active"><button class="btn btn-primary"
-                                    (click)="deactivateUser(item.id)">Deactivate</button></td>
+                                        (click)="deactivateUser(item.id)">Deactivate</button></td>
                                 <td style="font-size: 12px" *ngIf="!item.active"><button class="btn btn-primary"
-                                    (click)="activateUser(item.id)">Activavte</button></td>
+                                        (click)="activateUser(item.id)">Activate</button></td>
+                                <td style="font-size: 12px"><button class="btn btn-primary"
+                                        (click)="getUserRoles(item, roles)">Roles</button></td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -105,3 +144,38 @@
         </div>
     </div>
 </div>
+<ng-template #roles>
+    <div class="modal-content" style="width: 130%;">
+        <div class="modal-body">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="modalRoles.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>Portal User Roles</h5>
+
+                    <div class="col-md-6">
+                        <p>Current Roles</p>
+                        <div class="checkbox" *ngFor="let role of currentRoles; let i = index">
+                            <label>
+                                <input class="i-check" checked (change)="removeCurrentRole(role)"
+                                   type="checkbox" />{{role}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <p>Unselected Roles</p>
+                        <div class="checkbox" *ngFor="let role of unSelectedRoles; let i = index">
+                            <label>
+                                <input class="i-check" (change)="addCurrentRole(role)"
+                                    type="checkbox" />{{role}}</label>
+                        </div>
+                    </div>
+                    <button style="margin-top: 8px;" class="btn btn-info btn" (click)="updateRoles()"
+                    type="button">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

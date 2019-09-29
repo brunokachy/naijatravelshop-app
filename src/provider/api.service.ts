@@ -21,8 +21,8 @@ export class Service {
     }
 
     private locationOrigin = window.location.origin;
-    // private naijaTravelShopAPIBaseURL = this.locationOrigin + '/naijatravelshop/api/';
-    private naijaTravelShopAPIBaseURL = 'http://localhost:8080/naijatravelshop/api/';
+   private naijaTravelShopAPIBaseURL = this.locationOrigin + '/naijatravelshop/api/';
+    // private naijaTravelShopAPIBaseURL = 'http://localhost:8080/naijatravelshop/api/';
 
     public CONFIRM_REGISTRATION = this.naijaTravelShopAPIBaseURL + 'confirm_registration';
     public CREATE_ACCOUNT = this.naijaTravelShopAPIBaseURL + 'admin/create_account';
@@ -192,7 +192,7 @@ export class Service {
                 this.callAPI('', this.GET_COUNTRIES).subscribe(data => {
                     const countryResponse: string = JSON.stringify(data);
                     const countries: ApiResponse<Country[]> = JSON.parse(countryResponse);
-                    this.initModel.countries = countries.data;
+                  //  this.initModel.countries = countries.data;
 
                     const country = new Country();
                     country.capital = 'Abuja';
@@ -203,8 +203,8 @@ export class Service {
                     country.isoCode = 'NG';
                     country.name = 'NIGERIA';
 
-                    this.initModel.countries.unshift(country);
-                    this.initModel.countryCode = 'NG';
+                   // this.initModel.countries.unshift(country);
+                    // this.initModel.countryCode = 'NG';
 
                     sessionStorage.setItem('initModel', JSON.stringify(this.initModel));
                     resolve();
